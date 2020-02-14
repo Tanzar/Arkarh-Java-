@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="js/Game.js"></script>
+        <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    </head>
+    <body>
+        Map width<input type="number" id="mapWidth"><br>
+        Map height<input type="number" id="mapHeight"><br>
+        <button onclick="generateMap()">Rysuj</button><br>
+        <canvas id="myCanvas" width="1000" height="500" style="border:1px solid #000000;"></canvas><br>
+        <div id="editorMenu"></div>
+    </body>
+    <script>
+        function generateMap(){
+            var width = document.getElementById("mapWidth");
+            var height = document.getElementById("mapHeight");
+            var canvas = document.getElementById("myCanvas");
+            var editorMenu = document.getElementById("editorMenu");
+            var parameters = {
+                width:  width.value,
+                height:  height.value,
+                fieldsWidth: 50,
+                fieldsHeight: 50
+            }
+            startGame(canvas, parameters, editorMenu);
+        }
+    </script>
+</html>
