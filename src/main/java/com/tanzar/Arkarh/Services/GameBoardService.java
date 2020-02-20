@@ -9,14 +9,17 @@ import com.google.gson.Gson;
 import com.tanzar.Arkarh.Containers.FieldContainer;
 import com.tanzar.Arkarh.Containers.TerrainContainer;
 import com.tanzar.Arkarh.Containers.MapContainer;
+import com.tanzar.Arkarh.Containers.ObstacleContainer;
 import com.tanzar.Arkarh.DAO.FieldDAO;
 import com.tanzar.Arkarh.DAO.TerrainDAO;
 import com.tanzar.Arkarh.DAO.MapDAO;
+import com.tanzar.Arkarh.DAO.ObstacleDAO;
 import com.tanzar.Arkarh.Elements.BoardSpace;
 import com.tanzar.Arkarh.Elements.GameBoard;
 import com.tanzar.Arkarh.Entities.Field;
 import com.tanzar.Arkarh.Entities.Terrain;
 import com.tanzar.Arkarh.Entities.Map;
+import com.tanzar.Arkarh.Entities.Obstacle;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,9 @@ public class GameBoardService {
     
     @Autowired
     private TerrainDAO terrainDAO;
+    
+    @Autowired
+    private ObstacleDAO obstacleDAO;
     
     private int fieldSize = 50;
     
@@ -63,19 +69,24 @@ public class GameBoardService {
         return boardSpace;
     }
     
-    public GameBoard prepareEmptyBoard(int width, int height, int fieldsWidth, int fieldsHeight){
-        GameBoard newBoard = new GameBoard(width, height, fieldsWidth, fieldsHeight);
+    public GameBoard prepareEmptyBoard(int width, int height){
+        GameBoard newBoard = new GameBoard(width, height, this.fieldSize, this.fieldSize);
         return newBoard;
     }
     
     public String getTerrains(){
         TerrainContainer terrains = terrainDAO.getAll();
-        Terrain[] terrainsArray = new Terrain[terrains.size()];
-        for(int i = 0; i < terrainsArray.length; i++){
-            terrainsArray[i] = terrains.get(i);
-        }
+        Terrain[] terrainsArray = terrains.toArray();
         Gson jsonFormatter = new Gson();
         String result = jsonFormatter.toJson(terrainsArray);
+        return result;
+    }
+    
+    public String getObstacles(){
+        ObstacleContainer obstacles = this.obstacleDAO.getAll();
+        Obstacle[] obstaclesArray = obstacles.toArray();
+        Gson jsonFormatter = new Gson();
+        String result = jsonFormatter.toJson(obstaclesArray);
         return result;
     }
 }

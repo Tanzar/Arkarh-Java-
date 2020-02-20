@@ -24,6 +24,7 @@ public class BoardSpace {
         this.y = y;
         this.locked = false;
         this.terrain = new Terrain(-1, "none");
+        this.obstacle = new Obstacle();
     }
 
     public int getX() {

@@ -5,13 +5,10 @@
  */
 package com.tanzar.Arkarh.DAO.abstracts;
 
-import com.tanzar.Arkarh.Entities.Terrain;
-
 /**
  *
  * @author Tanzar
  */
-public interface GroundDAOInterface {
-    
-    public Terrain getById(Integer id);
+public interface GetById<EntityType> {
+    public EntityType getById(Integer Id);
 }

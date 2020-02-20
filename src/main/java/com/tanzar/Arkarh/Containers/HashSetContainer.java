@@ -54,5 +54,5 @@ public abstract class HashSetContainer<itemType> {
         return toArray(data);
     }
     
-    public abstract itemType[] toArray(HashSet<itemType> data);
+    protected abstract itemType[] toArray(HashSet<itemType> data);
 }

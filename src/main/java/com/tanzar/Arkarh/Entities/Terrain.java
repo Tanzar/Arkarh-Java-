@@ -28,6 +28,7 @@ public class Terrain {
     @Column(name = "name")
     private String name;
     
+    @Column(name = "asset")
     private String asset;
 
     public Terrain() {

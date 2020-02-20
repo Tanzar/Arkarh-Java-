@@ -7,12 +7,10 @@ package com.tanzar.Arkarh.DAO;
 
 import com.tanzar.Arkarh.Containers.TerrainContainer;
 import com.tanzar.Arkarh.DAO.abstracts.DAO;
-import com.tanzar.Arkarh.DAO.abstracts.GroundDAOInterface;
+import com.tanzar.Arkarh.DAO.abstracts.GetById;
 import com.tanzar.Arkarh.Entities.Terrain;
 import com.tanzar.Arkarh.Exceptions.QueryException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Repository;
  * @author Tanzar
  */
 @Repository
-public class TerrainDAO extends DAO<Terrain, TerrainContainer> implements GroundDAOInterface{
+public class TerrainDAO extends DAO<Terrain, TerrainContainer> implements GetById<Terrain>{
 
     public TerrainDAO() {
         super("Terrain");

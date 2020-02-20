@@ -30,13 +30,10 @@ public class Obstacle {
     
     private String asset;
     
-    @Column(name = "lockedX")
-    private Integer[] lockedX;
-    
-    @Column(name = "lockedY")
-    private Integer[] lockedY;
-
     public Obstacle() {
+        this.id = 0;
+        this.name = "none";
+        this.asset = "";
     }
 
     public Integer getId() {
@@ -60,22 +57,6 @@ public class Obstacle {
         return asset;
     }
 
-    public Integer[] getLockedX() {
-        return lockedX;
-    }
-
-    public void setLockedX(Integer[] lockedX) {
-        this.lockedX = lockedX;
-    }
-
-    public Integer[] getLockedY() {
-        return lockedY;
-    }
-
-    public void setLockedY(Integer[] lockedY) {
-        this.lockedY = lockedY;
-    }
-    
     private String setAssetPath(String name){
         return "/img/obstacles/" + name + ".png";
     }
