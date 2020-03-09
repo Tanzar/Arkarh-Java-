@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @author Tanzar
  */
 @Entity
-@Table(name = " fields")
+@Table(name = "fields")
 public class Field {
     
     @Id

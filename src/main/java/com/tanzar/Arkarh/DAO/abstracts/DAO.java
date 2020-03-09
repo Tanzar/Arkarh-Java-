@@ -57,7 +57,7 @@ public abstract class DAO<entityType, containerType> {
     }
     
     protected containerType get(String conditions) throws QueryException{
-        if(conditions.length() > 5 && conditions.substring(0, 4).equals("where")){
+        if(conditions.length() > 5 && conditions.substring(0, 5).equals("where")){
             String hql = "from " + this.entityName + " " + conditions;
             List<entityType> result = executeSelect(hql);
             return convertResults(result);

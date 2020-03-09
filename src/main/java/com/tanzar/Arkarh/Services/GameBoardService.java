@@ -50,6 +50,7 @@ public class GameBoardService {
     }
     
     public GameBoard prepareGameBoard(Integer mapID){
+        /**
         Map gameMap = mapDAO.getById(mapID);
         TerrainContainer terrains = terrainDAO.getAll();
         FieldContainer fields = fieldDAO.getByMapId(mapID);
@@ -60,17 +61,19 @@ public class GameBoardService {
             BoardSpace boardSpace = prepareField(field, terrain);
             newBoard.setField(field.getX(), field.getY(), boardSpace);
         }
-        return newBoard;
+        return newBoard;*/
+        return null;
     }
-    
+    /*
     private BoardSpace prepareField(Field field, Terrain terrain){
         BoardSpace boardSpace = new BoardSpace(field.getX(), field.getY());
         boardSpace.setTerrain(terrain);
         return boardSpace;
     }
-    
+    */
     public GameBoard prepareEmptyBoard(int width, int height){
-        GameBoard newBoard = new GameBoard(width, height, this.fieldSize, this.fieldSize);
+        Terrain defaultTerrain = terrainDAO.getByName("grass");
+        GameBoard newBoard = new GameBoard(width, height, this.fieldSize, this.fieldSize, defaultTerrain);
         return newBoard;
     }
     

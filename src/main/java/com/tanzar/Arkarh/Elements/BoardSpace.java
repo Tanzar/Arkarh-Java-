@@ -19,11 +19,11 @@ public class BoardSpace {
     private Terrain terrain;
     private Obstacle obstacle;
 
-    public BoardSpace(int x, int y) {
+    public BoardSpace(int x, int y, Terrain terrain) {
         this.x = x;
         this.y = y;
         this.locked = false;
-        this.terrain = new Terrain(-1, "none");
+        this.terrain = terrain;
         this.obstacle = new Obstacle();
     }
 

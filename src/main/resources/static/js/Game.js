@@ -36,10 +36,10 @@ function Editor(menuDiv){
 function EditorMenu(menuDiv){
     this.menuDiv = menuDiv;
     this.menuTable;
+    this.terrainSelect;
     this.typesSelect;
     this.optionsSelect;
-    this.types = [];
-    var terrains = $.ajax({
+    this.terrains = $.ajax({
         async: false,
         type: "GET",
         contentType:"application/json; charset=utf-8",
@@ -54,11 +54,9 @@ function EditorMenu(menuDiv){
             return undefined;
         }
     });
-    terrains = terrains.responseJSON;
-    this.types.push(terrains);
-    var items = [];
-    this.types.push(items);
-    var obstacles = $.ajax({
+    this.terrains = this.terrains.responseJSON;
+    this.items = [];
+    this.obstacles = $.ajax({
         async: false,
         type: "GET",
         contentType:"application/json; charset=utf-8",
@@ -73,20 +71,14 @@ function EditorMenu(menuDiv){
             return undefined;
         }
     });
-    obstacles = obstacles.responseJSON;
-    this.types.push(obstacles);
-    var events = [];
-    this.types.push(events);
+    this.obstacles = this.obstacles.responseJSON;
+    this.events = [];
     this.selectedListNumber;
     this.selectedListItem;
     this.init = function(){
-        this.initAll();
-    }
-    this.initAll = function(){
         this.menuTable = document.createElement("table");
         var row = this.menuTable.insertRow(0);
-        this.initTypes(row);
-        this.initOptions(row);
+        this.initTerrain(row);
         this.menuDiv.appendChild(this.menuTable);
     }
     this.newOption = function(text, value){
@@ -95,6 +87,16 @@ function EditorMenu(menuDiv){
         var textNode = document.createTextNode(text);
         tmp.appendChild(textNode);
         return tmp;
+    }
+    this.initTerrain = function(row){
+        var textCell = row.insertCell(0);
+        var tekst = document.createTextNode("Teren: ");
+        textCell.appendChild(tekst);
+        var optionsCell = row.insertCell(1);
+        this.terrainSelect = document.createElement("select");
+        this.terrainSelect = this.setOptions(this.terrainSelect, this.terrains)
+        optionsCell.appendChild(this.terrainSelect);
+        
     }
     this.initTypes = function(row){
         var typesCell = row.insertCell(0);
@@ -121,19 +123,15 @@ function EditorMenu(menuDiv){
         }
         optionsCell.appendChild(this.optionsSelect);
     }
-    this.setOptions = function(selectedListNumber){
-        this.selectedListNumber = selectedListNumber;
-        this.refillOptions(this.types[this.selectedListNumber]);
-        this.selectedListItem = this.types[selectedListNumber][this.optionsSelect.value - 1];
-    }
-    this.refillOptions = function(optionsArray){
-        for(i = this.optionsSelect.length - 1; i >= 0; i--){
-            this.optionsSelect.remove(i);
+    this.setOptions = function(select, optionsArray){
+        for(i = select.length - 1; i >= 0; i--){
+            select.remove(i);
         }
         for(i = 0; i < optionsArray.length; i++){
             var option = optionsArray[i];
-            this.optionsSelect.appendChild(this.newOption(option.name, option.id));
+            select.appendChild(this.newOption(option.name, option.id));
         }
+        return select;
     }
 }
 
@@ -223,12 +221,7 @@ function Game(){
             var y = game.camera.y + e.y - game.canvas.getBoundingClientRect().top;
             x = Math.floor((x - 1)/game.map.fieldsWidth);
             y = Math.floor((y - 1)/game.map.fieldsHeight);
-            if(editor.editorMenu.selectedListNumber == 0){
-                game.map.changeGround(x, y, editor.editorMenu.selectedListItem);
-            }
-            if(editor.editorMenu.selectedListNumber == 2){
-                game.map.changeObstacle(x, y, editor.editorMenu.selectedListItem);
-            }
+            game.map.markField(x, y);
         });
     }
 }
@@ -239,6 +232,13 @@ function Map(pattern){
     this.fieldsHeight = pattern.fieldHeight;
     this.width = pattern.width;
     this.height = pattern.height;
+    img = new Image();
+    img.src = "img/marker.png";
+    this.marker = {
+        asset: img,
+        x: 0,
+        y: 0
+    }
     for(x = 0; x < pattern.width; x++){
         for(y = 0; y < pattern.height; y++){
             this.fields[x][y].terrain.assetImg = new Image();
@@ -259,19 +259,31 @@ function Map(pattern){
                 ctx.drawImage(terrain, 0, 0, this.fieldsWidth, this.fieldsHeight);                       // draw image at current position
                 var obstacle = field.obstacle.assetImg;//draw terrain
                 ctx.drawImage(obstacle, 0, 0, this.fieldsWidth, this.fieldsHeight);                       // draw image at current position
+                if(this.marker.x == x && this.marker.y == y){
+                    ctx.drawImage(this.marker.asset, 0, 0, this.fieldsWidth, this.fieldsHeight);
+                }
                 ctx.restore();
+                
             }
         }
     }
-    this.changeGround = function(x, y, item){
+    this.changeMarkedGround = function(item){
+        var x = this.marker.x;
+        var y = this.marker.y;
         this.fields[x][y].terrain.name = item.name;
         this.fields[x][y].terrain.asset = item.asset;
         this.fields[x][y].terrain.assetImg.src = item.asset;
     }
-    this.changeObstacle = function(x, y, item){
+    this.changeMarkedLocation = function(item){
+        var x = this.marker.x;
+        var y = this.marker.y;
         this.fields[x][y].obstacle.name = item.name;
         this.fields[x][y].obstacle.asset = item.asset;
         this.fields[x][y].obstacle.assetImg.src = item.asset;
+    }
+    this.markField = function(x, y){
+        this.marker.x = x;
+        this.marker.y = y;
     }
 }
 

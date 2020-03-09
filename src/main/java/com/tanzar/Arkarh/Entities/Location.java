@@ -17,24 +17,25 @@ import javax.persistence.Table;
  * @author Tanzar
  */
 @Entity
-@Table(name = "obstacles")
-public class Obstacle {
+@Table( name = "locations")
+public class Location {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id", insertable=false, updatable=false)
     private Integer id;
     
-    @Column(name = "name")
     private String name;
     
-    @Column(name = "asset")
     private String asset;
-    
-    public Obstacle() {
-        this.id = 0;
-        this.name = "none";
-        this.asset = "";
+
+    public Location() {
+    }
+
+    public Location(Integer id, String name, String asset) {
+        this.id = id;
+        this.name = name;
+        this.asset = asset;
     }
 
     public Integer getId() {
@@ -51,14 +52,13 @@ public class Obstacle {
 
     public void setName(String name) {
         this.name = name;
-        this.asset = setAssetPath(name);
     }
 
     public String getAsset() {
         return asset;
     }
 
-    private String setAssetPath(String name){
-        return "/img/obstacles/" + name + ".png";
+    public void setAsset(String asset) {
+        this.asset = asset;
     }
 }

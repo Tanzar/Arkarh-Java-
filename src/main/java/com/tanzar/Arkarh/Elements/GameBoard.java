@@ -5,6 +5,8 @@
  */
 package com.tanzar.Arkarh.Elements;
 
+import com.tanzar.Arkarh.Entities.Terrain;
+
 /**
  *
  * @author Tanzar
@@ -17,7 +19,7 @@ public class GameBoard {
     private int fieldHeight;
     private int fieldWidth;
     
-    public GameBoard(int widthInFields, int heightInFields, int fieldWidth, int fieldHeight){
+    public GameBoard(int widthInFields, int heightInFields, int fieldWidth, int fieldHeight, Terrain defaultTerrain){
         this.fields = new BoardSpace[widthInFields][heightInFields];
         this.height = heightInFields;
         this.width = widthInFields;
@@ -25,7 +27,7 @@ public class GameBoard {
         this.fieldWidth = fieldWidth;
         for(int x = 0; x < widthInFields; x++){
             for(int y = 0; y < heightInFields; y++){
-                BoardSpace currentField = new BoardSpace(x, y);
+                BoardSpace currentField = new BoardSpace(x, y, defaultTerrain);
                 this.fields[x][y] = currentField;
             }
         }

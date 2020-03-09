@@ -50,4 +50,19 @@ public class TerrainDAO extends DAO<Terrain, TerrainContainer> implements GetByI
         }
     }
     
+    public Terrain getByName(String name){
+        try {
+            TerrainContainer terrain = this.get("where name = '" + name + "'");
+            if(terrain.size() != 1){
+                throw new QueryException("");
+            }
+            else{
+                return terrain.get(0);
+            }
+        }
+        catch (QueryException ex) {
+            return new Terrain(-1, "none");
+        }
+    }
+    
 }
