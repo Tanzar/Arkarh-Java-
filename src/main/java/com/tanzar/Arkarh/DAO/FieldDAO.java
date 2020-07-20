@@ -47,7 +47,7 @@ public class FieldDAO extends DAO<Field, FieldContainer> implements FieldDAOInte
             }
         }
         catch (QueryException ex) {
-            return new Field(-1, -1, -1, -1, -1);
+            return new Field();
             
         }
     }

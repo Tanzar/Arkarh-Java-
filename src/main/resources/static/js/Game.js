@@ -8,137 +8,23 @@ var game = new Game();
 var editor;
 
 
-function startGame(canvas, parameters, editorMenuDiv){
+function startGame(canvas, seed){
     game.stop();
     game.init(canvas);
-    if(editorMenuDiv != undefined){
-        if(editor == undefined){
-            editor = new Editor(editorMenuDiv);
-        }
-        game.setEmptyMap(parameters.width, parameters.height, parameters.fieldsWidth, parameters.fieldsHeight);
-        game.start();
-    }
-    else{
-        
-    }
+    game.setEmptyMap(seed, 100, 100);
+    game.start();
 }
 
 function stopGame(){
     game.run = false;
 }
 
-function Editor(menuDiv){
-    this.editorMenu = new EditorMenu(menuDiv);
-    this.editorMenu.init();
-    this.menuDiv = menuDiv;
-}
-
-function EditorMenu(menuDiv){
-    this.menuDiv = menuDiv;
-    this.menuTable;
-    this.terrainSelect;
-    this.typesSelect;
-    this.optionsSelect;
-    this.terrains = $.ajax({
-        async: false,
-        type: "GET",
-        contentType:"application/json; charset=utf-8",
-        dataType: "json",
-        url: "/allTerrains",
-        success: function (response) {
-            return response.responseJSON;
-            console.log();
-        },
-        error : function(response) {
-            console.log(response);
-            return undefined;
-        }
-    });
-    this.terrains = this.terrains.responseJSON;
-    this.items = [];
-    this.obstacles = $.ajax({
-        async: false,
-        type: "GET",
-        contentType:"application/json; charset=utf-8",
-        dataType: "json",
-        url: "/allObstacles",
-        success: function (response) {
-            return response.responseJSON;
-            console.log();
-        },
-        error : function(response) {
-            console.log(response);
-            return undefined;
-        }
-    });
-    this.obstacles = this.obstacles.responseJSON;
-    this.events = [];
-    this.selectedListNumber;
-    this.selectedListItem;
-    this.init = function(){
-        this.menuTable = document.createElement("table");
-        var row = this.menuTable.insertRow(0);
-        this.initTerrain(row);
-        this.menuDiv.appendChild(this.menuTable);
-    }
-    this.newOption = function(text, value){
-        var tmp = document.createElement("option");
-        tmp.setAttribute("value", value);
-        var textNode = document.createTextNode(text);
-        tmp.appendChild(textNode);
-        return tmp;
-    }
-    this.initTerrain = function(row){
-        var textCell = row.insertCell(0);
-        var tekst = document.createTextNode("Teren: ");
-        textCell.appendChild(tekst);
-        var optionsCell = row.insertCell(1);
-        this.terrainSelect = document.createElement("select");
-        this.terrainSelect = this.setOptions(this.terrainSelect, this.terrains)
-        optionsCell.appendChild(this.terrainSelect);
-        
-    }
-    this.initTypes = function(row){
-        var typesCell = row.insertCell(0);
-        this.typesSelect = document.createElement("select");
-        this.typesSelect.appendChild(this.newOption("Teren", 0));
-        this.typesSelect.appendChild(this.newOption("Przedmioty", 1));
-        this.typesSelect.appendChild(this.newOption("Przeszkody", 2));
-        this.typesSelect.appendChild(this.newOption("Lokacje", 3));
-        this.typesSelect.onchange = function(){
-            var selected = this.value;
-            editor.editorMenu.setOptions(selected);
-            console.log(selected);
-        }
-        typesCell.appendChild(this.typesSelect);
-    }
-    this.initOptions = function(row){
-        var optionsCell = row.insertCell(1);
-        this.optionsSelect = document.createElement("select");
-        this.setOptions(this.typesSelect.value);
-        this.optionsSelect.onchange = function(){
-            var itemNumber = this.value - 1;
-            var listNumber = editor.editorMenu.selectedListNumber;
-            editor.editorMenu.selectedListItem = editor.editorMenu.types[listNumber][itemNumber];
-        }
-        optionsCell.appendChild(this.optionsSelect);
-    }
-    this.setOptions = function(select, optionsArray){
-        for(i = select.length - 1; i >= 0; i--){
-            select.remove(i);
-        }
-        for(i = 0; i < optionsArray.length; i++){
-            var option = optionsArray[i];
-            select.appendChild(this.newOption(option.name, option.id));
-        }
-        return select;
-    }
-}
 
 function Game(){
     this.canvas;
     this.items = [];
     this.map;
+    this.assets;
     this.camera;
     this.run = true;
     this.keys = [];
@@ -161,8 +47,9 @@ function Game(){
         this.run = true;
         requestAnimationFrame(newFrame);
     }
-    this.setEmptyMap = function(width, height){
+    this.setEmptyMap = function(seed, width, height){
         var boardParameters = {
+            seed : seed,
             width : width,
             height : height
         }
@@ -183,6 +70,7 @@ function Game(){
             }
         });
         this.map = new Map(response.responseJSON);
+        this.map.init();
     }
     this.drawFrame = function(contextFromCanvas){
         this.map.drawMap(contextFromCanvas, this.camera);
@@ -221,30 +109,48 @@ function Game(){
             var y = game.camera.y + e.y - game.canvas.getBoundingClientRect().top;
             x = Math.floor((x - 1)/game.map.fieldsWidth);
             y = Math.floor((y - 1)/game.map.fieldsHeight);
-            game.map.markField(x, y);
+            console.log(game.map.fields[x][y].biome);
+        });
+        game.canvas.addEventListener("wheel", function(e){
+            if (event.wheelDelta){
+            	delta = event.wheelDelta;
+            }else{
+            	delta = -1 *event.deltaY;
+            }
+            if (delta < 0){
+            	console.log("DOWN");
+                game.map.zoomIn()
+            }else if (delta > 0){
+                console.log("UP");
+                game.map.zoomOut();
+            }
         });
     }
+    
 }
 
 function Map(pattern){
+    this.assets;
     this.fields = pattern.fields;
-    this.fieldsWidth = pattern.fieldWidth;
-    this.fieldsHeight = pattern.fieldHeight;
+    this.maxSize = 50;
+    this.minSize = 20;
+    this.zoomStep = 5;
+    this.fieldsWidth = this.maxSize;
+    this.fieldsHeight = this.maxSize;
     this.width = pattern.width;
     this.height = pattern.height;
-    img = new Image();
-    img.src = "img/marker.png";
-    this.marker = {
-        asset: img,
-        x: 0,
-        y: 0
-    }
-    for(x = 0; x < pattern.width; x++){
-        for(y = 0; y < pattern.height; y++){
-            this.fields[x][y].terrain.assetImg = new Image();
-            this.fields[x][y].terrain.assetImg.src = this.fields[x][y].terrain.asset;
-            this.fields[x][y].obstacle.assetImg = new Image();
-            this.fields[x][y].obstacle.assetImg.src = this.fields[x][y].obstacle.asset;
+    
+    this.init = function(){
+        this.assets = this.getAssets();
+        for(y = 0; y < this.height; y++){
+            for(x = 0; x < this.width; x++){
+                var terrainName = this.fields[x][y].terrain;
+                var index = this.assets.findTerrainIndex(terrainName);
+                this.fields[x][y].terrainAssetIndex = index;
+                var structureName = this.fields[x][y].structure;
+                index = this.assets.findStructureIndex(structureName);
+                this.fields[x][y].structureAssetIndex = index;
+            }
         }
     }
     this.drawMap = function(ctx, camera){
@@ -255,36 +161,97 @@ function Map(pattern){
                 var fieldY = (y * this.fieldsHeight) - camera.y;
                 ctx.save();
                 ctx.translate(fieldX, fieldY);//position of img
-                var terrain = field.terrain.assetImg;//draw terrain
+                var terrain = this.assets.terrains[field.terrainAssetIndex].img;//draw terrain
                 ctx.drawImage(terrain, 0, 0, this.fieldsWidth, this.fieldsHeight);                       // draw image at current position
-                var obstacle = field.obstacle.assetImg;//draw terrain
-                ctx.drawImage(obstacle, 0, 0, this.fieldsWidth, this.fieldsHeight);                       // draw image at current position
-                if(this.marker.x == x && this.marker.y == y){
-                    ctx.drawImage(this.marker.asset, 0, 0, this.fieldsWidth, this.fieldsHeight);
+                if(field.structureAssetIndex != 0){
+                    var structure = this.assets.structures[field.structureAssetIndex].img;//draw terrain
+                    ctx.drawImage(structure, 0, 0, this.fieldsWidth, this.fieldsHeight);                       // draw image at current position
                 }
                 ctx.restore();
                 
             }
         }
     }
-    this.changeMarkedGround = function(item){
-        var x = this.marker.x;
-        var y = this.marker.y;
-        this.fields[x][y].terrain.name = item.name;
-        this.fields[x][y].terrain.asset = item.asset;
-        this.fields[x][y].terrain.assetImg.src = item.asset;
+    this.getAssets = function(){
+        var response = $.ajax({
+            async: false,
+            type: "GET",
+            contentType:"application/json; charset=utf-8",
+            dataType: "json",
+            url: "/getAssets",
+            success: function (response) {
+                return response;
+                console.log();
+            },
+            error : function(response) {
+                console.log(response);
+                return undefined;
+            }
+        });
+        return new Assets(response.responseJSON)
     }
-    this.changeMarkedLocation = function(item){
-        var x = this.marker.x;
-        var y = this.marker.y;
-        this.fields[x][y].obstacle.name = item.name;
-        this.fields[x][y].obstacle.asset = item.asset;
-        this.fields[x][y].obstacle.assetImg.src = item.asset;
+    
+    this.zoomIn = function(){
+        if(this.fieldsWidth > this.minSize && this.fieldsHeight > this.minSize){
+            this.fieldsWidth -= this.zoomStep;
+            this.fieldsHeight -= this.zoomStep;
+        }
     }
-    this.markField = function(x, y){
-        this.marker.x = x;
-        this.marker.y = y;
+    
+    this.zoomOut = function(){
+        if(this.fieldsWidth < this.maxSize && this.fieldsHeight < this.maxSize){
+            this.fieldsWidth += this.zoomStep;
+            this.fieldsHeight += this.zoomStep;
+        }
     }
+}
+
+function Assets(pattern){
+    this.terrains = [];
+    this.items = [];
+    this.structures = [];
+    this.enemies = [];
+    this.locations = [];
+    this.players = [];
+    
+    for(i = 0; i < pattern.terrains.length; i++){
+        terrain = new Asset();
+        terrain.name = pattern.terrains[i].name;
+        terrain.img.src = pattern.terrains[i].path;
+        this.terrains.push(terrain);
+    };
+    
+    for(i = 0; i < pattern.structures.length; i++){
+        structure = new Asset();
+        structure.name = pattern.structures[i].name;
+        structure.img.src = pattern.structures[i].path;
+        this.structures.push(structure);
+    };
+    
+    this.findTerrainIndex = function(name){
+        var index = -1;
+        for(i = 0; i < this.terrains.length; i++){
+            if(this.terrains[i].name == name){
+                index = i;
+            }
+        }
+        return index;
+    };
+    
+    this.findStructureIndex = function(name){
+        var index = -1;
+        for(i = 0; i < this.structures.length; i++){
+            if(this.structures[i].name == name){
+                index = i;
+            }
+        }
+        return index;
+    };
+}
+
+function Asset(){
+    this.type;
+    this.img = new Image();
 }
 
 function Camera(x, y, width, height){

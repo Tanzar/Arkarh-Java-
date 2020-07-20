@@ -6,22 +6,16 @@
 package com.tanzar.Arkarh.Services;
 
 import com.google.gson.Gson;
-import com.tanzar.Arkarh.Containers.FieldContainer;
-import com.tanzar.Arkarh.Containers.TerrainContainer;
 import com.tanzar.Arkarh.Containers.MapContainer;
-import com.tanzar.Arkarh.Containers.ObstacleContainer;
 import com.tanzar.Arkarh.DAO.FieldDAO;
-import com.tanzar.Arkarh.DAO.TerrainDAO;
 import com.tanzar.Arkarh.DAO.MapDAO;
-import com.tanzar.Arkarh.DAO.ObstacleDAO;
-import com.tanzar.Arkarh.Elements.BoardSpace;
+import com.tanzar.Arkarh.Elements.Assets;
 import com.tanzar.Arkarh.Elements.GameBoard;
-import com.tanzar.Arkarh.Entities.Field;
-import com.tanzar.Arkarh.Entities.Terrain;
-import com.tanzar.Arkarh.Entities.Map;
-import com.tanzar.Arkarh.Entities.Obstacle;
-import java.util.Objects;
+import com.tanzar.Arkarh.Map.Exceptions.GenerationException;
+import com.tanzar.Arkarh.Map.MapGenerator;
+import com.tanzar.Arkarh.Map.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,58 +32,37 @@ public class GameBoardService {
     private FieldDAO fieldDAO;
     
     @Autowired
-    private TerrainDAO terrainDAO;
-    
-    @Autowired
-    private ObstacleDAO obstacleDAO;
+    @Qualifier("assets")
+    private Assets assets;
     
     private int fieldSize = 50;
+    private int defaultTerrainIndex = 1;
     
     public MapContainer getMapList(){
         return mapDAO.getAll();
     }
     
-    public GameBoard prepareGameBoard(Integer mapID){
-        /**
-        Map gameMap = mapDAO.getById(mapID);
-        TerrainContainer terrains = terrainDAO.getAll();
-        FieldContainer fields = fieldDAO.getByMapId(mapID);
-        GameBoard newBoard = new GameBoard(gameMap.getWidth(), gameMap.getHeight(), this.fieldSize, this.fieldSize);
-        Field[] fieldsArray = fields.toArray();
-        for(Field field: fieldsArray){
-            Terrain terrain = terrains.getById(field.getIdTerrain());
-            BoardSpace boardSpace = prepareField(field, terrain);
-            newBoard.setField(field.getX(), field.getY(), boardSpace);
+    public Map newMap(int seed, int width, int height) throws GenerationException{
+        MapGenerator generator = new MapGenerator(width, height);
+        Map newMap;
+        if(seed == 0){
+            newMap = generator.generate();
         }
-        return newBoard;*/
-        return null;
+        else{
+            newMap = generator.generate(seed);
+        }
+        return newMap;
     }
-    /*
-    private BoardSpace prepareField(Field field, Terrain terrain){
-        BoardSpace boardSpace = new BoardSpace(field.getX(), field.getY());
-        boardSpace.setTerrain(terrain);
-        return boardSpace;
-    }
-    */
-    public GameBoard prepareEmptyBoard(int width, int height){
-        Terrain defaultTerrain = terrainDAO.getByName("grass");
-        GameBoard newBoard = new GameBoard(width, height, this.fieldSize, this.fieldSize, defaultTerrain);
+    
+    public GameBoard newBoard(int width, int height){
+        GameBoard newBoard = new GameBoard(width, height, this.defaultTerrainIndex);
         return newBoard;
     }
     
-    public String getTerrains(){
-        TerrainContainer terrains = terrainDAO.getAll();
-        Terrain[] terrainsArray = terrains.toArray();
+    public String getAssets(){
         Gson jsonFormatter = new Gson();
-        String result = jsonFormatter.toJson(terrainsArray);
+        String result = jsonFormatter.toJson(this.assets);
         return result;
     }
     
-    public String getObstacles(){
-        ObstacleContainer obstacles = this.obstacleDAO.getAll();
-        Obstacle[] obstaclesArray = obstacles.toArray();
-        Gson jsonFormatter = new Gson();
-        String result = jsonFormatter.toJson(obstaclesArray);
-        return result;
-    }
 }

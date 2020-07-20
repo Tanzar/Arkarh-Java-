@@ -10,7 +10,8 @@ import com.google.gson.JsonObject;
 import com.tanzar.Arkarh.Containers.MapContainer;
 import com.tanzar.Arkarh.DAO.MapDAO;
 import com.tanzar.Arkarh.Elements.GameBoard;
-import com.tanzar.Arkarh.Entities.Map;
+import com.tanzar.Arkarh.Map.Exceptions.GenerationException;
+import com.tanzar.Arkarh.Map.Map;
 import com.tanzar.Arkarh.Services.GameBoardService;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,32 +31,20 @@ public class MapsController {
     @Autowired
     private GameBoardService gameboardService;
     
-    @RequestMapping(value = "/fields/{id}", method = RequestMethod.GET)
-    public String getMapFields(@PathVariable String id){
-        Gson jsonMaker = new Gson();
-        GameBoard gameBoard = gameboardService.prepareGameBoard(Integer.parseInt(id));
-        String result = jsonMaker.toJson(gameBoard);
-        return result;
-    }
-    
     @RequestMapping(value = "/newBoard", method = RequestMethod.POST)
-    public String createNewBoard(@RequestBody String boardParameters){
+    public String createNewBoard(@RequestBody String boardParameters) throws GenerationException{
         Gson jsonMaker = new Gson();
         JsonObject parameters = jsonMaker.fromJson(boardParameters, JsonObject.class);
         Integer width = parameters.get("width").getAsInt();
         Integer height = parameters.get("height").getAsInt();
-        GameBoard newBoard = gameboardService.prepareEmptyBoard(width, height);
+        Integer seed = parameters.get("seed").getAsInt();
+        Map newBoard = gameboardService.newMap(seed, width, height);
         String result = jsonMaker.toJson(newBoard);
         return result;
     }
     
-    @RequestMapping(value = "/allTerrains", method = RequestMethod.GET)
+    @RequestMapping(value = "/getAssets", method = RequestMethod.GET)
     public String getAllTerrains(){
-        return gameboardService.getTerrains();
-    }
-    
-    @RequestMapping(value = "/allObstacles", method = RequestMethod.GET)
-    public String getAllObstacles(){
-        return gameboardService.getObstacles();
+        return gameboardService.getAssets();
     }
 }

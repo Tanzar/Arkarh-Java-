@@ -6,6 +6,7 @@
 package com.tanzar.Arkarh;
 
 import com.tanzar.Arkarh.DAO.MapDAO;
+import com.tanzar.Arkarh.Elements.Assets;
 import com.tanzar.Arkarh.Services.GameBoardService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,4 +17,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class AppConfig {
+    
+    @Bean(name = "assets")
+    public Assets assets(){
+        return new Assets();
+    }
 }

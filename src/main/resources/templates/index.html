@@ -12,10 +12,16 @@ and open the template in the editor.
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     </head>
     <body>
+        <input id="generateSeed" type="number">
+        <button id="generateButton" onclick="generate()">Generuj</button>
+        <br><br>
         <canvas id="myCanvas" width="1000" height="500" style="border:1px solid #000000;"></canvas>
     </body>
     <script>
         var canvas = document.getElementById("myCanvas");
-       startGame(canvas, false, 1);
+        function generate(){
+            var seed = document.getElementById("generateSeed").value;
+            startGame(canvas, seed);
+        }
     </script>
 </html>
