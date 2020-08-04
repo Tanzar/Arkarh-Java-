@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.Battle.Battlefield;
+package com.tanzar.Arkarh.GamePlay.Modifier;
 
 /**
  *
  * @author spako
  */
-public class Battlefield {
+public class Active {
     
 }
