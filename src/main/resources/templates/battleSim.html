@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="js/BattleSimulator.js"></script>
+        <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th>BattleField</th>
+                <th>Options</th>
+            </tr>
+            <tr>
+                <td><canvas id="attackerCanvas" width="1000" height="100" style="border:1px solid #000000;"></canvas><br></td>
+                <td>Attackers (WIP)</td>
+            </tr>
+            <tr>
+                <td><canvas id="defenderCanvas" width="1000" height="100" style="border:1px solid #000000;"></canvas><br></td>
+                <td>Defenders (WIP)</td>
+            </tr>
+            <tr>
+                <td><textarea id="combatlog" rows="10" cols="140" style="resize: none;" readonly></textarea></td>
+                <td>
+                    <button id="startBtn" onclick="start()">Get battle simulation</button><br><br>
+                    <button id="nextTick" onclick="nextStage()">Next Stage</button><br><br>
+                    <button id="previousTick" onclick="previousStage()">Previous Stage</button><br><br>
+                    <button id="startAutoBattle" onclick="autoBattle()">Start auto battle</button><br><br>
+                    <button id="stopAutoBattle" onclick="stopAutoBattle()">Stop</button>
+                </td>
+            </tr>
+        </table>
+    </body>
+    <script>
+        function start(){
+            var attackerCanvas = document.getElementById("attackerCanvas");
+            var defenderCanvas = document.getElementById("defenderCanvas");
+            var combatlog = document.getElementById("combatlog");
+            startSimulation(attackerCanvas, defenderCanvas, combatlog);
+        }
+    </script>
+</html>

@@ -5,6 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units;
 
+import com.tanzar.Arkarh.GamePlay.CombatLog.BattleSide;
 import java.util.List;
 
 /**
@@ -15,19 +16,28 @@ public class Army {
     
     private Leader leader;
     
-    private Units units[];
+    private Units unitsSplitPerRole[];
     
     public Army(){
-        this.units = new Units[Role.countRoles()];
-        for(int i = 0; i < this.units.length; i++){
-            this.units[i] = new Units();
+        this.unitsSplitPerRole = new Units[Role.countRoles()];
+        for(int i = 0; i < this.unitsSplitPerRole.length; i++){
+            this.unitsSplitPerRole[i] = new Units();
+        }
+    }
+    
+    public void setSide(BattleSide side){
+        for(int i = 0; i < this.unitsSplitPerRole.length; i++){
+            for(int j = 0; j < this.unitsSplitPerRole[i].size(); j++){
+                Unit unit = this.unitsSplitPerRole[i].get(j);
+                unit.setSide(side);
+            }
         }
     }
     
     public Army copy(){
         Army copy = new Army();
-        for(int i = 0; i < this.units.length; i++){
-            Units unitsCopy = this.units[i].copy();
+        for(int i = 0; i < this.unitsSplitPerRole.length; i++){
+            Units unitsCopy = this.unitsSplitPerRole[i].copy();
             copy.addUnits(unitsCopy);
         }
         return copy;
@@ -43,19 +53,19 @@ public class Army {
     public void addUnit(Unit unit){
         Role unitRole = unit.getRole();
         int roleIndex = unitRole.getIndex();
-        this.units[roleIndex].addUnit(unit);
+        this.unitsSplitPerRole[roleIndex].addUnit(unit);
     }
     
     public Units getUnits(Role role){
         int index = role.getIndex();
-        return this.units[index];
+        return this.unitsSplitPerRole[index];
     }
     
     public int size(){
         Role roles[] = Role.values();
         int size = 0;
         for(int i = 0; i < roles.length; i++){
-            size += this.units[i].size();
+            size += this.unitsSplitPerRole[i].size();
         }
         return size;
     }

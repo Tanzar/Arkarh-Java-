@@ -5,6 +5,8 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units;
 
+import com.tanzar.Arkarh.GamePlay.CombatLog.BattleSide;
+
 /**
  *
  * @author spako
@@ -14,6 +16,11 @@ public class Unit implements Comparable<Unit>{
     private String name;
     private Role role;
     private int position;
+    private final int maxArmor = 75;
+    private final int maxWard = 75;
+    private double spellPowerBonus = 0.05;
+    private double atkDefBonus = 0.05;
+    private BattleSide side = BattleSide.none;
     
     
     private int attack;
@@ -56,6 +63,29 @@ public class Unit implements Comparable<Unit>{
         this.morale = 100;
         this.position = -1;
     }
+
+    public Unit(String name, Role role, int position, int attack, int spellPower, DamageType damageType, int damage, AttackType attackType, int defense, int armor, int ward, int baseHealth, int upkeep, int speed, int range, int baseMorale) {
+        this.name = name;
+        this.role = role;
+        this.position = position;
+        this.attack = attack;
+        this.spellPower = spellPower;
+        this.damageType = damageType;
+        this.damage = damage;
+        this.attackType = attackType;
+        this.defense = defense;
+        this.armor = armor;
+        this.ward = ward;
+        this.baseHealth = baseHealth;
+        this.health = baseHealth;
+        this.upkeep = upkeep;
+        this.speed = speed;
+        this.range = range;
+        this.baseMorale = baseMorale;
+        this.morale = baseMorale;
+    }
+    
+    
     
     public Unit copy(){
         Unit copy = new Unit();
@@ -113,6 +143,14 @@ public class Unit implements Comparable<Unit>{
         return this.position;
     }
     
+    public void setSide(BattleSide side){
+        this.side = side;
+    }
+    
+    public BattleSide getSide(){
+        return this.side;
+    }
+    
     public void changeAttack(int value){
         this.attack += value;
     }
@@ -161,8 +199,8 @@ public class Unit implements Comparable<Unit>{
             return 0;
         }
         else{
-            if(this.armor > 75){
-                return 75;
+            if(this.armor > this.maxArmor){
+                return this.maxArmor;
             }
             else{
                 return this.armor;
@@ -208,8 +246,8 @@ public class Unit implements Comparable<Unit>{
             return 0;
         }
         else{
-            if(this.ward > 75){
-                return 75;
+            if(this.ward > this.maxWard){
+                return this.maxWard;
             }
             else{
                 return this.ward;
@@ -343,4 +381,55 @@ public class Unit implements Comparable<Unit>{
         return compareSpeed - this.speed;
     }
     
+    public int calculateDamage(Unit target){
+        int damage = 0;
+        if(this.damageType == DamageType.physical){
+            damage = this.physicalAttack(target);
+        }
+        else{
+            damage = this.magicalAttack(target);
+        }
+        return damage;
+    }
+    
+    private int physicalAttack(Unit target){
+        int damage = 1;
+        int differenceAtkDef = this.getAttack() - target.getDefense();
+        double atkDefMultiplier = 1 + differenceAtkDef * this.atkDefBonus;
+        if(atkDefMultiplier < 0.5){
+            atkDefMultiplier = 0.5;
+        }
+        double armor = (double) target.getArmor();
+        double armorReductionMultiplier = (100 - armor) / 100;
+        damage = (int) Math.round((this.getDamage() * atkDefMultiplier) * armorReductionMultiplier);
+        return damage;
+    }
+    
+    private int magicalAttack(Unit target){
+        int damage = 1;
+        double spellPowerMultiplier = 1 + (this.getSpellPower() * this.spellPowerBonus);
+        double ward = (double) target.getWard();
+        double wardReductionMultiplier = (100 - ward) / 100;
+        damage = (int) Math.round(this.getDamage() * spellPowerMultiplier * wardReductionMultiplier);
+        return damage;
+    }
+    
+    @Override
+    public String toString(){
+        String result = "";
+        if(this.name.equals("")){
+            result += this.role;
+        }
+        else{
+            result += this.name;
+        }
+        result += " in position " + this.position + " ";
+        if(this.role.isRanged()){
+            result += "on backline ";
+        }
+        else{
+            result += "on frontline ";
+        }
+        return result;
+    }
 }

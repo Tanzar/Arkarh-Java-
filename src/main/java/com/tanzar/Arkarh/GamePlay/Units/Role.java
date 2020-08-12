@@ -10,10 +10,11 @@ package com.tanzar.Arkarh.GamePlay.Units;
  * @author spako
  */
 public enum Role {
-    warrior(0, false),
-    flanker(1, false),
-    mage(2, true),
-    shooter(3, true);
+    none(0, false),
+    warrior(1, false),
+    flanker(2, false),
+    mage(3, true),
+    shooter(4, true);
     
     private int index;
     private boolean ranged;
@@ -37,19 +38,27 @@ public enum Role {
     }
     
     public Role nextRoleInLine(){
-        Role roles[] = Role.values();
-        int index = this.index;
-        Role result = null;
-        while(index != this.index && result == null){
-            Role role = roles[index];
-            if(role.isRanged() == this.ranged){
-                result = role;
-            }
-            index++;
+        if(this != none){
+            Role roles[] = Role.values();
+            int index = this.index + 1;
             if(index == roles.length){
-                index = 0;
+                index = 1;
             }
+            Role result = null;
+            while(index != this.index && result == null){
+                Role role = roles[index];
+                if(role.isRanged() == this.ranged){
+                    result = role;
+                }
+                index++;
+                if(index == roles.length){
+                    index = 1;
+                }
+            }
+            return result;
         }
-        return result;
+        else{
+            return none;
+        }
     }
 }

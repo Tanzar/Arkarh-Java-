@@ -15,10 +15,12 @@ public class Assets {
     private Asset structures[];
     private Asset enemies[];
     private Asset players[];
+    private Asset units[];
     
     public Assets(){
         prepareTerrains();
         prepareStructures();
+        prepareUnits();
     }
     
     private void prepareTerrains(){
@@ -49,6 +51,15 @@ public class Assets {
         this.structures[4] = new Asset("/img/structures/natural/cactus.png", "cactus");
         this.structures[5] = new Asset("/img/structures/natural/deadTree.png", "deadTree");
     }
+    
+    private void prepareUnits(){
+        this.units = new Asset[5];
+        this.units[0] = new Asset("/img/units/none.png", "none");
+        this.units[1] = new Asset("/img/units/warrior.png", "warrior");
+        this.units[2] = new Asset("/img/units/flanker.png", "flanker");
+        this.units[3] = new Asset("/img/units/mage.png", "mage");
+        this.units[4] = new Asset("/img/units/shooter.png", "shooter");
+    }
 
     public Asset[] getTerrains() {
         return terrains;
@@ -68,5 +79,9 @@ public class Assets {
     
     public Asset[] getPlayers() {
         return players;
+    }
+    
+    public Asset[] getUnits(){
+        return this.units;
     }
 }

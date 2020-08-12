@@ -50,6 +50,10 @@ public class Reserves {
         this.reserves.add(unit);
     }
     
+    public void remove(Unit unit){
+        this.reserves.remove(unit);
+    }
+    
     public int size(){
         return this.reserves.size();
     }

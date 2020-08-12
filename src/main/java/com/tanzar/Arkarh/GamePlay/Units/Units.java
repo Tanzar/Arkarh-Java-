@@ -21,7 +21,7 @@ public class Units {
     }
     
     public Unit get(int index){
-        if(index < 0 || index >= this.unitList.size()){
+        if(this.size() == 0 || index < 0 || index >= this.unitList.size()){
             return null;
         }
         else{
@@ -47,6 +47,27 @@ public class Units {
             }
         }
         return null;
+    }
+    
+    public Units getBySpeed(int speed){
+        Units result = new Units();
+        for(Unit unit: this.unitList){
+            if(unit.getSpeed() == speed){
+                result.addUnit(unit);
+            }
+        }
+        return result;
+    }
+    
+    public int getNextSpeed(int speed){
+        int result = 0;
+        for(Unit unit: this.unitList){
+            int unitSpeed = unit.getSpeed();
+            if(unitSpeed < speed && unitSpeed > result){
+                result = unitSpeed;
+            }
+        }
+        return result;
     }
     
     public void remove(int index){

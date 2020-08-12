@@ -21,8 +21,8 @@ public class MainController {
         return "index";
     }
     
-    @RequestMapping("/wedit")
+    @RequestMapping("/battleSim")
     public String worldEdit(Model model){
-        return "editor";
+        return "battleSim";
     }
 }

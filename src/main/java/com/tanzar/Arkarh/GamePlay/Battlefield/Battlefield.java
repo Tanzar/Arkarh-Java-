@@ -5,6 +5,10 @@
  */
 package com.tanzar.Arkarh.GamePlay.Battlefield;
 
+import com.tanzar.Arkarh.GamePlay.CombatLog.Actions;
+import com.tanzar.Arkarh.GamePlay.CombatLog.BattleSide;
+import com.tanzar.Arkarh.GamePlay.CombatLog.CombatReport;
+import com.tanzar.Arkarh.GamePlay.CombatLog.ReportEntry;
 import com.tanzar.Arkarh.GamePlay.Units.Army;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
@@ -29,8 +33,8 @@ public class Battlefield {
         this.fieldWidth = fieldWidth;
         this.attacker = attacker;
         this.defender = defender;
-        this.attackingSide = new Side(attacker, fieldWidth);
-        this.defendingSide = new Side(defender, fieldWidth);
+        this.attackingSide = new Side(attacker, fieldWidth, BattleSide.attacker);
+        this.defendingSide = new Side(defender, fieldWidth, BattleSide.defender);
         this.fotrified = false;
     }
     
@@ -42,34 +46,56 @@ public class Battlefield {
         this.fotrified = false;
     }
     
-    public void tick(){
+    public CombatReport fight(){
+        BattleState battleState = BattleState.ongoing;
+        CombatReport report = new CombatReport(this.attackingSide, this.defendingSide);
+        while(battleState == BattleState.ongoing){
+            report.nextTick();
+            this.tick(report);
+            battleState = this.getState();
+        }
+        report.combatResult(battleState);
+        return report;
+    }
+    
+    public BattleState getState(){
+        boolean attackersCappable = this.attackingSide.isSideCappableToFight();
+        boolean defendersCappable = this.defendingSide.isSideCappableToFight();
+        if(attackersCappable && defendersCappable){
+            return BattleState.ongoing;
+        }
+        else{
+            if(!attackersCappable && !defendersCappable){
+                return BattleState.draw;
+            }
+            else{
+                if(attackersCappable){
+                    return BattleState.attackerWin;
+                }
+                else{
+                    return BattleState.defenderWin;
+                }
+            }
+        }
+    }
+    
+    public CombatReport tick(CombatReport report){
         Units attackersOrder = this.attackingSide.getFieldedUnitsOrderedBySpeed();
         Units defendersOrder = this.defendingSide.getFieldedUnitsOrderedBySpeed();
         int currentSpeed = this.getHighestSpeed(attackersOrder, defendersOrder);
         while(currentSpeed > 0){
-            boolean flag = true;
-            int defendersDamageTaken[][] = new int[this.fieldWidth][2];
-            int attackersDamageTaken[][] = new int[this.fieldWidth][2];
-            while(flag){
-                Unit attacker = attackersOrder.getFirst();
-                Unit defender = defendersOrder.getFirst();
-                if(attacker == null && defender == null){
-                    currentSpeed = 0;
-                    flag = false;
-                }
-                else{
-                    if(attacker == null){
-                        
-                    }
-                    if(defender == null){
-                        
-                    }
-                    if(attacker != null && defender != null){
-                        
-                    }
-                }
-            }
+            report.nextWeave();
+            Units attackersWave = attackersOrder.getBySpeed(currentSpeed);
+            Units defendersWave = defendersOrder.getBySpeed(currentSpeed);
+            DamagePattern defendersDamageTaken = this.makeWaveDamagePattern(attackersWave, defendingSide, report, BattleSide.attacker);
+            DamagePattern attackersDamageTaken = this.makeWaveDamagePattern(defendersWave, attackingSide, report, BattleSide.defender);
+            this.defendingSide.applyDamagePattern(defendersDamageTaken);
+            this.attackingSide.applyDamagePattern(attackersDamageTaken);
+            currentSpeed = this.selectNextSpeed(attackersOrder, defendersOrder, currentSpeed);
         }
+        boolean somethingWasReinforced = this.attackingSide.reorganizeLines(report, false);
+        this.defendingSide.reorganizeLines(report, somethingWasReinforced);
+        return report;
     }
     
     private int getHighestSpeed(Units attackersOrder, Units defendersOrder){
@@ -83,8 +109,37 @@ public class Battlefield {
         }
     }
     
-    public Units test(){
-        return this.attackingSide.getFieldedUnitsOrderedBySpeed();
+    private DamagePattern makeWaveDamagePattern(Units units, Side targetsSide, CombatReport report, BattleSide battleside){
+        DamagePattern damagePattern = new DamagePattern(this.fieldWidth);
+        for(int i = 0; i < units.size(); i++){
+            Unit unit = units.get(i);
+            if(unit.isAlive()){
+                DamagePattern pattern = targetsSide.calculateAttackerDamagePattern(unit);
+                for(int j = 0; j < pattern.getWidth(); j++){
+                    if(pattern.getDamage(j, true) != 0){
+                        report.attacking(unit, targetsSide.getUnit(new Position(j, true)), pattern.getDamage(j, true));
+                    }
+                    if(pattern.getDamage(j, false) != 0){
+                        report.attacking(unit, targetsSide.getUnit(new Position(j, false)), pattern.getDamage(j, false));
+                    }
+                }
+                damagePattern.applyDamagePattern(pattern);
+            }
+        }
+        return damagePattern;
+    }
+    
+    private int selectNextSpeed(Units attackersOrder, Units defendersOrder, int currentSpeed){
+        int nextSpeed = 0;
+        int nextAttackSpeed = attackersOrder.getNextSpeed(currentSpeed);
+        int nextDefenseSpeed = defendersOrder.getNextSpeed(currentSpeed);
+        if(nextAttackSpeed > nextDefenseSpeed){
+            nextSpeed = nextAttackSpeed;
+        }
+        else{
+            nextSpeed = nextDefenseSpeed;
+        }
+        return nextSpeed;
     }
     
     @Override
