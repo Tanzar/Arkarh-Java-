@@ -5,7 +5,6 @@
  */
 package com.tanzar.Arkarh.GamePlay.Battlefield;
 
-import com.tanzar.Arkarh.GamePlay.CombatLog.Actions;
 import com.tanzar.Arkarh.GamePlay.CombatLog.BattleSide;
 import com.tanzar.Arkarh.GamePlay.CombatLog.CombatReport;
 import com.tanzar.Arkarh.GamePlay.CombatLog.ReportEntry;
@@ -79,7 +78,7 @@ public class Battlefield {
         }
     }
     
-    public CombatReport tick(CombatReport report){
+    private CombatReport tick(CombatReport report){
         Units attackersOrder = this.attackingSide.getFieldedUnitsOrderedBySpeed();
         Units defendersOrder = this.defendingSide.getFieldedUnitsOrderedBySpeed();
         int currentSpeed = this.getHighestSpeed(attackersOrder, defendersOrder);
@@ -87,10 +86,8 @@ public class Battlefield {
             report.nextWeave();
             Units attackersWave = attackersOrder.getBySpeed(currentSpeed);
             Units defendersWave = defendersOrder.getBySpeed(currentSpeed);
-            DamagePattern defendersDamageTaken = this.makeWaveDamagePattern(attackersWave, defendingSide, report, BattleSide.attacker);
-            DamagePattern attackersDamageTaken = this.makeWaveDamagePattern(defendersWave, attackingSide, report, BattleSide.defender);
-            this.defendingSide.applyDamagePattern(defendersDamageTaken);
-            this.attackingSide.applyDamagePattern(attackersDamageTaken);
+            Units wave = this.combineWaves(attackersWave, defendersWave);
+            this.unitsActions(wave, report);
             currentSpeed = this.selectNextSpeed(attackersOrder, defendersOrder, currentSpeed);
         }
         boolean somethingWasReinforced = this.attackingSide.reorganizeLines(report, false);
@@ -109,24 +106,25 @@ public class Battlefield {
         }
     }
     
-    private DamagePattern makeWaveDamagePattern(Units units, Side targetsSide, CombatReport report, BattleSide battleside){
-        DamagePattern damagePattern = new DamagePattern(this.fieldWidth);
+    private Units combineWaves(Units attackers, Units defenders){
+        Units wave = new Units();
+        wave.addUnits(attackers);
+        wave.addUnits(defenders);
+        return wave;
+    }
+    
+    private void unitsActions(Units units, CombatReport report){
         for(int i = 0; i < units.size(); i++){
-            Unit unit = units.get(i);
-            if(unit.isAlive()){
-                DamagePattern pattern = targetsSide.calculateAttackerDamagePattern(unit);
-                for(int j = 0; j < pattern.getWidth(); j++){
-                    if(pattern.getDamage(j, true) != 0){
-                        report.attacking(unit, targetsSide.getUnit(new Position(j, true)), pattern.getDamage(j, true));
-                    }
-                    if(pattern.getDamage(j, false) != 0){
-                        report.attacking(unit, targetsSide.getUnit(new Position(j, false)), pattern.getDamage(j, false));
-                    }
-                }
-                damagePattern.applyDamagePattern(pattern);
+            Unit source = units.get(i);
+            Units targets = this.attackingSide.getTargets(source);
+            targets.addUnits(this.defendingSide.getTargets(source));
+            for(int j = 0; j < targets.size(); j++){
+                Unit target = targets.get(j);
+                ReportEntry entry = source.action(target);
+                report.newEntry(entry);
             }
         }
-        return damagePattern;
+        
     }
     
     private int selectNextSpeed(Units attackersOrder, Units defendersOrder, int currentSpeed){

@@ -9,7 +9,7 @@ package com.tanzar.Arkarh.GamePlay.Units;
  *
  * @author spako
  */
-public enum DamageType {
+public enum EffectType {
     none,
     physical,
     light,
@@ -23,8 +23,8 @@ public enum DamageType {
     death,
     life;
     
-    public boolean isOpposite(DamageType compared){
-        DamageType opposite = this.opposite();
+    public boolean isOpposite(EffectType compared){
+        EffectType opposite = this.opposite();
         if(this != physical && this != none && opposite == compared){
             return true;
         }
@@ -33,30 +33,30 @@ public enum DamageType {
         }
     }
     
-    public DamageType opposite(){
+    public EffectType opposite(){
         switch(this){
             case light:
-                return DamageType.shadow;
+                return EffectType.shadow;
             case shadow:
-                return DamageType.light;
+                return EffectType.light;
             case arcane:
-                return DamageType.chaos;
+                return EffectType.chaos;
             case chaos:
-                return DamageType.arcane;
+                return EffectType.arcane;
             case fire:
-                return DamageType.water;
+                return EffectType.water;
             case water:
-                return DamageType.fire;
+                return EffectType.fire;
             case earth:
-                return DamageType.air;
+                return EffectType.air;
             case air:
-                return DamageType.earth;
+                return EffectType.earth;
             case death:
-                return DamageType.life;
+                return EffectType.life;
             case life:
-                return DamageType.death;
+                return EffectType.death;
             default:
-                return DamageType.none;
+                return EffectType.none;
                 
         }
     }

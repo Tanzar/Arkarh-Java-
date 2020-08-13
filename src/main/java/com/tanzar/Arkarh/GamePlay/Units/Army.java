@@ -53,7 +53,7 @@ public class Army {
     public void addUnit(Unit unit){
         Role unitRole = unit.getRole();
         int roleIndex = unitRole.getIndex();
-        this.unitsSplitPerRole[roleIndex].addUnit(unit);
+        this.unitsSplitPerRole[roleIndex].add(unit);
     }
     
     public Units getUnits(Role role){

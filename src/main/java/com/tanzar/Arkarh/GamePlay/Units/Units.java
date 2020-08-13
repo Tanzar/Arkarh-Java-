@@ -53,7 +53,7 @@ public class Units {
         Units result = new Units();
         for(Unit unit: this.unitList){
             if(unit.getSpeed() == speed){
-                result.addUnit(unit);
+                result.add(unit);
             }
         }
         return result;
@@ -80,13 +80,14 @@ public class Units {
         this.unitList.remove(unit);
     }
     
-    public void addUnits(Unit[] units){
-        for(int i = 0; i < units.length; i++){
-            this.unitList.add(units[i]);
+    public void addUnits(Units units){
+        for(int i = 0; i < units.size(); i++){
+            Unit unit = units.get(i);
+            this.add(unit);
         }
     }
     
-    public void addUnit(Unit unit){
+    public void add(Unit unit){
         this.unitList.add(unit);
     }
     
@@ -107,7 +108,7 @@ public class Units {
         Units copy = new Units();
         for(Unit unit : this.unitList){
             Unit unitCopy = unit.copy();
-            copy.addUnit(unitCopy);
+            copy.add(unitCopy);
         }
         return copy;
     }

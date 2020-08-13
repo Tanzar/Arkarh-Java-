@@ -42,7 +42,7 @@ public class Side {
         this.army.setSide(side);
         this.formNewFront(army);
         this.formNewBack(army);
-        this.centerArmy();
+        this.centerArmyOld();
         this.setupReserves(army);
         this.fixUnitsPositions();
     }
@@ -164,7 +164,7 @@ public class Side {
         }
     }
     
-    private void centerArmy(){
+    private void centerArmyOld(){
         int freeFront = this.countFree(this.front);
         int freeBack = this.countFree(this.back);
         int halfFront = (int) Math.floor(freeFront/2);
@@ -181,6 +181,21 @@ public class Side {
             }
             else{
                 this.back[i] = null;
+            }
+        }
+    }
+    //WIP new version - groups units to left than pushes to right
+    private void centerArmy(){
+        boolean searching = true;
+        int count = 0;
+        for(int i = 0; i < this.width; i++){
+            if(searching){
+                if(this.front[i] == null){
+                    
+                }
+            }
+            else{
+                
             }
         }
     }
@@ -326,24 +341,21 @@ public class Side {
         Units units = new Units();
         for(int i = 0; i < this.front.length; i++){
             if(this.front[i] != null){
-                units.addUnit(this.front[i]);
+                units.add(this.front[i]);
             }
             if(this.back[i] != null){
-                units.addUnit(this.back[i]);
+                units.add(this.back[i]);
             }
         }
         return units;
     }
     
-    public DamagePattern calculateAttackerDamagePattern(Unit attacker){
-        int center = attacker.getPosition();
-        int range = attacker.getRange();
+    public Units getTargets(Unit source){
+        int center = source.getPosition();
+        int range = source.getRange();
         Position[] positions = this.calculateTargetsPositions(center, range);
-        this.damagePositions(attacker, positions);
-        DamagePattern damagePattern = new DamagePattern(this.width);
-        damagePattern.applyDamage(positions);
-        
-        return damagePattern;
+        Units targets = this.getTargetsList(source, positions);
+        return targets;
     }
     
     private Position[] calculateTargetsPositions(int center, int range){
@@ -368,45 +380,46 @@ public class Side {
         return positions;
     }
     
-    private void damagePositions(Unit attacker, Position[] positions){
+    private Units getTargetsList(Unit source, Position[] positions){
+        if(this.battleSide == source.getSide()){
+            return this.getAllTargets(positions);
+        }
+        else{
+            return this.getUnitsOnPositions(source, positions);
+        }
+    }
+    
+    private Units getUnitsOnPositions(Unit attacker, Position[] positions){
         AttackType attackType = attacker.getAttackType();
         switch(attackType){
             case single:
-                this.singleAttack(attacker, positions);
-                break;
+                return this.getFirstTarget(positions);
             case cleave:
-                this.cleaveAttack(attacker, positions);
-                break;
+                return this.getCleaveTargets(positions);
             case splash:
-                this.splashAttack(attacker, positions);
-                break;
+                return this.getAllTargets(positions);
+            default:
+                return new Units();
         }
     }
     
-    private void singleAttack(Unit attacker, Position[] targetsPositions){
-        for(int i = 0; i < targetsPositions.length; i++){
-            Position position = targetsPositions[i];
-            if(position.isValid(this.width - 1)){
-                int index = position.getPositionInLine();
-                Unit target = null;
-                if(position.isOnFrontLine()){
-                    target = this.front[index];
-                }
-                else{
-                    target = this.back[index];
-                }
-                if(target != null){
-                    int damage = attacker.calculateDamage(target);
-                    position.addDamage(damage);
-                    break;
-                }
+    private Units getFirstTarget(Position[] positions){
+        Units target = new Units();
+        for(int i = 0; i < positions.length; i++){
+            Position position = positions[i];
+            Unit unit = this.getUnit(position);
+            if(unit != null){
+                target.add(unit);
+                break;
             }
         }
+        return target;
     }
     
-    private void cleaveAttack(Unit attacker, Position[] targetsPositions){
-        for(int i = 0; i < targetsPositions.length; i++){
-            Position position = targetsPositions[i];
+    private Units getCleaveTargets(Position[] positions){
+        Units targets = new Units();
+        for(int i = 0; i < positions.length; i++){
+            Position position = positions[i];
             if(position.isValid(this.width - 1)){
                 int index = position.getPositionInLine();
                 Unit target = null;
@@ -419,57 +432,39 @@ public class Side {
                     }
                 }
                 if(target != null){
-                    int damage = attacker.calculateDamage(target);
-                    position.addDamage(damage);
+                    targets.add(target);
                 }
             }
         }
+        return targets;
     }
     
-    private void splashAttack(Unit attacker, Position[] targetsPositions){
-        for(int i = 0; i < targetsPositions.length; i++){
-            Position position = targetsPositions[i];
-            if(position.isValid(this.width - 1)){
-                int index = position.getPositionInLine();
-                Unit target = null;
-                if(position.isOnFrontLine()){
-                    target = this.front[index];
-                }
-                else{
-                    target = this.back[index];
-                }
-                if(target != null){
-                    int damage = attacker.calculateDamage(target);
-                    position.addDamage(damage);
-                }
+    private Units getAllTargets(Position[] positions){
+        Units target = new Units();
+        for(int i = 0; i < positions.length; i++){
+            Position position = positions[i];
+            Unit unit = this.getUnit(position);
+            if(unit != null){
+                target.add(unit);
             }
         }
+        return target;
     }
     
-    public void applyDamagePattern(DamagePattern pattern){
-        if(this.width == pattern.getWidth()){
-            for(int i = 0; i < this.width; i++){
-                Unit unit = this.front[i];
-                if(unit != null){
-                    int damage = -1 * pattern.getDamage(i, true);
-                    unit.changeHealth(damage);
-                }
-                unit = this.back[i];
-                if(unit != null){
-                    int damage = -1 * pattern.getDamage(i, false);
-                    unit.changeHealth(damage);
-                }
-            }
-        }
-    }
+    
     
     public Unit getUnit(Position position){
-        int index = position.getPositionInLine();
-        if(position.isOnFrontLine()){
-            return this.front[index];
+        if(position.isValid(this.width - 1)){
+            int index = position.getPositionInLine();
+            if(position.isOnFrontLine()){
+                return this.front[index];
+            }
+            else{
+                return this.back[index];
+            }
         }
         else{
-            return this.back[index];
+            return null;
         }
     }
     

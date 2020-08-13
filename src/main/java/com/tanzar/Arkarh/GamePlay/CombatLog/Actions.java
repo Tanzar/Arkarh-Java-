@@ -12,6 +12,7 @@ package com.tanzar.Arkarh.GamePlay.CombatLog;
 public enum Actions {
     none,
     attack,
+    heal,
     retreat,
     death,
     reinforce,
@@ -25,6 +26,8 @@ public enum Actions {
                 return "";
             case attack:
                 return " attacks ";
+            case heal:
+                return " heals ";
             case retreat:
                 return " retreats from battlefield.";
             case death:

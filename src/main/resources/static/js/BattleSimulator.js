@@ -29,17 +29,14 @@ function previousStage(){
 function autoBattle(){
     if(simulator.isRunning()){
         simulator.auto = true;
-        window.setTimeout(autoStage, 3000);
+        window.setTimeout(autoStage, 2000);
     }
 }
 
 function autoStage(){
     console.log(simulator.currentStage);
     simulator.nextStage();
-    if(simulator.isLastStage() || simulator.auto == false){
-        simulator.auto = false;
-    }
-    else{
+    if(!simulator.isLastStage() && simulator.auto == false){
         window.setTimeout(autoStage, 2000);
     }
 }
@@ -282,7 +279,10 @@ function Simulator(){
         }
     }
     this.updateUnit = function(entry){
-        if(entry.action == "death" || entry.action == "retreat"){
+        if(entry.action == "death"){
+            this.removeUnit(entry);
+        }
+        if(entry.action == "retreat"){
             this.removeUnit(entry);
         }
         if(entry.action == "reinforce"){

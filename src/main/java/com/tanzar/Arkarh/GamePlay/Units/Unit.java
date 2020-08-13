@@ -5,7 +5,9 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units;
 
+import com.tanzar.Arkarh.GamePlay.CombatLog.Actions;
 import com.tanzar.Arkarh.GamePlay.CombatLog.BattleSide;
+import com.tanzar.Arkarh.GamePlay.CombatLog.ReportEntry;
 
 /**
  *
@@ -13,31 +15,38 @@ import com.tanzar.Arkarh.GamePlay.CombatLog.BattleSide;
  */
 public class Unit implements Comparable<Unit>{
     
+    //basic
     private String name;
     private Role role;
     private int position;
-    private final int maxArmor = 75;
-    private final int maxWard = 75;
-    private double spellPowerBonus = 0.05;
-    private double atkDefBonus = 0.05;
     private BattleSide side = BattleSide.none;
     
+    //limits
+    private final int maxArmor = 75;
+    private final int maxWard = 75;
     
+    //bonuses
+    private double spellPowerBonus = 0.05;
+    private double atkDefBonus = 0.05;
+    private boolean healer = false;
+    
+    //combat stats
     private int attack;
     private int spellPower;
-    private DamageType damageType;
+    private EffectType effectType;
     private int damage;
+    private int baseHealingValue = 0;
     private AttackType attackType;
     
+    //defensive stats
     private int defense;
     private int armor;
     private int ward;
-    
-    
     private int baseHealth;
     private int health;
-    private int upkeep;
     
+    //special
+    private int upkeep;
     private int speed;
     private int range;
     private int baseMorale;
@@ -51,7 +60,7 @@ public class Unit implements Comparable<Unit>{
         this.defense = 0;
         this.armor = 0;
         this.spellPower = 0;
-        this.damageType = DamageType.physical;
+        this.effectType = EffectType.physical;
         this.attackType = AttackType.single;
         this.ward = 0;
         this.baseHealth = 1;
@@ -64,13 +73,13 @@ public class Unit implements Comparable<Unit>{
         this.position = -1;
     }
 
-    public Unit(String name, Role role, int position, int attack, int spellPower, DamageType damageType, int damage, AttackType attackType, int defense, int armor, int ward, int baseHealth, int upkeep, int speed, int range, int baseMorale) {
+    public Unit(String name, Role role, int position, int attack, int spellPower, EffectType damageType, int damage, AttackType attackType, int defense, int armor, int ward, int baseHealth, int upkeep, int speed, int range, int baseMorale) {
         this.name = name;
         this.role = role;
         this.position = position;
         this.attack = attack;
         this.spellPower = spellPower;
-        this.damageType = damageType;
+        this.effectType = damageType;
         this.damage = damage;
         this.attackType = attackType;
         this.defense = defense;
@@ -85,30 +94,54 @@ public class Unit implements Comparable<Unit>{
         this.morale = baseMorale;
     }
     
+    public void setBasic(String name, Role role, int position, BattleSide side){
+        this.name = name;
+        this.role = role;
+        this.position = position;
+        this.side = side;
+    }
     
+    public void setBonuses(double spellPowerBonus, double atkDefBonus, boolean isHealer){
+        this.spellPowerBonus = spellPowerBonus;
+        this.atkDefBonus = atkDefBonus;
+        this.healer = isHealer;
+    }
+    
+    public void setCombatStats(int attack, int spellPower, EffectType effectType, int damage, int healing, AttackType attackType){
+        this.attack = attack;
+        this.spellPower = spellPower;
+        this.effectType = effectType;
+        this.damage = damage;
+        this.baseHealingValue = healing;
+        this.attackType = attackType;
+    }
+    
+    public void setDefensiveStats(int defense, int armor, int ward, int baseHealth){
+        this.defense = defense;
+        this.armor = armor;
+        this.ward = ward;
+        this.baseHealth = baseHealth;
+        this.health = baseHealth;
+    }
+    
+    public void setSpecialStats(int upkeep, int speed, int range, int baseMorale){
+        this.upkeep = upkeep;
+        this.speed = speed;
+        this.range = range;
+        this.baseMorale = baseMorale;
+        this.morale = baseMorale;
+    }
     
     public Unit copy(){
         Unit copy = new Unit();
-        copy.setUnitName(this.name);
-        copy.setRole(this.role);
-        copy.setDamageType(this.damageType);
-        copy.changeAttack(this.attack);
-        copy.changeDefense(this.defense);
-        copy.changeArmor(this.armor);
-        copy.changeSpellPower(this.spellPower);
-        copy.setAttackType(this.attackType);
-        copy.changeDamage(this.damage - 1);
-        copy.changeWard(this.ward);
-        copy.changeBaseHealth(this.baseHealth - 1);
-        copy.changeHealth(this.health - 1);
-        copy.changeUpkeep(this.upkeep - 1);
-        copy.changeSpeed(this.speed - 1);
-        copy.changeRange(this.range - 1);
-        copy.changeBaseMorale(this.baseMorale - 100);
-        copy.changeMorale(this.morale - 100);
+        copy.setBasic(name, role, position, side);
+        copy.setCombatStats(attack, spellPower, effectType, damage, baseHealingValue, attackType);
+        copy.setDefensiveStats(defense, armor, ward, baseHealth);
+        copy.setSpecialStats(upkeep, speed, range, baseMorale);
+        copy.setHealth(this.health - 1);
+        copy.setMorale(this.morale - 100);
         return copy;
     }
-    
     
     public void setUnitName(String name){
         this.name = name;
@@ -151,8 +184,36 @@ public class Unit implements Comparable<Unit>{
         return this.side;
     }
     
-    public void changeAttack(int value){
-        this.attack += value;
+    public void setSpellPowerBonus(double bonus){
+        this.spellPowerBonus = bonus;
+    }
+    
+    public double getSpellPowerBonus(){
+        return this.spellPowerBonus;
+    }
+    
+    public void setAttackDefenseBonus(double bonus){
+        this.atkDefBonus = bonus;
+    }
+    
+    public double getAttackDefenseBonus(){
+        return this.atkDefBonus;
+    }
+    
+    public void setHealer(){
+        this.healer = true;
+    }
+    
+    public void disableHealer(){
+        this.healer = false;
+    }
+    
+    public boolean isHealer(){
+        return this.healer;
+    }
+    
+    public void setAttack(int value){
+        this.attack = value;
     }
     
     public int getAttack(){
@@ -164,8 +225,29 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void changeDamage(int value){
-        this.damage += value;
+    public void setSpellPower(int value){
+        this.spellPower = value;
+    }
+    
+    public int getSpellPower(){
+        if(this.spellPower < 0){
+            return 0;
+        }
+        else{
+            return this.spellPower;
+        }
+    }
+    
+    public void setEffectType(EffectType type){
+        this.effectType = type;
+    }
+    
+    public EffectType getEffectType(){
+        return this.effectType;
+    }
+    
+    public void setDamage(int value){
+        this.damage = value;
     }
     
     public int getDamage(){
@@ -177,8 +259,29 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void changeDefense(int value){
-        this.defense += value;
+    public void setBaseHealing(int value){
+        this.baseHealingValue = value;
+    }
+    
+    public int getBaseHealingValue(){
+        if(this.baseHealingValue < 0){
+            return 0;
+        }
+        else{
+            return this.baseHealingValue;
+        }
+    }
+    
+    public void setAttackType(AttackType type){
+        this.attackType = type;
+    }
+    
+    public AttackType getAttackType(){
+        return this.attackType;
+    }
+    
+    public void setDefense(int value){
+        this.defense = value;
     }
     
     public int getDefense(){
@@ -190,8 +293,8 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void changeArmor(int value){
-        this.armor += value;
+    public void setArmor(int value){
+        this.armor = value;
     }
     
     public int getArmor(){
@@ -208,36 +311,7 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void changeSpellPower(int value){
-        this.spellPower += value;
-    }
-    
-    public int getSpellPower(){
-        if(this.spellPower < 0){
-            return 0;
-        }
-        else{
-            return this.spellPower;
-        }
-    }
-    
-    public void setDamageType(DamageType type){
-        this.damageType = type;
-    }
-    
-    public DamageType getDamageType(){
-        return this.damageType;
-    }
-    
-    public void setAttackType(AttackType type){
-        this.attackType = type;
-    }
-    
-    public AttackType getAttackType(){
-        return this.attackType;
-    }
-    
-    public void changeWard(int value){
+    public void setWard(int value){
         this.ward += value;
     }
     
@@ -255,8 +329,8 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void changeBaseHealth(int value){
-        this.baseHealth += value;
+    public void setBaseHealth(int value){
+        this.baseHealth = value;
     }
     
     public int getBaseHealth(){
@@ -268,7 +342,7 @@ public class Unit implements Comparable<Unit>{
         }
     }
 
-    public int changeHealth(int value){
+    public int setHealth(int value){
         this.health += value;
         return this.health;
     }
@@ -282,8 +356,8 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void changeUpkeep(int value){
-        this.upkeep += value;
+    public void setUpkeep(int value){
+        this.upkeep = value;
     }
     
     public int getUpkeep(){
@@ -295,8 +369,8 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void changeSpeed(int value){
-        this.speed += value;
+    public void setSpeed(int value){
+        this.speed = value;
     }
     
     public int getSpeed(){
@@ -308,8 +382,8 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void changeRange(int value){
-        this.range += value;
+    public void setRange(int value){
+        this.range = value;
     }
     
     public int getRange(){
@@ -321,8 +395,8 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void changeBaseMorale(int value){
-        this.baseMorale += value;
+    public void setBaseMorale(int value){
+        this.baseMorale = value;
     }
     
     public int getBaseMorale(){
@@ -334,9 +408,8 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public int changeMorale(int value){
-        this.morale += value;
-        return this.morale;
+    public void setMorale(int value){
+        this.morale = value;
     }
     
     public int getMorale(){
@@ -374,6 +447,15 @@ public class Unit implements Comparable<Unit>{
             return false;
         }
     }
+    
+    public boolean isFriendly(Unit target){
+        if(this.side == target.getSide()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
     @Override
     public int compareTo(Unit u) {
@@ -381,9 +463,35 @@ public class Unit implements Comparable<Unit>{
         return compareSpeed - this.speed;
     }
     
+    public void damageMorale(){
+        this.morale--;
+    }
+    
+    public ReportEntry action(Unit target){
+        ReportEntry entry = null;
+        if(this.isFriendly(target)){
+            if(this.healer){
+                int heal = this.heal(target);
+                entry = new ReportEntry(Actions.heal, this, target, String.valueOf(heal));
+            }
+        }
+        else{
+            int damage = this.attack(target);
+            entry = new ReportEntry(Actions.attack, this, target, String.valueOf(damage));
+        }
+        return entry;
+    }
+    
+    public int attack(Unit target){
+        int damage = this.calculateDamage(target);
+        target.takeDamage(damage);
+        target.damageMorale();
+        return damage;
+    }
+    
     public int calculateDamage(Unit target){
         int damage = 0;
-        if(this.damageType == DamageType.physical){
+        if(this.effectType == EffectType.physical){
             damage = this.physicalAttack(target);
         }
         else{
@@ -412,6 +520,33 @@ public class Unit implements Comparable<Unit>{
         double wardReductionMultiplier = (100 - ward) / 100;
         damage = (int) Math.round(this.getDamage() * spellPowerMultiplier * wardReductionMultiplier);
         return damage;
+    }
+    
+    public void takeDamage(int damage){
+        if(damage > 0){
+            int healthChange = -1 * damage;
+            this.setHealth(healthChange);
+        }
+    }
+    
+    public int heal(Unit target){
+        int healValue = (int) Math.round(this.baseHealingValue * (1 + this.getSpellPower() * this.spellPowerBonus));
+        return target.restoreHealth(healValue);
+    }
+    
+    private int restoreHealth(int value){
+        int realvalue = 0;
+        if(this.health < this.baseHealth){
+            int missingHealth = this.baseHealth - this.health;
+            if(value > missingHealth){
+                realvalue = missingHealth;
+            }
+            else{
+                realvalue = value;
+            }
+            this.health += realvalue;
+        }
+        return realvalue;
     }
     
     @Override
