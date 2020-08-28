@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.GamePlay.Battlefield;
+package com.tanzar.Arkarh.GamePlay.Combat;
 
-import com.tanzar.Arkarh.GamePlay.CombatLog.Actions;
-import com.tanzar.Arkarh.GamePlay.CombatLog.BattleSide;
-import com.tanzar.Arkarh.GamePlay.CombatLog.CombatReport;
-import com.tanzar.Arkarh.GamePlay.CombatLog.ReportEntry;
+import com.tanzar.Arkarh.GamePlay.Combat.Log.Actions;
+import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
+import com.tanzar.Arkarh.GamePlay.Combat.Log.ReportEntry;
 import com.tanzar.Arkarh.GamePlay.Units.Army;
 import com.tanzar.Arkarh.GamePlay.Units.AttackType;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
@@ -290,26 +289,24 @@ public class Side {
         }
     }
     
-    public boolean reorganizeLines(CombatReport report, boolean somethingWasReinforced){
-        boolean flag = somethingWasReinforced;
+    public int reorganizeLines(CombatReport report, int reinforcedCount){
         for(int i = 0; i < this.width; i++){
             if(this.front[i] != null){
-                flag = this.reinforce(this.front, i, report, flag);
+                reinforcedCount += this.reinforce(this.front, i, report, reinforcedCount);
             }
             if(this.back[i] != null){
-                flag = this.reinforce(this.back, i, report, flag);
+                reinforcedCount += this.reinforce(this.back, i, report, reinforcedCount);
             }
         }
         this.fixUnitsPositions();
-        return flag;
+        return reinforcedCount;
     }
     
-    private boolean reinforce(Unit[] line, int position, CombatReport report, boolean somethingWasReinforced){
-        boolean flag = somethingWasReinforced;
+    private int reinforce(Unit[] line, int position, CombatReport report, int reinforcedCount){
+        int count = 0;
         if(!line[position].isCapableToFight()){
-            if(!somethingWasReinforced){
+            if(reinforcedCount == 0){
                 report.nextWeave();
-                flag = true;
             }
             Unit retreat = line[position];
             report.unitRemovalFromBattlefield(retreat);
@@ -326,9 +323,10 @@ public class Side {
                 unit.setPosition(position);
                 report.reinforcing(unit, position);
                 line[position] = unit;
+                count++;
             }
         }
-        return flag;
+        return count;
     }
     
     public Units getFieldedUnitsOrderedBySpeed(){

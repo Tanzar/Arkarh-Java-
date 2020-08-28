@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.GamePlay.CombatLog;
+package com.tanzar.Arkarh.GamePlay.Combat.Log;
 
-import com.tanzar.Arkarh.GamePlay.Battlefield.BattleState;
-import com.tanzar.Arkarh.GamePlay.Battlefield.Position;
-import com.tanzar.Arkarh.GamePlay.Battlefield.Side;
+import com.tanzar.Arkarh.GamePlay.Combat.BattleState;
+import com.tanzar.Arkarh.GamePlay.Combat.Position;
+import com.tanzar.Arkarh.GamePlay.Combat.Side;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import java.util.ArrayList;
@@ -77,6 +77,11 @@ public class CombatReport {
     
     public void attacking(Unit source, Unit target, int damage){
         ReportEntry entry = new ReportEntry(Actions.attack, source, target, String.valueOf(damage));
+        this.newEntry(entry);
+    }
+    
+    public void healing(Unit source, Unit target, int heal){
+        ReportEntry entry = new ReportEntry(Actions.heal, source, target, String.valueOf(heal));
         this.newEntry(entry);
     }
     

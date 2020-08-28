@@ -42,7 +42,12 @@ public abstract class DAO<entityType, containerType> {
     
     public void remove(entityType object) {
         Session ses = this.entityManager.unwrap(Session.class);
-        ses.delete(object);
+        if(this.entityManager.contains(object)){
+            ses.delete(object);
+        }
+        else{
+            ses.delete(this.entityManager.merge(object));
+        }
     }
     
     public void update(entityType object) {

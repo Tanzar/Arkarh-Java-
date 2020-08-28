@@ -3,12 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.GamePlay.Modifier;
+package com.tanzar.Arkarh.GamePlay.TMP;
 
 /**
  *
  * @author spako
  */
-public class Active {
-    
+public enum Alliance {
+    none,
+    union,
+    pactOfTheFallen,
+    councilOfTribes,
+    mageguard,
+    sentinels
+    ;
 }

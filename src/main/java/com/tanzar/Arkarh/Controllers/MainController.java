@@ -22,7 +22,12 @@ public class MainController {
     }
     
     @RequestMapping("/battleSim")
-    public String worldEdit(Model model){
+    public String battleSim(Model model){
         return "battleSim";
+    }
+    
+    @RequestMapping("/unitEditor")
+    public String unitEdit(Model model){
+        return "unitEdit";
     }
 }

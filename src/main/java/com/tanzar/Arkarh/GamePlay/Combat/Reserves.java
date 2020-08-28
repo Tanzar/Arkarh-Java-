@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.GamePlay.Battlefield;
+package com.tanzar.Arkarh.GamePlay.Combat;
 
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Role;

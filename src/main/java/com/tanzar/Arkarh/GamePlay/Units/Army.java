@@ -5,7 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units;
 
-import com.tanzar.Arkarh.GamePlay.CombatLog.BattleSide;
+import com.tanzar.Arkarh.GamePlay.Combat.BattleSide;
 import java.util.List;
 
 /**
@@ -33,7 +33,7 @@ public class Army {
             }
         }
     }
-    
+    /*
     public Army copy(){
         Army copy = new Army();
         for(int i = 0; i < this.unitsSplitPerRole.length; i++){
@@ -41,7 +41,7 @@ public class Army {
             copy.addUnits(unitsCopy);
         }
         return copy;
-    }
+    }*/
     
     public void addUnits(Units units){
         for(int i = 0; i < units.size(); i++){

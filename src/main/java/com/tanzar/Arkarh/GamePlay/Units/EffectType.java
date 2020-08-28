@@ -5,23 +5,35 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units;
 
+import com.tanzar.Arkarh.GamePlay.Modifiers.ActiveEffect;
+
 /**
  *
  * @author spako
  */
 public enum EffectType {
-    none,
-    physical,
-    light,
-    shadow,
-    arcane,
-    chaos,
-    fire,
-    water,
-    earth,
-    air,
-    death,
-    life;
+    none(null),
+    physical(null),
+    light(ActiveEffect.weaknessToLight),
+    shadow(ActiveEffect.weaknessToShadow),
+    arcane(ActiveEffect.weaknessToArcane),
+    chaos(ActiveEffect.weaknessToChaos),
+    fire(ActiveEffect.weaknessToFire),
+    water(ActiveEffect.weaknessToWater),
+    earth(ActiveEffect.weaknessToEarth),
+    air(ActiveEffect.weaknessToAir),
+    death(ActiveEffect.weaknessToDeath),
+    life(ActiveEffect.weaknessToLife);
+    
+    private ActiveEffect weakness;
+    
+    EffectType(ActiveEffect weakness){
+        this.weakness = weakness;
+    }
+    
+    public ActiveEffect getWeakness(){
+        return this.weakness;
+    }
     
     public boolean isOpposite(EffectType compared){
         EffectType opposite = this.opposite();
@@ -65,29 +77,29 @@ public enum EffectType {
     public String toString(){
         switch(this){
             case physical:
-                return "Physical";
+                return "physical";
             case light:
-                return "Light";
+                return "light";
             case shadow:
-                return "Shadow";
+                return "shadow";
             case arcane:
-                return "Arcane";
+                return "arcane";
             case chaos:
-                return "Chaos";
+                return "chaos";
             case fire:
-                return "Fire";
+                return "fire";
             case water:
-                return "Water";
+                return "water";
             case earth:
-                return "Earth";
+                return "earth";
             case air:
-                return "Air";
+                return "air";
             case death:
-                return "Death";
+                return "death";
             case life:
-                return "Life";
+                return "life";
             default:
-                return "None";
+                return "none";
                 
         }
     }

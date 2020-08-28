@@ -6,8 +6,9 @@
 package com.tanzar.Arkarh.Controllers;
 
 import com.google.gson.Gson;
-import com.tanzar.Arkarh.GamePlay.Battlefield.Battlefield;
-import com.tanzar.Arkarh.GamePlay.CombatLog.CombatReport;
+import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
+import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
+import com.tanzar.Arkarh.GamePlay.TMP.Fraction;
 import com.tanzar.Arkarh.GamePlay.Units.Army;
 import com.tanzar.Arkarh.GamePlay.Units.AttackType;
 import com.tanzar.Arkarh.GamePlay.Units.EffectType;
@@ -81,7 +82,7 @@ public class BattleController {
     }
     
     private Unit newUnit(Role role, int attack, int spellPower, EffectType damageType, int damage, AttackType attackType, int defense, int armor, int ward, int baseHealth, int speed, int range){
-        Unit unit = new Unit("", role, -1, attack, spellPower, damageType, damage, attackType, defense, armor, ward, baseHealth, 1, speed, range, 100);
+        Unit unit = new Unit("", role.toString(), Fraction.none, role, -1, attack, spellPower, damageType, damage, attackType, defense, armor, ward, baseHealth, 1, speed, range, 100);
         return unit;
     }
 }

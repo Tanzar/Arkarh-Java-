@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.GamePlay.Battlefield;
+package com.tanzar.Arkarh.GamePlay.Combat;
 
-import com.tanzar.Arkarh.GamePlay.CombatLog.BattleSide;
-import com.tanzar.Arkarh.GamePlay.CombatLog.CombatReport;
-import com.tanzar.Arkarh.GamePlay.CombatLog.ReportEntry;
+import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
+import com.tanzar.Arkarh.GamePlay.Combat.Log.ReportEntry;
 import com.tanzar.Arkarh.GamePlay.Units.Army;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
@@ -90,8 +89,8 @@ public class Battlefield {
             this.unitsActions(wave, report);
             currentSpeed = this.selectNextSpeed(attackersOrder, defendersOrder, currentSpeed);
         }
-        boolean somethingWasReinforced = this.attackingSide.reorganizeLines(report, false);
-        this.defendingSide.reorganizeLines(report, somethingWasReinforced);
+        int reinforcedCount = this.attackingSide.reorganizeLines(report, 0);
+        this.defendingSide.reorganizeLines(report, reinforcedCount);
         return report;
     }
     
@@ -120,8 +119,8 @@ public class Battlefield {
             targets.addUnits(this.defendingSide.getTargets(source));
             for(int j = 0; j < targets.size(); j++){
                 Unit target = targets.get(j);
-                ReportEntry entry = source.action(target);
-                report.newEntry(entry);
+                UnitActions actions = new UnitActions(report);
+                actions.action(source, target);
             }
         }
         

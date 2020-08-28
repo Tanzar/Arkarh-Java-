@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.GamePlay.CombatLog;
+package com.tanzar.Arkarh.GamePlay.Combat.Log;
 
+import com.tanzar.Arkarh.GamePlay.Combat.BattleSide;
 import com.tanzar.Arkarh.GamePlay.Units.EffectType;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;

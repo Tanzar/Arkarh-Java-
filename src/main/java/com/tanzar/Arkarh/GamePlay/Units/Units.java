@@ -103,7 +103,7 @@ public class Units {
             return false;
         }
     }
-    
+    /*
     public Units copy(){
         Units copy = new Units();
         for(Unit unit : this.unitList){
@@ -111,7 +111,7 @@ public class Units {
             copy.add(unitCopy);
         }
         return copy;
-    }
+    }*/
     
     public void orderBySpeed(){
         this.unitList.sort(null);

@@ -14,8 +14,20 @@ public class Asset {
     private String name;
 
     public Asset(String path, String name) {
-        this.path = path;
+        this.path = this.correctPath(path);
         this.name = name;
+    }
+    
+    private String correctPath(String path){
+        for(int i = 0; i < path.length(); i++){
+            char character = path.charAt(i);
+            if(character == '\\' && i < (path.length() - 1)){
+                String before = path.substring(0, i);
+                String after = path.substring(i + 1);
+                path = before + "/" + after;
+            }
+        }
+        return path;
     }
 
     public String getPath() {
