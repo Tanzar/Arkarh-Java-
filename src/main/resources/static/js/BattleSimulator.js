@@ -76,7 +76,7 @@ function Simulator(){
             type: "GET",
             contentType:"application/json; charset=utf-8",
             dataType: "json",
-            url: "/getAssets",
+            url: "/getUnitsAssets",
             success: function (response) {
                 return response;
                 console.log();
@@ -335,8 +335,8 @@ function Simulator(){
     }
 }
 
-function Position(name){
-    this.name = name;
+function Position(assetName){
+    this.name = assetName;
     this.active = false;
 }
 
@@ -345,10 +345,10 @@ function Assets(pattern){
     this.marker = new Image();
     this.marker.src = "/img/units/marker.png";
     
-    for(i = 0; i < pattern.units.length; i++){
+    for(i = 0; i < pattern.length; i++){
         asset = new Asset();
-        asset.name = pattern.units[i].name;
-        asset.img.src = pattern.units[i].path;
+        asset.name = pattern[i].name;
+        asset.img.src = pattern[i].path;
         this.units.push(asset);
     };
     this.findUnit = function(name){

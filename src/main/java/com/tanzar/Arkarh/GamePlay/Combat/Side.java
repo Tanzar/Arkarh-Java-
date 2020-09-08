@@ -9,7 +9,7 @@ import com.tanzar.Arkarh.GamePlay.Combat.Log.Actions;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.ReportEntry;
 import com.tanzar.Arkarh.GamePlay.Units.Army;
-import com.tanzar.Arkarh.GamePlay.Units.AttackType;
+import com.tanzar.Arkarh.GamePlay.Units.AttackStyle;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
@@ -335,7 +335,7 @@ public class Side {
         return units;
     }
     
-    private Units getFieldedUnits(){
+    public Units getFieldedUnits(){
         Units units = new Units();
         for(int i = 0; i < this.front.length; i++){
             if(this.front[i] != null){
@@ -388,7 +388,7 @@ public class Side {
     }
     
     private Units getUnitsOnPositions(Unit attacker, Position[] positions){
-        AttackType attackType = attacker.getAttackType();
+        AttackStyle attackType = attacker.getAttackType();
         switch(attackType){
             case single:
                 return this.getFirstTarget(positions);
@@ -449,7 +449,19 @@ public class Side {
         return target;
     }
     
-    
+    public Unit getUnit(int position){
+        if(position < this.width - 1 && position > -1){
+            if(this.front[position] != null){
+                return this.front[position];
+            }
+            else{
+                return this.back[position];
+            }
+        }
+        else{
+            return null;
+        }
+    }
     
     public Unit getUnit(Position position){
         if(position.isValid(this.width - 1)){
@@ -472,7 +484,7 @@ public class Side {
         for(int i = 0; i < this.front.length; i++){
             result += "[";
             if(this.front[i] != null){
-                result += this.front[i].getRole();
+                result += this.front[i].getAssetName();
             }
             else{
                 result += "0";
@@ -483,7 +495,7 @@ public class Side {
         for(int i = 0; i < this.back.length; i++){
             result += "[";
             if(this.back[i] != null){
-                result += this.back[i].getRole();
+                result += this.back[i].getAssetName();
             }
             else{
                 result += "0";
@@ -495,7 +507,7 @@ public class Side {
         result += System.lineSeparator();
         for(int i = 0; i < this.reserves.size(); i++){
             Unit unit = this.reserves.get(i);
-            result += "[" + unit.getRole() + "]";
+            result += "[" + unit.getAssetName() + "]";
         }
         result += System.lineSeparator();
         result += System.lineSeparator();

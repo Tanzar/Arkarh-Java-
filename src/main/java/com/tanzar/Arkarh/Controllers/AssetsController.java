@@ -7,6 +7,7 @@ package com.tanzar.Arkarh.Controllers;
 
 import com.google.gson.Gson;
 import com.tanzar.Arkarh.Elements.Asset;
+import com.tanzar.Arkarh.Elements.Assets;
 import com.tanzar.Arkarh.Services.AssetsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,10 +27,17 @@ public class AssetsController {
     
     
     @RequestMapping(value = "/getAssetsCategories", method = RequestMethod.GET)
-    public String getAllAssets(){
+    public String getAssetsCategories(){
         Gson gson = new Gson();
         String[] categories = service.getCategories();
         return gson.toJson(categories);
+    }
+    
+    @RequestMapping(value = "/getAllAssets", method = RequestMethod.GET)
+    public String getAllAssets(){
+        Gson gson = new Gson();
+        Assets assets = service.getAll();
+        return gson.toJson(assets);
     }
     
     @RequestMapping(value = "/getUnitsAssets", method = RequestMethod.GET)

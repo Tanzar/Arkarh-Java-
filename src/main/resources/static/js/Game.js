@@ -163,7 +163,7 @@ function Map(pattern){
                 ctx.translate(fieldX, fieldY);//position of img
                 var terrain = this.assets.terrains[field.terrainAssetIndex].img;//draw terrain
                 ctx.drawImage(terrain, 0, 0, this.fieldsWidth, this.fieldsHeight);                       // draw image at current position
-                if(field.structureAssetIndex != 0){
+                if(field.structureAssetIndex >= 0){
                     var structure = this.assets.structures[field.structureAssetIndex].img;//draw terrain
                     ctx.drawImage(structure, 0, 0, this.fieldsWidth, this.fieldsHeight);                       // draw image at current position
                 }
@@ -178,7 +178,7 @@ function Map(pattern){
             type: "GET",
             contentType:"application/json; charset=utf-8",
             dataType: "json",
-            url: "/getAssets",
+            url: "/getAllAssets",
             success: function (response) {
                 return response;
                 console.log();
@@ -188,7 +188,9 @@ function Map(pattern){
                 return undefined;
             }
         });
-        return new Assets(response.responseJSON)
+        var assets = new Assets();
+        assets.init(response.responseJSON);
+        return assets;
     }
     
     this.zoomIn = function(){
@@ -206,7 +208,7 @@ function Map(pattern){
     }
 }
 
-function Assets(pattern){
+function Assets(){
     this.terrains = [];
     this.items = [];
     this.structures = [];
@@ -214,24 +216,27 @@ function Assets(pattern){
     this.locations = [];
     this.players = [];
     
-    for(i = 0; i < pattern.terrains.length; i++){
-        terrain = new Asset();
-        terrain.name = pattern.terrains[i].name;
-        terrain.img.src = pattern.terrains[i].path;
-        this.terrains.push(terrain);
-    };
-    
-    for(i = 0; i < pattern.structures.length; i++){
-        structure = new Asset();
-        structure.name = pattern.structures[i].name;
-        structure.img.src = pattern.structures[i].path;
-        this.structures.push(structure);
-    };
-    
+    this.init = function(pattern){
+        var assetsSet = this.getSet(pattern, "terrain");
+
+        for(var i = 0; i < assetsSet.length; i++){
+            var terrain = new Asset();
+            terrain.name = assetsSet[i].name;
+            terrain.img.src = assetsSet[i].path;
+            this.terrains.push(terrain);
+        };
+        assetsSet = this.getSet(pattern, "structures");
+        for(var i = 0; i < assetsSet.length; i++){
+            var structure = new Asset();
+            structure.name = assetsSet[i].name;
+            structure.img.src = assetsSet[i].path;
+            this.structures.push(structure);
+        };
+    }
     this.findTerrainIndex = function(name){
         var index = -1;
-        for(i = 0; i < this.terrains.length; i++){
-            if(this.terrains[i].name == name){
+        for(var i = 0; i < this.terrains.length; i++){
+            if(this.terrains[i].name.includes(name)){
                 index = i;
             }
         }
@@ -240,13 +245,21 @@ function Assets(pattern){
     
     this.findStructureIndex = function(name){
         var index = -1;
-        for(i = 0; i < this.structures.length; i++){
-            if(this.structures[i].name == name){
+        for(var i = 0; i < this.structures.length; i++){
+            if(this.structures[i].name.includes(name)){
                 index = i;
             }
         }
         return index;
     };
+    
+    this.getSet = function(pattern, name){
+        for(var i = 0; i < pattern.assets.length; i++){
+            if(pattern.assets[i].category.includes(name)){
+                return pattern.assets[i].list;
+            }
+        }
+    }
 }
 
 function Asset(){

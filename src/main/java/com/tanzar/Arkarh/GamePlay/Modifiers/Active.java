@@ -11,12 +11,22 @@ package com.tanzar.Arkarh.GamePlay.Modifiers;
  */
 public class Active {
     
+    private String name;
     private ActiveEffect effect;
     private int value;
     
-    public Active(ActiveEffect effect, int value){
+    public Active(String name, ActiveEffect effect, int value){
+        this.name = name;
         this.effect = effect;
         this.value = value;
+    }
+    
+    public String getName(){
+        return this.name;
+    }
+    
+    public void setName(String name){
+        this.name = name;
     }
     
     public ActiveEffect getEffect(){
@@ -44,6 +54,6 @@ public class Active {
     }
     
     public Active copy(){
-        return new Active(this.effect, this.value);
+        return new Active(this.name, this.effect, this.value);
     }
 }

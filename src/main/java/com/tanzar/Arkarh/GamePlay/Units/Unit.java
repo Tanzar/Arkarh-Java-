@@ -46,10 +46,10 @@ public class Unit implements Comparable<Unit>{
     //combat stats
     private int attack;
     private int spellPower;
-    private EffectType effectType;
+    private EffectSchool effectType;
     private int damage;
     private int baseHealingValue = 0;
-    private AttackType attackType;
+    private AttackStyle attackType;
     
     //defensive stats
     private int defense;
@@ -80,8 +80,8 @@ public class Unit implements Comparable<Unit>{
         this.defense = 0;
         this.armor = 0;
         this.spellPower = 0;
-        this.effectType = EffectType.physical;
-        this.attackType = AttackType.single;
+        this.effectType = EffectSchool.physical;
+        this.attackType = AttackStyle.single;
         this.ward = 0;
         this.baseHealth = 1;
         this.health = 1;
@@ -94,7 +94,7 @@ public class Unit implements Comparable<Unit>{
         this.position = -1;
     }
 
-    public Unit(String name, String assetName, Fraction fraction, Role role, int position, int attack, int spellPower, EffectType damageType, int damage, AttackType attackType, int defense, int armor, int ward, int baseHealth, int upkeep, int speed, int range, int baseMorale) {
+    public Unit(String name, String assetName, Fraction fraction, Role role, int position, int attack, int spellPower, EffectSchool damageType, int damage, AttackStyle attackType, int defense, int armor, int ward, int baseHealth, int upkeep, int speed, int range, int baseMorale) {
         this.name = name;
         this.assetName = assetName;
         this.fraction = fraction;
@@ -138,7 +138,7 @@ public class Unit implements Comparable<Unit>{
         this.atkDefBonus = atkDefBonus;
     }
     
-    public void setCombatStats(int attack, int spellPower, EffectType effectType, int damage, int healing, AttackType attackType){
+    public void setCombatStats(int attack, int spellPower, EffectSchool effectType, int damage, int healing, AttackStyle attackType){
         this.attack = attack;
         this.spellPower = spellPower;
         this.effectType = effectType;
@@ -306,11 +306,11 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void setEffectType(EffectType type){
+    public void setEffectType(EffectSchool type){
         this.effectType = type;
     }
     
-    public EffectType getEffectType(){
+    public EffectSchool getEffectType(){
         return this.effectType;
     }
     
@@ -340,11 +340,11 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public void setAttackType(AttackType type){
+    public void setAttackType(AttackStyle type){
         this.attackType = type;
     }
     
-    public AttackType getAttackType(){
+    public AttackStyle getAttackType(){
         return this.attackType;
     }
     
@@ -536,7 +536,7 @@ public class Unit implements Comparable<Unit>{
     }
     
     public boolean isHealer(){
-        if(this.effectType != EffectType.physical && this.effectType != EffectType.none){
+        if(this.effectType != EffectSchool.physical && this.effectType != EffectSchool.none){
             if(this.baseHealingValue > 0){
                 return true;
             }
@@ -544,7 +544,7 @@ public class Unit implements Comparable<Unit>{
         return false;
     }
     
-    public double weaknessValue(EffectType damageType){
+    public double weaknessValue(EffectSchool damageType){
         return this.actives.getWeaknessValue(damageType);
     }
 

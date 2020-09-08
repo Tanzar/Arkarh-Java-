@@ -5,7 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Modifiers;
 
-import com.tanzar.Arkarh.GamePlay.Units.EffectType;
+import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +60,7 @@ public class Actives {
         }
     }
     
-    public double getWeaknessValue(EffectType effect){
+    public double getWeaknessValue(EffectSchool effect){
         ActiveEffect weakness = effect.getWeakness();
         if(weakness != null){
             return this.getValueOfEffect(weakness);

@@ -6,14 +6,15 @@
 package com.tanzar.Arkarh.Services;
 
 import com.tanzar.Arkarh.Containers.UnitEntities;
+import com.tanzar.Arkarh.DAO.UnitEffectsDAO;
 import com.tanzar.Arkarh.DAO.UnitsDAO;
 import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.BattleSide;
 import com.tanzar.Arkarh.GamePlay.TMP.Category;
 import com.tanzar.Arkarh.GamePlay.TMP.Fraction;
 import com.tanzar.Arkarh.GamePlay.TMP.Tier;
-import com.tanzar.Arkarh.GamePlay.Units.AttackType;
-import com.tanzar.Arkarh.GamePlay.Units.EffectType;
+import com.tanzar.Arkarh.GamePlay.Units.AttackStyle;
+import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
@@ -29,6 +30,9 @@ public class UnitsService {
     
     @Autowired
     private UnitsDAO unitsDAO;
+    
+    @Autowired
+    private UnitEffectsDAO effectsDAO;
     
     public Units getAll(){
         UnitEntities entities = this.unitsDAO.getAll();
@@ -55,7 +59,6 @@ public class UnitsService {
         UnitEntity entity = this.convert(unit);
         int id = entity.getId();
         this.unitsDAO.delete(id);
-        //this.unitsDAO.remove(entity);
     }
     
     private Unit convert(UnitEntity entity){
@@ -86,11 +89,11 @@ public class UnitsService {
         int attack = entity.getAttack();
         int spellPower = entity.getSpellPower();
         String effectString = entity.getEffectType();
-        EffectType effect = EffectType.valueOf(effectString);
+        EffectSchool effect = EffectSchool.valueOf(effectString);
         int damage = entity.getDamage();
         int healing = entity.getHealing();
         String attackString = entity.getAttackType();
-        AttackType attackType = AttackType.valueOf(attackString);
+        AttackStyle attackType = AttackStyle.valueOf(attackString);
         unit.setCombatStats(attack, spellPower, effect, damage, healing, attackType);
     }
     

@@ -6,7 +6,7 @@
 package com.tanzar.Arkarh.GamePlay.Combat.Log;
 
 import com.tanzar.Arkarh.GamePlay.Combat.BattleSide;
-import com.tanzar.Arkarh.GamePlay.Units.EffectType;
+import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 
@@ -18,12 +18,13 @@ public class ReportEntry {
     
     private Actions action;
     private String sourceName;
+    private String sourceAsset;
     private int sourcePosition;
     private BattleSide sourceSide;
     private boolean isFront;
     private int targetPosition;
     private String value;
-    private EffectType effectType;
+    private EffectSchool effectType;
     private String stringFormat;
 
     public ReportEntry(Actions action, Unit source, Unit target, String value) {
@@ -61,6 +62,7 @@ public class ReportEntry {
     
     private String attackString(Unit source, Unit target, String value){
         this.sourceName = source.getName();
+        this.sourceAsset = source.getAssetName();
         this.sourcePosition = source.getPosition();
         this.sourceSide = source.getSide();
         this.isFront = !source.getRole().isRanged();
@@ -72,6 +74,7 @@ public class ReportEntry {
     
     private String reinforceString(Unit source, String value){
         this.sourceName = source.getName();
+        this.sourceAsset = source.getAssetName();
         this.sourcePosition = source.getPosition();
         this.sourceSide = source.getSide();
         this.isFront = !source.getRole().isRanged();
@@ -81,6 +84,7 @@ public class ReportEntry {
     
     private String deathString(Unit source){
         this.sourceName = source.getName();
+        this.sourceAsset = source.getAssetName();
         this.sourcePosition = source.getPosition();
         this.sourceSide = source.getSide();
         this.isFront = !source.getRole().isRanged();
@@ -89,6 +93,7 @@ public class ReportEntry {
     
     private String retreatString(Unit source){
         this.sourceName = source.getName();
+        this.sourceAsset = source.getAssetName();
         this.sourcePosition = source.getPosition();
         this.sourceSide = source.getSide();
         this.isFront = !source.getRole().isRanged();
@@ -97,6 +102,7 @@ public class ReportEntry {
     
     private String healString(Unit source, Unit target, String value){
         this.sourceName = source.getName();
+        this.sourceAsset = source.getAssetName();
         this.sourcePosition = source.getPosition();
         this.sourceSide = source.getSide();
         this.isFront = !source.getRole().isRanged();

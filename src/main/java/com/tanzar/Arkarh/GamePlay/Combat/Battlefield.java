@@ -7,9 +7,12 @@ package com.tanzar.Arkarh.GamePlay.Combat;
 
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.ReportEntry;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Trigger;
 import com.tanzar.Arkarh.GamePlay.Units.Army;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -138,6 +141,22 @@ public class Battlefield {
         }
         return nextSpeed;
     }
+    
+    public void newTick(){
+        Unit[] fieldedUnits = this.groupUnits(attackingSide, defendingSide);
+        Trigger trigger = Trigger.onAction;
+        for(Unit unit: fieldedUnits){
+            
+        }
+    }
+    
+    private Unit[] groupUnits(Side attackers, Side defenders){
+        Units groupedUnits = new Units();
+        groupedUnits.addUnits(attackers.getFieldedUnits());
+        groupedUnits.addUnits(defenders.getFieldedUnits());
+        return groupedUnits.toArray();
+    }
+    
     
     @Override
     public String toString(){

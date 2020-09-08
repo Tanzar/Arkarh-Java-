@@ -10,7 +10,7 @@ import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.ReportEntry;
 import com.tanzar.Arkarh.GamePlay.Modifiers.ActiveEffect;
 import com.tanzar.Arkarh.GamePlay.Modifiers.Passives;
-import com.tanzar.Arkarh.GamePlay.Units.EffectType;
+import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 
 /**
@@ -57,7 +57,7 @@ public class UnitActions {
     
     private int calculateDamage(Unit source, Unit target){
         int damage = 0;
-        if(source.getEffectType() == EffectType.physical){
+        if(source.getEffectType() == EffectSchool.physical){
             damage = this.physicalAttack(source, target);
         }
         else{
@@ -102,7 +102,7 @@ public class UnitActions {
     }
     
     private double weaknessToAttack(Unit source, Unit target){
-        EffectType damageCategory = source.getEffectType();
+        EffectSchool damageCategory = source.getEffectType();
         double weakness = target.weaknessValue(damageCategory);
         return weakness;
     }

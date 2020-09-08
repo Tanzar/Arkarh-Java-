@@ -19,10 +19,10 @@ import java.util.List;
  */
 public class CombatReport {
     private int width;
-    private Role[] attackersFront;
-    private Role[] attackersBack;
-    private Role[] defendersFront;
-    private Role[] defendersBack;
+    private String[] attackersFront;
+    private String[] attackersBack;
+    private String[] defendersFront;
+    private String[] defendersBack;
     
     private List<ReportEntry> entries;
     private boolean lock;
@@ -37,24 +37,24 @@ public class CombatReport {
     
     private void setupSidesState(Side attackers, Side defenders){
         this.width = attackers.getWidth();
-        this.attackersFront = new Role[this.width];
-        this.attackersBack = new Role[this.width];
-        this.defendersFront = new Role[this.width];
-        this.defendersBack = new Role[this.width];
+        this.attackersFront = new String[this.width];
+        this.attackersBack = new String[this.width];
+        this.defendersFront = new String[this.width];
+        this.defendersBack = new String[this.width];
         for(int i = 0; i < this.width; i++){
-            this.attackersFront[i] = this.setupRole(attackers.getUnit(new Position(i, true)));
-            this.attackersBack[i] = this.setupRole(attackers.getUnit(new Position(i, false)));
-            this.defendersFront[i] = this.setupRole(defenders.getUnit(new Position(i, true)));
-            this.defendersBack[i] = this.setupRole(defenders.getUnit(new Position(i, false)));
+            this.attackersFront[i] = this.setupAsset(attackers.getUnit(new Position(i, true)));
+            this.attackersBack[i] = this.setupAsset(attackers.getUnit(new Position(i, false)));
+            this.defendersFront[i] = this.setupAsset(defenders.getUnit(new Position(i, true)));
+            this.defendersBack[i] = this.setupAsset(defenders.getUnit(new Position(i, false)));
         }
     }
     
-    private Role setupRole(Unit unit){
+    private String setupAsset(Unit unit){
         if(unit == null){
-            return Role.none;
+            return "";
         }
         else{
-            return unit.getRole();
+            return unit.getAssetName();
         }
     }
     

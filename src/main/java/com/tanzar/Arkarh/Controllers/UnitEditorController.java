@@ -7,8 +7,8 @@ package com.tanzar.Arkarh.Controllers;
 
 import com.google.gson.Gson;
 import com.tanzar.Arkarh.GamePlay.TMP.*;
-import com.tanzar.Arkarh.GamePlay.Units.AttackType;
-import com.tanzar.Arkarh.GamePlay.Units.EffectType;
+import com.tanzar.Arkarh.GamePlay.Units.AttackStyle;
+import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
@@ -67,14 +67,14 @@ public class UnitEditorController {
     
     @RequestMapping(value = "/getEffectTypes", method = RequestMethod.GET)
     public String getEffectTypes(){
-        EffectType effects[] = EffectType.values();
+        EffectSchool effects[] = EffectSchool.values();
         Gson gson = new Gson();
         return gson.toJson(effects);
     }
     
     @RequestMapping(value = "/getAttackTypes", method = RequestMethod.GET)
     public String getAttackTypes(){
-        AttackType attacks[] = AttackType.values();
+        AttackStyle attacks[] = AttackStyle.values();
         Gson gson = new Gson();
         return gson.toJson(attacks);
     }

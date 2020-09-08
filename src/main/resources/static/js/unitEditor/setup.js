@@ -80,6 +80,11 @@ function setupUnitAssets(unitsSelect){
     for(var i = 0; i < units.length; i++){
         addOptionText(unitsSelect, units[i].path, units[i].name);
     }
+    unitsSelect.onchange = function(){
+        var path = this.options[this.selectedIndex].text;
+        var preview = document.getElementById('asset_preview');
+        preview.src = path;
+    }
 }
 
 function setupRoles(rolesSelect){
@@ -143,14 +148,6 @@ function addOptionText(select, text, value){
     select.appendChild(option);
 }
 
-function addOptionIamge(select, imagePath, value){
-    var option = document.createElement('option');
-    var textNode = document.createTextNode(value);
-    option.style = "background-image:url(" + imagePath + ");";
-    option.appendChild(textNode);
-    option.value = value;
-    select.appendChild(option);
-}
 
 function setupButtons(saveButton, updateButton, deleteButton){
     saveButton.onclick = function(){addUnit();};
@@ -219,6 +216,9 @@ function setUnitParameters(unit){
 function setValueInTable(table, row, value){
     var input = table.rows[row].cells[1].children[0];
     input.value = value;
+    if(input.tagName == 'SELECT'){
+        input.dispatchEvent(new Event('change'));
+    }
 }
 
 function addUnit(){

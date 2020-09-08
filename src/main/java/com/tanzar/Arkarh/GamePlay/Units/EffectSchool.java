@@ -11,7 +11,7 @@ import com.tanzar.Arkarh.GamePlay.Modifiers.ActiveEffect;
  *
  * @author spako
  */
-public enum EffectType {
+public enum EffectSchool {
     none(null),
     physical(null),
     light(ActiveEffect.weaknessToLight),
@@ -27,7 +27,7 @@ public enum EffectType {
     
     private ActiveEffect weakness;
     
-    EffectType(ActiveEffect weakness){
+    EffectSchool(ActiveEffect weakness){
         this.weakness = weakness;
     }
     
@@ -35,8 +35,8 @@ public enum EffectType {
         return this.weakness;
     }
     
-    public boolean isOpposite(EffectType compared){
-        EffectType opposite = this.opposite();
+    public boolean isOpposite(EffectSchool compared){
+        EffectSchool opposite = this.opposite();
         if(this != physical && this != none && opposite == compared){
             return true;
         }
@@ -45,30 +45,30 @@ public enum EffectType {
         }
     }
     
-    public EffectType opposite(){
+    public EffectSchool opposite(){
         switch(this){
             case light:
-                return EffectType.shadow;
+                return EffectSchool.shadow;
             case shadow:
-                return EffectType.light;
+                return EffectSchool.light;
             case arcane:
-                return EffectType.chaos;
+                return EffectSchool.chaos;
             case chaos:
-                return EffectType.arcane;
+                return EffectSchool.arcane;
             case fire:
-                return EffectType.water;
+                return EffectSchool.water;
             case water:
-                return EffectType.fire;
+                return EffectSchool.fire;
             case earth:
-                return EffectType.air;
+                return EffectSchool.air;
             case air:
-                return EffectType.earth;
+                return EffectSchool.earth;
             case death:
-                return EffectType.life;
+                return EffectSchool.life;
             case life:
-                return EffectType.death;
+                return EffectSchool.death;
             default:
-                return EffectType.none;
+                return EffectSchool.none;
                 
         }
     }

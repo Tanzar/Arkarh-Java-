@@ -44,4 +44,8 @@ public class AssetsService {
         }
         return list.toArray();
     }
+    
+    public Assets getAll(){
+        return this.assets;
+    }
 }
