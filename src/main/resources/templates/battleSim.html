@@ -14,16 +14,20 @@ and open the template in the editor.
     <body>
         <table>
             <tr>
-                <th>BattleField</th>
+                <th>Visuals</th>
                 <th>Options</th>
             </tr>
             <tr>
-                <td><canvas id="attackerCanvas" width="1000" height="100" style="border:1px solid #000000;"></canvas><br></td>
-                <td>Attackers (WIP)</td>
+                <td><canvas id="attackerCanvas" width="1000" height="200" style="border:1px solid #000000;"></canvas><br></td>
+                <td>Attackers Reserves(WIP)</td>
             </tr>
             <tr>
-                <td><canvas id="defenderCanvas" width="1000" height="100" style="border:1px solid #000000;"></canvas><br></td>
-                <td>Defenders (WIP)</td>
+                <td><canvas id="battleCanvas" width="1000" height="250" style="border:1px solid #000000;"></canvas><br></td>
+                <td>Battlefield(WIP)</td>
+            </tr>
+            <tr>
+                <td><canvas id="defenderCanvas" width="1000" height="200" style="border:1px solid #000000;"></canvas><br></td>
+                <td>Defenders Reserves(WIP)</td>
             </tr>
             <tr>
                 <td><textarea id="combatlog" rows="10" cols="140" style="resize: none;" readonly></textarea></td>
@@ -41,8 +45,9 @@ and open the template in the editor.
         function start(){
             var attackerCanvas = document.getElementById("attackerCanvas");
             var defenderCanvas = document.getElementById("defenderCanvas");
+            var battleCanvas = document.getElementById("battleCanvas");
             var combatlog = document.getElementById("combatlog");
-            startSimulation(attackerCanvas, defenderCanvas, combatlog);
+            startSimulation(attackerCanvas, defenderCanvas, battleCanvas, combatlog);
         }
     </script>
 </html>

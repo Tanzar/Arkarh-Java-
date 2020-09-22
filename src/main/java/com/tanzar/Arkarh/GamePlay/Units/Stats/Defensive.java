@@ -14,9 +14,18 @@ public class Defensive {
     private int armor;
     private int ward;
     private int baseHealth;
-    private int health;
     private final int maxArmor = 75;
     private final int maxWard = 75;
+
+    public Defensive() {
+    }
+
+    public Defensive(int defense, int armor, int ward, int baseHealth) {
+        this.defense = defense;
+        this.armor = armor;
+        this.ward = ward;
+        this.baseHealth = baseHealth;
+    }
     
     public void setDefense(int value){
         this.defense = value;
@@ -80,18 +89,13 @@ public class Defensive {
         }
     }
 
-    public int setHealth(int value){
-        this.health += value;
-        return this.health;
+    public int getMaxArmor() {
+        return maxArmor;
+    }
+
+    public int getMaxWard() {
+        return maxWard;
     }
     
-    public int getHealth(){
-        if(this.health < 0){
-            return 0;
-        }
-        else{
-            return this.health;
-        }
-    }
     
 }

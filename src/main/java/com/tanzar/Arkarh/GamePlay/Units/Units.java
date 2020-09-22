@@ -5,6 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units;
 
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Special;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +53,8 @@ public class Units {
     public Units getBySpeed(int speed){
         Units result = new Units();
         for(Unit unit: this.unitList){
-            if(unit.getSpeed() == speed){
+            Special specialStats = unit.getSpecial();
+            if(specialStats.getSpeed() == speed){
                 result.add(unit);
             }
         }
@@ -62,7 +64,8 @@ public class Units {
     public int getNextSpeed(int speed){
         int result = 0;
         for(Unit unit: this.unitList){
-            int unitSpeed = unit.getSpeed();
+            Special specialStats = unit.getSpecial();
+            int unitSpeed = specialStats.getSpeed();
             if(unitSpeed < speed && unitSpeed > result){
                 result = unitSpeed;
             }
@@ -88,7 +91,9 @@ public class Units {
     }
     
     public void add(Unit unit){
-        this.unitList.add(unit);
+        if(unit != null){
+            this.unitList.add(unit);
+        }
     }
     
     public int size(){
@@ -122,4 +127,5 @@ public class Units {
         this.unitList.toArray(array);
         return array;
     }
+    
 }

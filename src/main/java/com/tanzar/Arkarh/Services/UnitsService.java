@@ -16,6 +16,10 @@ import com.tanzar.Arkarh.GamePlay.TMP.Tier;
 import com.tanzar.Arkarh.GamePlay.Units.AttackStyle;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Defensive;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Offensive;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Special;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Status;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,22 +71,27 @@ public class UnitsService {
         this.setupCombatStats(unit, entity);
         this.setupDefensiveStats(unit, entity);
         this.setupSpecialStats(unit, entity);
-        unit.setPosition(entity.getId());
+        unit.getStatus().setPosition(entity.getId());
         return unit;
     }
     
     private void setupBasic(Unit unit, UnitEntity entity){
         String name = entity.getName();
+        unit.setName(name);
         String assetName = entity.getAssetName();
+        unit.setAssetName(assetName);
         String fractionString = entity.getFraction();
         Fraction fraction = Fraction.valueOf(fractionString);
+        unit.setFraction(fraction);
         String roleString = entity.getRole();
         Role role = Role.valueOf(roleString);
+        unit.setRole(role);
         String tierString = entity.getTier();
         Tier tier = Tier.valueOf(tierString);
+        unit.setTier(tier);
         String categoryString = entity.getCategory();
         Category category = Category.valueOf(categoryString);
-        unit.setBasic(name, assetName, fraction, role, tier, category, -1, BattleSide.none);
+        unit.setCategory(category);
     }
     
     private void setupCombatStats(Unit unit, UnitEntity entity){
@@ -94,7 +103,8 @@ public class UnitsService {
         int healing = entity.getHealing();
         String attackString = entity.getAttackType();
         AttackStyle attackType = AttackStyle.valueOf(attackString);
-        unit.setCombatStats(attack, spellPower, effect, damage, healing, attackType);
+        Offensive stats = new Offensive(attack, spellPower, effect, damage, healing, attackType);
+        unit.setOffensive(stats);
     }
     
     private void setupDefensiveStats(Unit unit, UnitEntity entity){
@@ -102,7 +112,8 @@ public class UnitsService {
         int armor = entity.getArmor();
         int ward = entity.getWard();
         int health = entity.getHealth();
-        unit.setDefensiveStats(defense, armor, ward, health);
+        Defensive stats = new Defensive(defense, armor, ward, health);
+        unit.setDefensive(stats);
     }
     
     private void setupSpecialStats(Unit unit, UnitEntity entity){
@@ -110,32 +121,49 @@ public class UnitsService {
         int speed = entity.getSpeed();
         int range = entity.getRange();
         int morale = entity.getMorale();
-        unit.setSpecialStats(upkeep, speed, range, morale);
+        Special stats = new Special(upkeep, speed, range, morale);
+        unit.setSpecial(stats);
     }
     
     private UnitEntity convert(Unit unit){
         UnitEntity entity = new UnitEntity();
-        entity.setId(unit.getPosition());
+        Status status = unit.getStatus();
+        entity.setId(status.getPosition());
         entity.setName(unit.getName());
         entity.setAssetName(unit.getAssetName());
         entity.setFraction(unit.getFraction().toString());
         entity.setRole(unit.getRole().toString());
         entity.setTier(unit.getTier().toString());
         entity.setCategory(unit.getCategory().toString());
-        entity.setAttack(unit.getAttack());
-        entity.setSpellPower(unit.getSpellPower());
-        entity.setEffectType(unit.getEffectType().toString());
-        entity.setDamage(unit.getDamage());
-        entity.setHealing(unit.getBaseHealingValue());
-        entity.setAttackType(unit.getAttackType().toString());
-        entity.setDefense(unit.getDefense());
-        entity.setArmor(unit.getArmor());
-        entity.setWard(unit.getWard());
-        entity.setHealth(unit.getBaseHealth());
-        entity.setUpkeep(unit.getUpkeep());
-        entity.setSpeed(unit.getSpeed());
-        entity.setRange(unit.getRange());
-        entity.setMorale(unit.getBaseMorale());
+        this.convertOffensive(unit, entity);
+        this.convertDefensive(unit, entity);
+        this.convertSpecial(unit, entity);
         return entity;
+    }
+    
+    private void convertOffensive(Unit unit, UnitEntity entity){
+        Offensive offensiveStats = unit.getOffensive();
+        entity.setAttack(offensiveStats.getAttack());
+        entity.setSpellPower(offensiveStats.getSpellPower());
+        entity.setEffectType(offensiveStats.getSchool().toString());
+        entity.setDamage(offensiveStats.getDamage());
+        entity.setHealing(offensiveStats.getBaseHealingValue());
+        entity.setAttackType(offensiveStats.getAttackType().toString());
+    }
+    
+    private void convertDefensive(Unit unit, UnitEntity entity){
+        Defensive defensiveStats = unit.getDefensive();
+        entity.setDefense(defensiveStats.getDefense());
+        entity.setArmor(defensiveStats.getArmor());
+        entity.setWard(defensiveStats.getWard());
+        entity.setHealth(defensiveStats.getBaseHealth());
+    }
+    
+    private void convertSpecial(Unit unit, UnitEntity entity){
+        Special specialStats = unit.getSpecial();
+        entity.setUpkeep(specialStats.getUpkeep());
+        entity.setSpeed(specialStats.getSpeed());
+        entity.setRange(specialStats.getRange());
+        entity.setMorale(specialStats.getBaseMorale());
     }
 }

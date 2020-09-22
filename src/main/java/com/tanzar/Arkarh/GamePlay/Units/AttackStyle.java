@@ -7,6 +7,9 @@ package com.tanzar.Arkarh.GamePlay.Units;
 
 import com.tanzar.Arkarh.GamePlay.Combat.Position;
 import com.tanzar.Arkarh.GamePlay.Combat.Side;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Offensive;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Special;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Status;
 
 /**
  *
@@ -16,33 +19,30 @@ public enum AttackStyle {
     single,
     cleave,
     splash;
-    /*
+    
     public static Units getTargets(Unit source, Side side){
-        AttackStyle attackStyle = source.getAttackType();
+        Offensive stats = source.getOffensive();
+        AttackStyle attackStyle = stats.getAttackType();
         switch(attackStyle){
             case single:
-                return this.getFirstTarget(positions);
+                return getFirstTarget(source, side);
             case cleave:
-                return this.getCleaveTargets(positions);
+                return getCleaveTargets(source, side);
             case splash:
-                return this.getAllTargets(positions);
+                return getAllTargets(source, side);
             default:
                 return new Units();
         }
     }
     
-    private Units getFirstTarget(Unit source, Side side){
+    private static Units getFirstTarget(Unit source, Side side){
         Units target = new Units();
-        int range = source.getRange();
-        int position = source.getPosition();
+        Special specialStats = source.getSpecial();
+        int range = specialStats.getRange();
+        Status unitStatus = source.getStatus();
+        int position = unitStatus.getPosition();
         for(int i = 0; i <= range; i++){
-            Unit unit = null;
-            if(i == 0){
-                unit = side.getUnit(position);
-            }
-            else{
-                
-            }
+            Unit unit = getUnitFrontOrBack(position, i, side);
             if(unit != null){
                 target.add(unit);
                 break;
@@ -51,39 +51,73 @@ public enum AttackStyle {
         return target;
     }
     
-    private Units getCleaveTargets(Unit source, Side side){
+    
+    private static Units getCleaveTargets(Unit source, Side side){
         Units targets = new Units();
-        for(int i = 0; i < positions.length; i++){
-            Position position = positions[i];
-            if(position.isValid(this.width - 1)){
-                int index = position.getPositionInLine();
-                Unit target = null;
-                if(position.isOnFrontLine()){
-                    target = this.front[index];
-                }
-                else{
-                    if(this.front[index] == null){
-                        target = this.back[index];
-                    }
-                }
-                if(target != null){
-                    targets.add(target);
-                }
+        Special specialStats = source.getSpecial();
+        int range = specialStats.getRange();
+        Status unitStatus = source.getStatus();
+        int position = unitStatus.getPosition();
+        for(int i = 0; i <= range; i++){
+            Unit unit = getUnitFrontOrBack(position, i, side);
+            if(unit != null){
+                targets.add(unit);
             }
         }
         return targets;
     }
     
-    private Units getAllTargets(Unit source, Side side){
-        Units target = new Units();
-        for(int i = 0; i < positions.length; i++){
-            Position position = positions[i];
-            Unit unit = this.getUnit(position);
-            if(unit != null){
-                target.add(unit);
+    private static Units getAllTargets(Unit source, Side side){
+        Units targets = new Units();
+        Special specialStats = source.getSpecial();
+        int range = specialStats.getRange();
+        Status unitStatus = source.getStatus();
+        int position = unitStatus.getPosition();
+        for(int i = 0; i <= range; i++){
+            addUnitFrontAndBack(position, i, side, targets);
+        }
+        return targets;
+    }
+    
+    private static void addUnitFrontAndBack(int position, int i, Side side, Units units){
+        Unit unit = null;
+        if(i == 0){
+            unit = side.getUnit(new Position(position, true));
+            units.add(unit);
+            unit = side.getUnit(new Position(position, false));
+            units.add(unit);
+        }
+        else{
+            unit = side.getUnit(new Position(position + i, true));
+            units.add(unit);
+            unit = side.getUnit(new Position(position - i, true));
+            units.add(unit);
+            unit = side.getUnit(new Position(position + i, false));
+            units.add(unit);
+            unit = side.getUnit(new Position(position - i, false));
+            units.add(unit);
+        }
+    }
+    
+    private static Unit getUnitFrontOrBack(int position, int i, Side side){
+        Unit unit = null;
+        if(i == 0){
+            unit = side.getUnit(new Position(position, true));
+            if(unit == null){
+                unit = side.getUnit(new Position(position, false));
             }
         }
-        return target;
+        else{
+            unit = side.getUnit(new Position(position + i, true));
+            if(unit == null){
+                unit = side.getUnit(new Position(position - i, true));
+            }
+            unit = side.getUnit(new Position(position + i, false));
+            if(unit == null){
+                unit = side.getUnit(new Position(position - i, false));
+            }
+        }
+        return unit;
     }
-    */
+    
 }

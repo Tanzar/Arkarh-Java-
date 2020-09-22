@@ -6,10 +6,10 @@
 
 var simulator = new Simulator();
 
-function startSimulation(attackersCanvas, defendersCanvas, combatlog){
+function startSimulation(attackersCanvas, defendersCanvas, battleCanvas, combatlog){
     if(!simulator.auto){
         simulator.stop();
-        simulator.init(attackersCanvas, defendersCanvas, combatlog);
+        simulator.init(attackersCanvas, defendersCanvas, battleCanvas, combatlog);
         simulator.start();
     }
 }
@@ -36,8 +36,13 @@ function autoBattle(){
 function autoStage(){
     console.log(simulator.currentStage);
     simulator.nextStage();
-    if(!simulator.isLastStage() && simulator.auto == false){
+    if(!simulator.isLastStage() && simulator.auto == true){
         window.setTimeout(autoStage, 2000);
+    }
+    else{
+        if(simulator.isLastStage()){
+            stopAutoBattle();
+        }
     }
 }
 
@@ -48,25 +53,30 @@ function stopAutoBattle(){
 function Simulator(){
     this.attackersCanvas;
     this.defendersCanvas;
+    this.battleCanvas;
     this.combatlog;
     this.assets;
     this.attackersFront = [];
     this.attackersBack = [];
+    this.attackersReserves = [];
+    this.attackersReservesState = [];
     this.defendersFront = [];
     this.defendersBack = [];
+    this.defendersReserves = [];
+    this.defendersReservesState = [];
     this.width;
-    this.entries = [];
-    this.stagesIndexes = [];
+    this.entries;
     this.currentStage = 0;
+    this.firstPhase = true;
     this.run = true;
     this.auto = false;
-    this.init = function(attackersCanvas, defendersCanvas, combatlog){
+    this.init = function(attackersCanvas, defendersCanvas, battleCanvas, combatTextArea){
         this.attackersCanvas = attackersCanvas;
         this.defendersCanvas = defendersCanvas;
-        this.combatlog = combatlog;
+        this.battleCanvas = battleCanvas;
+        this.combatlog = new CombatLog(combatTextArea);
         this.setAssets();
         this.getSimulation();
-        this.getStages();
         this.updateBattleState();
         console.log(this.stagesIndexes);
     }
@@ -104,31 +114,68 @@ function Simulator(){
             }
         });
         response = response.responseJSON;
-        this.attackersFront = this.parseUnits(response.attackersFront);
-        this.attackersBack = this.parseUnits(response.attackersBack);
-        this.defendersFront = this.parseUnits(response.defendersFront);
-        this.defendersBack = this.parseUnits(response.defendersBack);
         this.width = response.width;
-        this.entries = response.entries;
+        this.entries = new CombatEntries(response.entries);
         console.log(response);
     }
-    this.parseUnits = function(line){
-        var result = [];
-        for(var i = 0; i < line.length; i++){
-            var position = new Position(line[i]);
-            result.push(position);
+    this.updateBattleState = function(){
+        this.combatlog.clear();
+        var entries = this.entries.getStageEntries(this.currentStage);
+        if(this.firstPhase == true){
+            this.battlePhase(entries);
         }
-        return result;
+        else{
+            this.reinforcementsPhase(entries);
+        }
     }
-    this.getStages = function(){
-        for(i = 0; i < this.entries.length; i++){
-            if(this.entries[i].action == "wave"){
-                this.stagesIndexes.push(i);
+    this.battlePhase = function(entries){
+        for(var i = 0; i < entries.length; i++){
+            var entry = entries[i];
+            if(entry.entryCategory == "reinforcePhase"){
+                break;
+            }
+            else{
+                this.interpretEntry(entry);
             }
         }
     }
-    this.clear = function(){
-        this.combatlog.value = "";
+    this.interpretEntry = function(entry){
+        if(entry.entryCategory == "attackersState" || entry.entryCategory == "defendersState"){
+            if(entry.entryCategory == "attackersState"){
+                this.attackersFront = entry.frontLine;
+                this.attackersBack = entry.backLine;
+                this.attackersReserves = entry.reserves;
+                this.attackersReservesState = entry.aliveReserves;
+            }
+            else{
+                this.defendersFront = entry.frontLine;
+                this.defendersBack = entry.backLine;
+                this.defendersReserves = entry.reserves;
+                this.defendersReservesState = entry.aliveReserves;
+            }
+        }
+        else{
+            var text = entry.stringFormat;
+            this.combatlog.newLogLine(text);
+        }
+    }
+    this.reinforcementsPhase = function(entries){
+        var found = false;
+        for(var i = 0; i < entries.length; i++){
+            var entry = entries[i];
+            if(!found){
+                if(entry.entryCategory == "reinforcePhase"){
+                    found = true;
+                    var text = entry.stringFormat;
+                    this.combatlog.newLogLine(text);
+                }
+            }
+            else{
+                if(entry.entryCategory != "tick"){
+                    this.interpretEntry(entry);
+                }
+            }
+        }
     }
     this.stop = function(){
         this.run = false;
@@ -138,12 +185,68 @@ function Simulator(){
         console.log(this);
         requestAnimationFrame(newFrame);
     }
-    this.newFrame = function(ctxAttack, ctxDef){
-        this.drawAttackers(ctxAttack);
-        this.drawDefenders(ctxDef);
+    this.newFrame = function(ctxBattle, ctxAttackReserves, ctxDefReserves){
+        this.drawBattle(ctxBattle);
+        this.drawReserves(this.attackersCanvas.width, ctxAttackReserves, this.attackersReserves, this.attackersReservesState);
+        this.drawReserves(this.defendersCanvas.width, ctxDefReserves, this.defendersReserves, this.defendersReservesState);
+    }
+    this.drawBattle = function(ctx){
+        for(var index = 0; index < this.attackersFront.length; index++){
+            ctx.save();
+            this.drawUnits(ctx, index);
+            ctx.restore();
+        }
+    }
+    this.drawUnits = function(ctx, index){
+        var scale = 50;
+        var x = index * scale;
+        var y = 0;
+        var asset = this.assets.findUnit(this.attackersBack[index]);
+        ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
+        y = y + 50;
+        asset = this.assets.findUnit(this.attackersFront[index]);
+        ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
+        y = y + 100;
+        asset = this.assets.findUnit(this.defendersFront[index]);
+        ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
+        y = y + 50;
+        asset = this.assets.findUnit(this.defendersBack[index]);
+        ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
+    }
+    this.drawReserves = function(width, ctx, reserves, state){
+        var scale = 20;
+        for(var index = 0; index < reserves.length; index++){
+            ctx.save();
+            var x = (index % (width/scale)) * scale;
+            var y = Math.floor(index / (width/scale) ) * scale;
+            var asset = this.assets.findUnit(reserves[index]);
+            ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
+            if(state[index] == false){
+                ctx.drawImage(this.assets.marker, x, y, scale, scale);                       // draw image at current position
+            }
+            ctx.restore();
+        }
+    }
+    this.nextStage = function(){
+        if(this.currentStage + 1 < this.entries.stagesCount() || this.firstPhase == true){
+            if(this.firstPhase == false){
+                this.currentStage++;
+            }
+            this.firstPhase = !this.firstPhase;
+            this.updateBattleState();
+        }
+    }
+    this.previousStage = function(){
+        if(this.currentStage > 0 || this.firstPhase == false){
+            if(this.firstPhase == true){
+                this.currentStage--;
+            }
+            this.firstPhase = !this.firstPhase;
+            this.updateBattleState();
+        }
     }
     this.isLastStage = function(){
-        if(this.currentStage == this.stagesIndexes.length - 1){
+        if(this.currentStage == this.entries.stagesCount() - 1 && this.firstPhase == false){
             return true;
         }
         else{
@@ -153,184 +256,53 @@ function Simulator(){
     this.isRunning = function(){
         return this.run;
     }
-    this.drawAttackers = function(ctxAttack){
-        var position = this.defendersCanvas.width/2 - this.width/2 * 50
-        for(var x = 0; x < this.width; x++){
-            ctxAttack.save();
-            var horizontalPosition = position + x * 50;
-            var front = this.assets.findUnit(this.attackersFront[x].name);
-            ctxAttack.drawImage(front.img, horizontalPosition, 50, 50, 50);                       // draw image at current position
-            if(this.attackersFront[x].active){
-                ctxAttack.drawImage(this.assets.marker, horizontalPosition, 50, 50, 50);                       // draw image at current position
-            }
-            var back = this.assets.findUnit(this.attackersBack[x].name);
-            ctxAttack.drawImage(back.img, horizontalPosition, 0, 50, 50);                       // draw image at current position
-            if(this.attackersBack[x].active){
-                ctxAttack.drawImage(this.assets.marker, horizontalPosition, 0, 50, 50);                       // draw image at current position
-            }
-            ctxAttack.restore();
+}
+
+function CombatEntries(entries){
+    this.entries = entries;
+    this.stagesIndexes = [];
+    for(var i = 0; i < this.entries.length; i++){
+        if(this.entries[i].entryCategory == "tick"){
+            this.stagesIndexes.push(i);
         }
     }
-    this.drawDefenders = function(ctxDef){
-        var position = this.defendersCanvas.width/2 - this.width/2 * 50
-        for(var x = 0; x < this.width; x++){
-            ctxDef.save();
-            var horizontalPosition = position + x * 50;
-            var front = this.assets.findUnit(this.defendersFront[x].name);
-            ctxDef.drawImage(front.img, horizontalPosition, 0, 50, 50);                       // draw image at current position
-            if(this.defendersFront[x].active){
-                ctxDef.drawImage(this.assets.marker, horizontalPosition, 0, 50, 50);                       // draw image at current position
-            }
-            var back = this.assets.findUnit(this.defendersBack[x].name);
-            ctxDef.drawImage(back.img, horizontalPosition, 50, 50, 50);                       // draw image at current position
-            if(this.defendersBack[x].active){
-                ctxDef.drawImage(this.assets.marker, horizontalPosition, 50, 50, 50);                       // draw image at current position
-            }
-            ctxDef.restore();
+    
+    this.getStageEntries = function(stage){
+        var resultEntries = [];
+        var index = this.getStageEntryIndex(stage);
+        var nextIndex = this.getStageEntryIndex(stage + 1);
+        for(var i = index; i <= nextIndex; i++){
+            resultEntries.push(this.entries[i]);
         }
+        return resultEntries;
     }
-    this.nextStage = function(){
-        if(this.currentStage < this.stagesIndexes.length - 1){
-            this.clearActive();
-            this.currentStage++;
-            this.updateBattleState();
+    this.getStageEntryIndex = function(stage){
+        if(stage < 0){
+            return 0;
         }
-    }
-    this.updateBattleState = function(){
-        this.clear();
-        var index = this.stagesIndexes[this.currentStage] + 1;
-        while(index < this.entries.length){
-            var entry = this.entries[index];
-            if(entry.action == "wave"){
-                break;
-            }
-            else{
-                if(entry.action != "tick"){
-                    if(entry.action != "none"){
-                        this.markUnit(entry);
-                        this.updateUnit(entry);
-                    }
-                    this.newLogLine(entry.stringFormat);
-                }
-            }
-            index++;
-        }
-    }
-    this.previousStage = function(){
-        if(this.currentStage > 0){
-            this.clearActive();
-            this.revertCurrentState();
-            this.currentStage--;
-            this.updateBattleState();
-        }
-    }
-    this.revertCurrentState = function(){
-        var currentIndex = this.stagesIndexes[this.currentStage];
-        var nextIndex = this.getNextStageIndexInLog();
-        for(var i = nextIndex; i > currentIndex; i--){
-            var entry = this.entries[i];
-            if(entry.action == "tick" || entry.action == "wave"){
-            }
-            else{
-                this.reverseUpdateUnit(entry);
-            }
-        }
-    }
-    this.getNextStageIndexInLog = function(){
-        if(this.currentStage == this.stagesIndexes.length - 1){
+        if(stage >= this.stagesIndexes.length){
             return this.entries.length - 1;
         }
-        else{
-            return this.stagesIndexes[this.currentStage + 1];
-        }
+        var index = this.stagesIndexes[stage];
+        return index;
     }
-    this.clearActive = function(){
-        for(var i = 0; i < this.width; i++){
-            this.attackersFront[i].active = false;
-            this.attackersBack[i].active = false;
-            this.defendersFront[i].active = false;
-            this.defendersBack[i].active = false;
-        }
+    this.stagesCount = function(){
+        return this.stagesIndexes.length;
+    }
+}
+
+function CombatLog(combatTextArea){
+    this.combatTextArea = combatTextArea;
+    
+    this.clear = function(){
+        this.combatTextArea.value = "";
     }
     this.newLogLine = function(text){
-        if(this.combatlog.value != ""){
-            this.combatlog.value = this.combatlog.value + '\n' + text;
+        if(this.combatTextArea.value != ""){
+            this.combatTextArea.value = this.combatTextArea.value + '\n' + text;
         }
         else{
-            this.combatlog.value = text;
-        }
-    }
-    this.markUnit = function(entry){
-        if(entry.sourceSide == "attacker"){
-            if(entry.isFront){
-                this.attackersFront[entry.sourcePosition].active = true;
-            }
-            else{
-                this.attackersBack[entry.sourcePosition].active = true;
-            }
-        }
-        else{
-            if(entry.isFront){
-                this.defendersFront[entry.sourcePosition].active = true;
-            }
-            else{
-                this.defendersBack[entry.sourcePosition].active = true;
-            }
-        }
-    }
-    this.updateUnit = function(entry){
-        if(entry.action == "death"){
-            this.removeUnit(entry);
-        }
-        if(entry.action == "retreat"){
-            this.removeUnit(entry);
-        }
-        if(entry.action == "reinforce"){
-            this.replaceUnit(entry);
-        }
-    }
-    this.reverseUpdateUnit = function(entry){
-        if(entry.action == "death" || entry.action == "retreat"){
-            this.replaceUnit(entry);
-        }
-        if(entry.action == "reinforce"){
-            this.removeUnit(entry);
-        }
-    }
-    this.removeUnit = function(entry){
-        if(entry.sourceSide == "attacker"){
-            if(entry.isFront){
-                this.attackersFront[entry.sourcePosition].name = "none";
-            }
-            else{
-                this.attackersBack[entry.sourcePosition].name = "none";
-            }
-        }
-        else{
-            if(entry.isFront){
-                this.defendersFront[entry.sourcePosition].name = "none";
-            }
-            else{
-                this.defendersBack[entry.sourcePosition].name = "none";
-            }
-        }
-    }
-    this.replaceUnit = function(entry){
-        if(entry.sourceSide == "attacker"){
-            if(entry.isFront){
-                this.attackersFront[entry.sourcePosition].name = entry.sourceName;
-            }
-            else{
-                this.attackersBack[entry.sourcePosition].name = entry.sourceName;
-            }
-        }
-        else{
-            if(entry.isFront){
-                this.defendersFront[entry.sourcePosition].name = entry.sourceName;
-            }
-            else{
-                this.defendersBack[entry.sourcePosition].name = entry.sourceName;
-            }
+            this.combatTextArea.value = text;
         }
     }
 }
@@ -354,7 +326,7 @@ function Assets(pattern){
     this.findUnit = function(name){
         var result;
         for(i = 0; i < this.units.length; i++){
-            if(this.units[i].name == name){
+            if(this.units[i].name.includes(name)){
                 result = this.units[i];
                 break;
             }
@@ -374,11 +346,13 @@ function test(){
 }
 
 function newFrame(){
+    var ctxBattle = simulator.battleCanvas.getContext("2d");
+    ctxBattle.clearRect(0, 0, simulator.battleCanvas.width, simulator.battleCanvas.height);
     var ctxAttack = simulator.attackersCanvas.getContext("2d");
     ctxAttack.clearRect(0, 0, simulator.attackersCanvas.width, simulator.attackersCanvas.height);
     var ctxDef = simulator.defendersCanvas.getContext("2d");
     ctxDef.clearRect(0, 0, simulator.defendersCanvas.width, simulator.defendersCanvas.height);
-    simulator.newFrame(ctxAttack, ctxDef);
+    simulator.newFrame(ctxBattle, ctxAttack, ctxDef);
     if(simulator.run == true){
         requestAnimationFrame(newFrame);
     }

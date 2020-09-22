@@ -17,17 +17,18 @@ public class Offensive {
     private int spellPower;
     private EffectSchool school;
     private int damage;
-    private int baseHealingValue = 0;
+    private int baseHealingValue;
     private AttackStyle attackStyle;
 
     public Offensive() {
     }
 
-    public Offensive(int attack, int spellPower, EffectSchool school, int damage, AttackStyle attackStyle) {
+    public Offensive(int attack, int spellPower, EffectSchool school, int damage, int healing, AttackStyle attackStyle) {
         this.attack = attack;
         this.spellPower = spellPower;
         this.school = school;
         this.damage = damage;
+        this.baseHealingValue = healing;
         this.attackStyle = attackStyle;
     }
     

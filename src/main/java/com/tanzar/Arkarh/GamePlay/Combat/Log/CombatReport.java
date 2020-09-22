@@ -19,43 +19,16 @@ import java.util.List;
  */
 public class CombatReport {
     private int width;
-    private String[] attackersFront;
-    private String[] attackersBack;
-    private String[] defendersFront;
-    private String[] defendersBack;
     
     private List<ReportEntry> entries;
     private boolean lock;
     private int tickCounter;
     
-    public CombatReport(Side attackers, Side defenders){
-        this.setupSidesState(attackers, defenders);
+    public CombatReport(int combatWidth){
         this.entries = new ArrayList<ReportEntry>();
         this.lock = false;
         this.tickCounter = 0;
-    }
-    
-    private void setupSidesState(Side attackers, Side defenders){
-        this.width = attackers.getWidth();
-        this.attackersFront = new String[this.width];
-        this.attackersBack = new String[this.width];
-        this.defendersFront = new String[this.width];
-        this.defendersBack = new String[this.width];
-        for(int i = 0; i < this.width; i++){
-            this.attackersFront[i] = this.setupAsset(attackers.getUnit(new Position(i, true)));
-            this.attackersBack[i] = this.setupAsset(attackers.getUnit(new Position(i, false)));
-            this.defendersFront[i] = this.setupAsset(defenders.getUnit(new Position(i, true)));
-            this.defendersBack[i] = this.setupAsset(defenders.getUnit(new Position(i, false)));
-        }
-    }
-    
-    private String setupAsset(Unit unit){
-        if(unit == null){
-            return "";
-        }
-        else{
-            return unit.getAssetName();
-        }
+        this.width = combatWidth;
     }
     
     public void newEntry(ReportEntry entry){
@@ -66,38 +39,30 @@ public class CombatReport {
     
     public void nextTick(){
         this.tickCounter++;
-        ReportEntry entry = new ReportEntry(Actions.tick, null, null, String.valueOf(this.tickCounter));
+        ReportEntry entry = new ReportEntry(Entry.tick, null, null, String.valueOf(this.tickCounter));
         this.newEntry(entry);
     }
     
-    public void nextWeave(){
-        ReportEntry entry = new ReportEntry(Actions.wave, null, null, "");
+    public void nextReinforcementPhase(){
+        ReportEntry entry = new ReportEntry(Entry.reinforcePhase, null, null, "Reinforcing");
         this.newEntry(entry);
     }
     
-    public void attacking(Unit source, Unit target, int damage){
-        ReportEntry entry = new ReportEntry(Actions.attack, source, target, String.valueOf(damage));
+    public void abilityUse(Unit source, Unit target, String stringFormat){
+        int position = source.getPosition();
+        boolean front = source.isFront();
+        Position sourcePosition = new Position(position, front);
+        position = target.getPosition();
+        front = target.isFront();
+        Position targetPosition = new Position(position, front);
+        ReportEntry entry = new ReportEntry(Entry.ability, sourcePosition, targetPosition, stringFormat);
         this.newEntry(entry);
     }
     
-    public void healing(Unit source, Unit target, int heal){
-        ReportEntry entry = new ReportEntry(Actions.heal, source, target, String.valueOf(heal));
+    public void battlefieldState(Side attackers, Side defenders){
+        ReportEntry entry = new ReportEntry(Entry.attackersState, attackers);
         this.newEntry(entry);
-    }
-    
-    public void reinforcing(Unit unit, int position){
-        ReportEntry entry = new ReportEntry(Actions.reinforce, unit, null, String.valueOf(position));
-        this.newEntry(entry);
-    }
-    
-    public void unitRemovalFromBattlefield(Unit unit){
-        ReportEntry entry = null;
-        if(unit.isAlive()){
-            entry = new ReportEntry(Actions.retreat, unit, null, "");
-        }
-        else{
-            entry = new ReportEntry(Actions.death, unit, null, "");
-        }
+        entry = new ReportEntry(Entry.defendersState, defenders);
         this.newEntry(entry);
     }
     
@@ -107,7 +72,7 @@ public class CombatReport {
      * @param state 
      */
     public void combatResult(BattleState state){
-        ReportEntry entry = new ReportEntry(Actions.none, null, null, state.toString());
+        ReportEntry entry = new ReportEntry(Entry.none, null, null, state.toString());
         this.newEntry(entry);
         this.lock = true;
     }

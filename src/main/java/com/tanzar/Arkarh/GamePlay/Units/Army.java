@@ -29,7 +29,7 @@ public class Army {
         for(int i = 0; i < this.unitsSplitPerRole.length; i++){
             for(int j = 0; j < this.unitsSplitPerRole[i].size(); j++){
                 Unit unit = this.unitsSplitPerRole[i].get(j);
-                unit.setSide(side);
+                unit.getStatus().setSide(side);
             }
         }
     }
@@ -59,6 +59,16 @@ public class Army {
     public Units getUnits(Role role){
         int index = role.getIndex();
         return this.unitsSplitPerRole[index];
+    }
+    
+    public Units getAll(){
+        Units result = new Units();
+        Role[] roles = Role.values();
+        for(Role role: roles){
+            Units units = this.getUnits(role);
+            result.addUnits(units);
+        }
+        return result;
     }
     
     public int size(){

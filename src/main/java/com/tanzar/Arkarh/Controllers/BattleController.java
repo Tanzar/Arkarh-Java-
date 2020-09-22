@@ -13,6 +13,9 @@ import com.tanzar.Arkarh.GamePlay.Units.Army;
 import com.tanzar.Arkarh.GamePlay.Units.AttackStyle;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Defensive;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Offensive;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Special;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,31 +61,39 @@ public class BattleController {
         Army army = new Army();
         for(int i = 0; i < flankers; i++){
             Unit unit = this.newUnit(Role.flanker, 10, 0, EffectSchool.physical, 20, AttackStyle.single, 5, 25, 15, 200, 20, 3);
-            unit.setUnitName(unit.getRole().toString());
+            unit.setName(unit.getRole().toString());
             army.addUnit(unit);
         }
         for(int i = 0; i < warriors; i++){
             Unit unit = this.newUnit(Role.warrior, 10, 0, EffectSchool.physical, 5, AttackStyle.single, 20, 50, 50, 400, 10, 2);
-            unit.setUnitName(unit.getRole().toString());
+            unit.setName(unit.getRole().toString());
             army.addUnit(unit);
         }
         for(int i = 0; i < mages; i++){
             Unit unit = this.newUnit(Role.mage, 5, 10, EffectSchool.arcane, 10, AttackStyle.splash, 5, 10, 60, 300, 5, 1);
-            unit.setUnitName(unit.getRole().toString());
+            unit.setName(unit.getRole().toString());
             unit.setRole(Role.mage);
             
             army.addUnit(unit);
         }
         for(int i = 0; i < shooters; i++){
             Unit unit = this.newUnit(Role.shooter, 10, 0, EffectSchool.physical, 10, AttackStyle.single, 10, 30, 20, 250, 15, 5);
-            unit.setUnitName(unit.getRole().toString());
+            unit.setName(unit.getRole().toString());
             army.addUnit(unit);
         }
         return army;
     }
     
     private Unit newUnit(Role role, int attack, int spellPower, EffectSchool damageType, int damage, AttackStyle attackType, int defense, int armor, int ward, int baseHealth, int speed, int range){
-        Unit unit = new Unit("", role.toString() + ".png", Fraction.none, role, -1, attack, spellPower, damageType, damage, attackType, defense, armor, ward, baseHealth, 1, speed, range, 100);
+        Offensive offensive = new Offensive(attack, spellPower, damageType, damage, 0, attackType);
+        Defensive defensive = new Defensive(defense, armor, ward, baseHealth);
+        Special special = new Special(1, speed, range, 100);
+        Unit unit = new Unit();
+        unit.setRole(role);
+        unit.setAssetName(role.name() + ".png");
+        unit.setOffensive(offensive);
+        unit.setDefensive(defensive);
+        unit.setSpecial(special);
         return unit;
     }
 }

@@ -5,39 +5,27 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units;
 
-import com.tanzar.Arkarh.GamePlay.Modifiers.ActiveEffect;
 
 /**
  *
  * @author spako
  */
 public enum EffectSchool {
-    none(null),
-    physical(null),
-    light(ActiveEffect.weaknessToLight),
-    shadow(ActiveEffect.weaknessToShadow),
-    arcane(ActiveEffect.weaknessToArcane),
-    chaos(ActiveEffect.weaknessToChaos),
-    fire(ActiveEffect.weaknessToFire),
-    water(ActiveEffect.weaknessToWater),
-    earth(ActiveEffect.weaknessToEarth),
-    air(ActiveEffect.weaknessToAir),
-    death(ActiveEffect.weaknessToDeath),
-    life(ActiveEffect.weaknessToLife);
-    
-    private ActiveEffect weakness;
-    
-    EffectSchool(ActiveEffect weakness){
-        this.weakness = weakness;
-    }
-    
-    public ActiveEffect getWeakness(){
-        return this.weakness;
-    }
+    physical,
+    light,
+    shadow,
+    arcane,
+    chaos,
+    fire,
+    water,
+    earth,
+    air,
+    death,
+    life;
     
     public boolean isOpposite(EffectSchool compared){
         EffectSchool opposite = this.opposite();
-        if(this != physical && this != none && opposite == compared){
+        if(this != physical && opposite == compared){
             return true;
         }
         else{
@@ -68,7 +56,7 @@ public enum EffectSchool {
             case life:
                 return EffectSchool.death;
             default:
-                return EffectSchool.none;
+                return EffectSchool.physical;
                 
         }
     }
@@ -99,7 +87,7 @@ public enum EffectSchool {
             case life:
                 return "life";
             default:
-                return "none";
+                return "physical";
                 
         }
     }

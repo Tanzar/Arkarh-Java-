@@ -22,14 +22,19 @@ public class Passives {
     
     public void add(Passive passive){
         if(passive != null){
-            this.passives.add(passive);
-        }
-    }
-    
-    public void addCopy(Passive passive){
-        if(passive != null){
-            Passive copy = passive.copy();
-            this.passives.add(copy);
+            boolean found = false;
+            for(Passive item: this.passives){
+                if(item.equals(passive)){
+                    if(!item.isAtStacksLimit()){
+                        item.addStacks(passive.getStacks());
+                    }
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                this.passives.add(passive);
+            }
         }
     }
     
@@ -49,38 +54,29 @@ public class Passives {
         return this.passives.size();
     }
     
-    public void stack(Passive passive){
-        for(Passive item : passives){
-            if(item.isSimillar(passive)){
-                double value = passive.getValue();
-                item.changeValue(value);
-                break;
+    public Passives getByEffect(PassiveEffect effect){
+        Passives results = new Passives();
+        for(Passive passive: this.passives){
+            if(passive.getEffect().equals(effect)){
+                results.add(passive);
             }
         }
-        //if not found
-        this.addCopy(passive);
+        return results;
     }
     
-    public static Passives merge(Passives first, Passives second){
-        Passives all = Passives.combine(first, second);
-        Passives unique = new Passives();
-        for(int i = 0; i < all.size(); i++){
-            Passive mod = all.get(i);
-            unique.stack(mod);
+    public int summarizeValues(PassiveEffect effect){
+        int value = 0;
+        for(Passive passive: this.passives){
+            if(passive.getEffect().equals(effect)){
+                value += passive.getTotalValue();
+            }
         }
-        return unique;
+        return value;
     }
     
-    public static Passives combine(Passives first, Passives second){
-        Passives mods = new Passives();
-        for(int i = 0; i < first.size(); i++){
-            Passive passive = first.get(i);
-            mods.add(passive);
-        }
-        for(int i = 0; i < second.size(); i ++){
-            Passive passive = second.get(i);
-            mods.add(passive);
-        }
-        return mods;
+    public Passive[] toArray(){
+        Passive[] array = new Passive[this.size()];
+        this.passives.toArray(array);
+        return array;
     }
 }

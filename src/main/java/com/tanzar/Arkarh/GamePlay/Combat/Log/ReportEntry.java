@@ -6,9 +6,12 @@
 package com.tanzar.Arkarh.GamePlay.Combat.Log;
 
 import com.tanzar.Arkarh.GamePlay.Combat.BattleSide;
+import com.tanzar.Arkarh.GamePlay.Combat.Position;
+import com.tanzar.Arkarh.GamePlay.Combat.Side;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
+import com.tanzar.Arkarh.GamePlay.Units.Units;
 
 /**
  *
@@ -16,107 +19,54 @@ import com.tanzar.Arkarh.GamePlay.Units.Unit;
  */
 public class ReportEntry {
     
-    private Actions action;
-    private String sourceName;
-    private String sourceAsset;
-    private int sourcePosition;
-    private BattleSide sourceSide;
-    private boolean isFront;
-    private int targetPosition;
-    private String value;
-    private EffectSchool effectType;
+    private Entry entryCategory;
+    private Position sourcePosition;
+    private Position targetPosition;
     private String stringFormat;
+    private String[] frontLine;
+    private String[] backLine;
+    private String[] reserves;
+    private boolean[] aliveReserves;
 
-    public ReportEntry(Actions action, Unit source, Unit target, String value) {
-        this.action = action;
-        this.stringFormat = this.parseFormat(source, target, value);
+    public ReportEntry(Entry action, Position sourcePosition, Position targetPosition, String stringFormat) {
+        this.entryCategory = action;
+        this.sourcePosition = sourcePosition;
+        this.targetPosition = targetPosition;
+        this.stringFormat = stringFormat;
     }
     
-    private String parseFormat(Unit source, Unit target, String value){
-        switch(this.action){
-            case tick:
-                return this.tickString(value);
-            case wave:
-                return Actions.wave.toString();
-            case attack:
-                return this.attackString(source, target, value);
-            case heal:
-                return this.healString(source, target, value);
-            case reinforce:
-                return this.reinforceString(source, value);
-            case death:
-                return this.deathString(source);
-            case retreat:
-                return this.retreatString(source);
-            case none:
-                return this.noneString(value);
-            default:
-                return "";
+    public ReportEntry(Entry entry, Side side){
+        this.entryCategory = entry;
+        this.frontLine = new String[side.getWidth()];
+        this.backLine = new String[side.getWidth()];
+        for(int i = 0; i < side.getWidth(); i++){
+            this.frontLine[i] = this.getAssetName(i, true, side);
+            this.backLine[i] = this.getAssetName(i, false, side);
+        }
+        this.setReserves(side);
+    }
+    
+    private String getAssetName(int i, boolean front, Side side){
+        Unit unit = side.getUnit(new Position(i, front));
+        if(unit != null){
+            return unit.getAssetName();
+        }
+        else{
+            return "none";
         }
     }
     
-    private String tickString(String value){
-        this.value = value;
-        return "" + Actions.tick + this.value;
+    private void setReserves(Side side){
+        Units units = side.getReserves();
+        this.reserves = new String[units.size()];
+        this.aliveReserves = new boolean[units.size()];
+        for(int i = 0; i < this.reserves.length; i++){
+            Unit unit = units.get(i);
+            this.reserves[i] = unit.getAssetName();
+            this.aliveReserves[i] = unit.isAlive();
+        }
     }
-    
-    private String attackString(Unit source, Unit target, String value){
-        this.sourceName = source.getName();
-        this.sourceAsset = source.getAssetName();
-        this.sourcePosition = source.getPosition();
-        this.sourceSide = source.getSide();
-        this.isFront = !source.getRole().isRanged();
-        this.targetPosition = target.getPosition();
-        this.value = value;
-        this.effectType = source.getEffectType();
-        return source.getSide() + source.toString() + Actions.attack + target.toString() + "for " + this.value + " " + source.getEffectType() + " damage.";
-    }
-    
-    private String reinforceString(Unit source, String value){
-        this.sourceName = source.getName();
-        this.sourceAsset = source.getAssetName();
-        this.sourcePosition = source.getPosition();
-        this.sourceSide = source.getSide();
-        this.isFront = !source.getRole().isRanged();
-        this.value = value;
-        return source.getSide() + source.toString() + Actions.reinforce + " position " + this.value;
-    }
-    
-    private String deathString(Unit source){
-        this.sourceName = source.getName();
-        this.sourceAsset = source.getAssetName();
-        this.sourcePosition = source.getPosition();
-        this.sourceSide = source.getSide();
-        this.isFront = !source.getRole().isRanged();
-        return source.getSide() + source.toString() + Actions.death;
-    }
-    
-    private String retreatString(Unit source){
-        this.sourceName = source.getName();
-        this.sourceAsset = source.getAssetName();
-        this.sourcePosition = source.getPosition();
-        this.sourceSide = source.getSide();
-        this.isFront = !source.getRole().isRanged();
-        return source.getSide() + source.toString() + Actions.retreat;
-    }
-    
-    private String healString(Unit source, Unit target, String value){
-        this.sourceName = source.getName();
-        this.sourceAsset = source.getAssetName();
-        this.sourcePosition = source.getPosition();
-        this.sourceSide = source.getSide();
-        this.isFront = !source.getRole().isRanged();
-        this.targetPosition = target.getPosition();
-        this.value = value;
-        this.effectType = source.getEffectType();
-        return source.getSide() + source.toString() + Actions.heal + target.toString() + "for " + this.value + " " + source.getEffectType() + ".";
-    }
-    
-    private String noneString(String value){
-        this.value = value;
-        return this.value;
-    }
-    
+
     @Override
     public String toString(){
         return this.stringFormat;

@@ -7,6 +7,8 @@ package com.tanzar.Arkarh.GamePlay.Combat;
 
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Status;
+import com.tanzar.Arkarh.GamePlay.Units.Units;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +31,9 @@ public class Reserves {
     public Unit getUnit(Role role){
         Unit result = null;
         for(Unit unit: this.reserves){
-            if(unit.isRole(role) && unit.isCapableToFight()){
+            if(unit.isRole(role) && unit.isCappableToFight()){
                 if(result != null){
-                    if(unit.isBetterToFightThan(result)){
+                    if(unit.isFasterThan(result)){
                         result = unit;
                     }
                 }
@@ -46,7 +48,17 @@ public class Reserves {
         return result;
     }
     
+    public Units getAll(){
+        Units units = new Units();
+        for(Unit unit: this.reserves){
+            units.add(unit);
+        }
+        return units;
+    }
+    
     public void addUnit(Unit unit){
+        Status status = unit.getStatus();
+        status.setPosition(-1);
         this.reserves.add(unit);
     }
     
@@ -71,7 +83,7 @@ public class Reserves {
     public int countCappableToFight(){
         int count = 0;
         for(Unit unit: this.reserves){
-            if(unit.isCapableToFight()){
+            if(unit.isCappableToFight()){
                 count++;
             }
         }
