@@ -6,8 +6,12 @@
 package com.tanzar.Arkarh.Controllers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.tanzar.Arkarh.Containers.UnitEntities;
 import com.tanzar.Arkarh.GamePlay.TMP.*;
-import com.tanzar.Arkarh.GamePlay.Units.AttackStyle;
+import com.tanzar.Arkarh.GamePlay.Units.TargetsSelection;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author spako
  */
 @RestController
+@RequestMapping(value = "/unitEditor")
 public class UnitEditorController {
     
     @Autowired
@@ -32,9 +37,16 @@ public class UnitEditorController {
     @RequestMapping(value = "/getAllUnits", method = RequestMethod.GET)
     public String getAllUnits(){
         Gson gson = new Gson();
-        Units units = this.unitsService.getAll();
+        UnitEntities units = this.unitsService.getAllUnitEntities();
         String result = gson.toJson(units.toArray());
         return result;
+    }
+    
+    @RequestMapping(value = "/getOptions", method = RequestMethod.GET)
+    public String getOptions(){
+        Gson gson = new Gson();
+        EnumsCombined enums = new EnumsCombined();
+        return gson.toJson(enums);
     }
     
     @RequestMapping(value = "/getFractions", method = RequestMethod.GET)
@@ -74,7 +86,7 @@ public class UnitEditorController {
     
     @RequestMapping(value = "/getAttackTypes", method = RequestMethod.GET)
     public String getAttackTypes(){
-        AttackStyle attacks[] = AttackStyle.values();
+        TargetsSelection attacks[] = TargetsSelection.values();
         Gson gson = new Gson();
         return gson.toJson(attacks);
     }

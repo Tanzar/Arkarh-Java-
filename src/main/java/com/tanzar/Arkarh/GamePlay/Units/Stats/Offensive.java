@@ -5,7 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Stats;
 
-import com.tanzar.Arkarh.GamePlay.Units.AttackStyle;
+import com.tanzar.Arkarh.GamePlay.Units.TargetsSelection;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 
 /**
@@ -15,21 +15,17 @@ import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 public class Offensive {
     private int attack;
     private int spellPower;
-    private EffectSchool school;
     private int damage;
     private int baseHealingValue;
-    private AttackStyle attackStyle;
 
     public Offensive() {
     }
 
-    public Offensive(int attack, int spellPower, EffectSchool school, int damage, int healing, AttackStyle attackStyle) {
+    public Offensive(int attack, int spellPower, int damage, int healing) {
         this.attack = attack;
         this.spellPower = spellPower;
-        this.school = school;
         this.damage = damage;
         this.baseHealingValue = healing;
-        this.attackStyle = attackStyle;
     }
     
     public void setAttack(int value){
@@ -58,14 +54,6 @@ public class Offensive {
         }
     }
     
-    public void setSchool(EffectSchool school){
-        this.school = school;
-    }
-    
-    public EffectSchool getSchool(){
-        return this.school;
-    }
-    
     public void setDamage(int value){
         this.damage = value;
     }
@@ -90,14 +78,6 @@ public class Offensive {
         else{
             return this.baseHealingValue;
         }
-    }
-    
-    public void setAttackStyle(AttackStyle style){
-        this.attackStyle = style;
-    }
-    
-    public AttackStyle getAttackType(){
-        return this.attackStyle;
     }
     
 }

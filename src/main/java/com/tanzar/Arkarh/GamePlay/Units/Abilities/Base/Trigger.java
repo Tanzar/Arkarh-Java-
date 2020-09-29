@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.GamePlay.Units.Abilities;
+package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 
 /**
  *
@@ -12,6 +12,7 @@ package com.tanzar.Arkarh.GamePlay.Units.Abilities;
 public enum Trigger {
     onEntry,
     onAction,
+    onReorganize,
     onDeath,
     onDamageTaken,
     onKill;

@@ -12,17 +12,15 @@ package com.tanzar.Arkarh.GamePlay.Units.Stats;
 public class Special {
     private int upkeep;
     private int speed;
-    private int range;
     private int baseMorale;
     private int moraleLoss = 10;
 
     public Special() {
     }
 
-    public Special(int upkeep, int speed, int range, int baseMorale) {
+    public Special(int upkeep, int speed, int baseMorale) {
         this.upkeep = upkeep;
         this.speed = speed;
-        this.range = range;
         this.baseMorale = baseMorale;
     }
 
@@ -40,14 +38,6 @@ public class Special {
 
     public void setSpeed(int speed) {
         this.speed = speed;
-    }
-
-    public int getRange() {
-        return range;
-    }
-
-    public void setRange(int range) {
-        this.range = range;
     }
 
     public int getBaseMorale() {

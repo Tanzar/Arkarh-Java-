@@ -5,14 +5,17 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units;
 
+import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
+import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.TMP.Tier;
 import com.tanzar.Arkarh.GamePlay.TMP.Category;
-import com.tanzar.Arkarh.GamePlay.Modifiers.PassiveEffect;
-import com.tanzar.Arkarh.GamePlay.Modifiers.Passives;
+import com.tanzar.Arkarh.GamePlay.Units.Modifiers.PassiveEffect;
+import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passives;
 import com.tanzar.Arkarh.GamePlay.TMP.Fraction;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Trigger;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.UnitAbilities;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.UnitAbility;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Attack;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilities;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
 import com.tanzar.Arkarh.GamePlay.Units.Stats.*;
 
 /**
@@ -22,6 +25,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Stats.*;
 public class Unit implements Comparable<Unit>{
     
     //basic
+    private int id;
     private String name;
     private String assetName;
     private Fraction fraction;
@@ -37,6 +41,7 @@ public class Unit implements Comparable<Unit>{
     private UnitAbilities abilities;
     
     public Unit() {
+        this.id = 0;
         this.name = "Unit";
         this.assetName = "none";
         this.fraction = Fraction.none;
@@ -48,7 +53,15 @@ public class Unit implements Comparable<Unit>{
         this.special = new Special();
         this.status = new Status(-1, this.defensive.getBaseHealth(), this.special.getBaseMorale());
         this.passives = new Passives();
-        this.abilities = new UnitAbilities(this);
+        this.abilities = new UnitAbilities();
+    }
+    
+    public int getId(){
+        return this.id;
+    }
+    
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getName() {
@@ -145,6 +158,13 @@ public class Unit implements Comparable<Unit>{
         this.abilities.add(ability);
     }
     
+    public void setAbilities(UnitAbilities abilities){
+        UnitAbility ability = abilities.get(0);
+        if(ability instanceof Attack){
+            this.abilities = abilities;
+        }
+    }
+    
     public UnitAbilities getAbilities(){
         return this.abilities;
     }
@@ -227,15 +247,6 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
-    public boolean isMainAttackPhysical(){
-        if(this.offensive.getSchool().equals(EffectSchool.physical)){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
     public boolean isAlive(){
         return this.status.isAlive();
     }
@@ -271,6 +282,10 @@ public class Unit implements Comparable<Unit>{
     
     public void takeDamage(int damage){
         this.status.takeDamage(damage);
+    }
+    
+    public void useAbilities(Trigger trigger, Battlefield battlefield, CombatReport report){
+        this.abilities.useAbilities(this, trigger, battlefield, report);
     }
     
     @Override

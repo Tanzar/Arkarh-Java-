@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.GamePlay.Modifiers;
+package com.tanzar.Arkarh.GamePlay.Units.Modifiers;
 
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
@@ -16,13 +16,18 @@ import java.util.Objects;
  */
 public class Passive {
     
+    private int id;
     private String name;
+    private String asset;
     private int stacks;
     private int stacksLimit;
     private boolean isStackable;
     private int value;
     private PassiveEffect effect;
     private EffectSchool school;
+
+    public Passive() {
+    }
 
     public Passive(String name, int stacks, int stacksLimit, boolean isStackable, int value, PassiveEffect effect, EffectSchool school) {
         this.name = name;
@@ -34,6 +39,14 @@ public class Passive {
         this.school = school;
         this.adjustStacks();
     }
+    
+    public int getId(){
+        return this.id;
+    }
+    
+    public void setId(int id){
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -42,7 +55,15 @@ public class Passive {
     public void setName(String name) {
         this.name = name;
     }
-
+    
+    public String getAsset(){
+        return this.asset;
+    }
+    
+    public void setAsset(String asset){
+        this.asset = asset;
+    }
+    
     public int getStacks() {
         return stacks;
     }
@@ -66,7 +87,7 @@ public class Passive {
         this.adjustStacks();
     }
 
-    public boolean isIsStackable() {
+    public boolean isStackable() {
         return isStackable;
     }
 

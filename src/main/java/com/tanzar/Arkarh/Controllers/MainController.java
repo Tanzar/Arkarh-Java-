@@ -5,9 +5,12 @@
  */
 package com.tanzar.Arkarh.Controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -21,6 +24,11 @@ public class MainController {
         return "index";
     }
     
+    @RequestMapping("/mapGenerator")
+    public String mapGenerator(Model model){
+        return "mapGenerator";
+    }
+    
     @RequestMapping("/battleSim")
     public String battleSim(Model model){
         return "battleSim";
@@ -29,5 +37,15 @@ public class MainController {
     @RequestMapping("/unitEditor")
     public String unitEdit(Model model){
         return "unitEdit";
+    }
+    
+    @RequestMapping("/test")
+    @ResponseBody
+    public String test(Model model){
+        Gson gson = new Gson();
+        JsonObject obj = new JsonObject();
+        obj.addProperty("id", 10);
+        obj.addProperty("text", "test");
+        return gson.toJson(obj);
     }
 }

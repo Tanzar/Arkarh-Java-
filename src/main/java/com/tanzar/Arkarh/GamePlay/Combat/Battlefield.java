@@ -7,9 +7,9 @@ package com.tanzar.Arkarh.GamePlay.Combat;
 
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.ReportEntry;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Trigger;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.UnitAbilities;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.UnitAbility;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilities;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
 import com.tanzar.Arkarh.GamePlay.Units.Army;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
@@ -87,10 +87,7 @@ public class Battlefield {
         Unit[] fieldedUnits = this.groupUnits(attackingSide, defendingSide);
         Trigger trigger = Trigger.onAction;
         for(Unit unit: fieldedUnits){
-            UnitAbilities abilities = unit.getAbilities(trigger);
-            for(UnitAbility ability: abilities.toArray()){
-                ability.use(trigger, this, report);
-            }
+            unit.useAbilities(trigger, this, report);
         }
         this.reinforcementPhase(report);
     }
@@ -110,6 +107,18 @@ public class Battlefield {
     }
     
     public Side getOppositeSide(Unit unit){
+        BattleSide side = unit.getStatus().getSide();
+        switch(side){
+            case attacker:
+                return this.defendingSide;
+            case defender:
+                return this.attackingSide;
+            default:
+                return null;
+        }
+    }
+    
+    public Side getSide(Unit unit){
         BattleSide side = unit.getStatus().getSide();
         switch(side){
             case attacker:

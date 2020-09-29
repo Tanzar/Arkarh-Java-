@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.GamePlay.Units.Abilities;
+package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 
+import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
+import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Attack;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +22,6 @@ public class UnitAbilities {
     
     public UnitAbilities(){
         this.abilities = new ArrayList<UnitAbility>();
-    }
-    
-    public UnitAbilities(Unit unit){
-        this.abilities = new ArrayList<UnitAbility>();
-        Attack attackAbility = new Attack(unit);
-        this.abilities.add(attackAbility);
     }
     
     public void add(UnitAbility ability){
@@ -49,6 +46,12 @@ public class UnitAbilities {
             result.add(ability);
         }
         return result;
+    }
+    
+    public void useAbilities(Unit source, Trigger trigger, Battlefield battlefield, CombatReport report){
+        for(UnitAbility ability: this.abilities){
+            ability.use(source, trigger, battlefield, report);
+        }
     }
     
     public int size(){

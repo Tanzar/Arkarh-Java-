@@ -40,6 +40,14 @@ public abstract class DAO<entityType, containerType> {
         return id;
     }
     
+    public int[] add(entityType[] entities){
+        int[] ids = new int[entities.length];
+        for(int i = 0; i < ids.length; i++){
+            ids[i] = this.add(entities[i]);
+        }
+        return ids;
+    }
+    
     public void remove(entityType object) {
         Session ses = this.entityManager.unwrap(Session.class);
         if(this.entityManager.contains(object)){

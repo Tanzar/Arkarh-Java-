@@ -26,20 +26,23 @@ public class UnitEffectEntity implements Serializable{
     @Column(name = "id", insertable = false, updatable = false)
     private Integer id;
     
+    @Column(name = "unit_id")
+    private int unitId;
+    
     @Column(name = "effect_name")
     private String effectName;
     
-    @Column(name = "unit_id")
-    private int unitId;
+    @Column(name = "effect_group")
+    private String effectGroup;
     
     @Column(name = "asset_name")
     private String assetName;
     
-    @Column(name = "effect")
-    private String effect;
+    @Column(name = "charges")
+    private int charges;
     
-    @Column(name = "value")
-    private int value;
+    @Column(name = "effect_json")
+    private String effect;
 
     public UnitEffectEntity() {
     }
@@ -52,6 +55,14 @@ public class UnitEffectEntity implements Serializable{
         this.id = id;
     }
 
+    public int getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(int unitId) {
+        this.unitId = unitId;
+    }
+
     public String getEffectName() {
         return effectName;
     }
@@ -60,12 +71,12 @@ public class UnitEffectEntity implements Serializable{
         this.effectName = effectName;
     }
 
-    public int getUnitId() {
-        return unitId;
+    public String getEffectGroup() {
+        return effectGroup;
     }
 
-    public void setUnitId(int unitId) {
-        this.unitId = unitId;
+    public void setEffectGroup(String effectGroup) {
+        this.effectGroup = effectGroup;
     }
 
     public String getAssetName() {
@@ -84,12 +95,13 @@ public class UnitEffectEntity implements Serializable{
         this.effect = effect;
     }
 
-    public int getValue() {
-        return value;
+    public int getCharges() {
+        return charges;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setCharges(int charges) {
+        this.charges = charges;
     }
+
     
 }

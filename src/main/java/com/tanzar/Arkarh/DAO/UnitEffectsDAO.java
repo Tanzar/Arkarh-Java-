@@ -36,12 +36,22 @@ public class UnitEffectsDAO extends DAO<UnitEffectEntity, UnitEffects> {
     
     public UnitEffects getByUnitId(int id){
         try {
-            UnitEffects effects = this.get("where units_id =" + id);
+            UnitEffects effects = this.get("where unit_id =" + id);
             return effects;
         } catch (QueryException ex) {
             
         }
-        return null;
+        return new UnitEffects();
+    }
+    
+    public UnitEffects getByUnitIdAndEffectGroup(int id, String group){
+        try {
+            UnitEffects effects = this.get("where unit_id =" + id + " and effect_group='" + group + "'");
+            return effects;
+        } catch (QueryException ex) {
+            
+        }
+        return new UnitEffects();
     }
     
     public void delete(int id){

@@ -120,7 +120,7 @@ public class Side {
     public int getWidth(){
         return this.width;
     }
-    
+    /*
     public int[] getUnitTargetsPositions(Unit attacker){
         int position = attacker.getStatus().getPosition();
         int range = attacker.getSpecial().getRange();
@@ -141,7 +141,7 @@ public class Side {
             }
         }
         return finalPositions;
-    }
+    }*/
     
     public boolean isSideCappableToFight(){
         if(this.isPercentageCappableToFight(20)){
@@ -257,6 +257,23 @@ public class Side {
         }
         else{
             return null;
+        }
+    }
+    
+    public boolean isAnyOnPosition(int position){
+        if(position < this.width - 1 && position > -1){
+            if(this.front[position] != null){
+                return true;
+            }
+            if(this.back[position] != null){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
         }
     }
     

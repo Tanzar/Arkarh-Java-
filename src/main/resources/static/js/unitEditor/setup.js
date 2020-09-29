@@ -11,6 +11,8 @@ function setup(unitsTableId, fractionsId, assetsId, rolesId, tiersId, categories
     setupUnits(unitsTableId);
     setupSelects(fractionsId, assetsId, rolesId, tiersId, categoriesId, effectsId, attacksId);
     parametersTable = document.getElementById(parametersTableId);
+    var tes = getFromUrl("/unitEditor/getOptions");
+    console.log(tes);
 }
 
 function setupUnits(tableId){
@@ -24,12 +26,12 @@ function setupUnits(tableId){
                         scrollY: 500,
                         scrollCollapse: true,
                         ajax: {
-                            url: "/getAllUnits",
+                            url: "/unitEditor/getAllUnits",
                             dataSrc: "",
                             mDataProp: ""
                         },
                         "columns": [
-                            { "data": "name" },
+                            { "data": "unitName" },
                             { "data": "assetName" },
                             { "data": "fraction" },
                             { "data": "role" },
@@ -69,7 +71,7 @@ function setupSelects(fractionsId, assetsId, rolesId, tiersId, categoriesId, eff
 }
 
 function setupFractions(fractionSelect){
-    var fractions = getFromUrl("/getFractions");
+    var fractions = getFromUrl("/unitEditor/getFractions");
     for(var i = 0; i < fractions.length; i++){
         addOptionText(fractionSelect, fractions[i], fractions[i]);
     }
@@ -88,35 +90,35 @@ function setupUnitAssets(unitsSelect){
 }
 
 function setupRoles(rolesSelect){
-    var roles = getFromUrl("/getRoles");
+    var roles = getFromUrl("/unitEditor/getRoles");
     for(var i = 0; i < roles.length; i++){
         addOptionText(rolesSelect, roles[i], roles[i]);
     }
 }
 
 function setupTiers(tierSelect){
-    var tiers = getFromUrl("/getTiers");
+    var tiers = getFromUrl("/unitEditor/getTiers");
     for(var i = 0; i < tiers.length; i++){
         addOptionText(tierSelect, tiers[i], tiers[i]);
     }
 }
 
 function setupUnitCategories(categorySelect){
-    var categories = getFromUrl("/getUnitsCategories");
+    var categories = getFromUrl("/unitEditor/getUnitsCategories");
     for(var i = 0; i < categories.length; i++){
         addOptionText(categorySelect, categories[i], categories[i]);
     }
 }
 
 function setupEffectTypes(effectSelect){
-    var effects = getFromUrl("/getEffectTypes");
+    var effects = getFromUrl("/unitEditor/getEffectTypes");
     for(var i = 0; i < effects.length; i++){
         addOptionText(effectSelect, effects[i], effects[i]);
     }
 }
 
 function setupAttackTypes(attackSelect){
-    var attacks = getFromUrl("/getAttackTypes");
+    var attacks = getFromUrl("/unitEditor/getAttackTypes");
     for(var i = 0; i < attacks.length; i++){
         addOptionText(attackSelect, attacks[i], attacks[i]);
     }
@@ -228,7 +230,7 @@ function addUnit(){
         contentType:"application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(unit),
-        url: "/addUnit",
+        url: "/unitEditor/addUnit",
         success: function (response) {
             console.log(response);
             refreshUnitsTable();
@@ -250,7 +252,7 @@ function updateUnit(){
         contentType:"application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(unit),
-        url: "/updateUnit",
+        url: "/unitEditor/updateUnit",
         success: function (response) {
             console.log(response);
             refreshUnitsTable();
@@ -272,7 +274,7 @@ function deleteUnit(){
         contentType:"application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(unit),
-        url: "/deleteUnit",
+        url: "/unitEditor/deleteUnit",
         success: function (response) {
             console.log(response);
             refreshUnitsTable();

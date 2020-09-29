@@ -13,10 +13,10 @@ import com.tanzar.Arkarh.GamePlay.Combat.BattleSide;
  */
 public class Status {
     private int position;
+    private State state;
     private BattleSide side = BattleSide.none;
     private int health;
     private int morale;
-    private boolean risen;
 
     public Status() {
     }
@@ -25,7 +25,7 @@ public class Status {
         this.position = position;
         this.health = health;
         this.morale = morale;
-        this.risen = false;
+        this.state = State.alive;
     }
     
     public int getPosition() {
@@ -44,8 +44,12 @@ public class Status {
         this.side = side;
     }
     
+    public State getState(){
+        return this.state;
+    }
+    
     public boolean isAlive(){
-        if(!risen && health > 0){
+        if(this.state.equals(State.alive)){
             return true;
         }
         else{
@@ -63,7 +67,9 @@ public class Status {
     }
     
     public void rise(){
-        this.risen = true;
+        if(this.state.equals(State.dead)){
+            this.state = State.risen;
+        }
     }
     
     public void damageMorale(int loss){
@@ -72,6 +78,9 @@ public class Status {
     
     public void takeDamage(int damage){
         this.health = this.health - damage;
+        if(this.health < 1){
+            this.state = State.dead;
+        }
     }
 
 }

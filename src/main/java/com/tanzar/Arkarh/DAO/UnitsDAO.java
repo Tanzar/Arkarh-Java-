@@ -36,10 +36,6 @@ public class UnitsDAO extends DAO<UnitEntity, UnitEntities> {
         return units;
     }
     
-    public void updateUnit(UnitEntity entity){
-        this.update(entity);
-    }
-    
     public UnitEntity getByName(String name){
         try{
             UnitEntities units = this.get("where unit_name ='" + name + "'");

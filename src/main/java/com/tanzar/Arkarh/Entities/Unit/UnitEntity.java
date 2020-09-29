@@ -50,17 +50,11 @@ public class UnitEntity implements Serializable{
     @Column(name = "spell_power")
     private int spellPower;
     
-    @Column(name = "effect_type")
-    private String effectType;
-    
     @Column(name = "damage")
     private int damage;
     
     @Column(name = "healing")
     private int healing;
-    
-    @Column(name = "attack_type")
-    private String attackType;
     
     @Column(name = "defense")
     private int defense;
@@ -79,9 +73,6 @@ public class UnitEntity implements Serializable{
     
     @Column(name = "speed")
     private int speed;
-    
-    @Column(name = "range")
-    private int range;
     
     @Column(name = "morale")
     private int morale;
@@ -161,14 +152,6 @@ public class UnitEntity implements Serializable{
         this.spellPower = spellPower;
     }
 
-    public String getEffectType() {
-        return effectType;
-    }
-
-    public void setEffectType(String effectType) {
-        this.effectType = effectType;
-    }
-
     public int getDamage() {
         return damage;
     }
@@ -183,14 +166,6 @@ public class UnitEntity implements Serializable{
 
     public void setHealing(int healing) {
         this.healing = healing;
-    }
-
-    public String getAttackType() {
-        return attackType;
-    }
-
-    public void setAttackType(String attackType) {
-        this.attackType = attackType;
     }
 
     public int getDefense() {
@@ -239,14 +214,6 @@ public class UnitEntity implements Serializable{
 
     public void setSpeed(int speed) {
         this.speed = speed;
-    }
-
-    public int getRange() {
-        return range;
-    }
-
-    public void setRange(int range) {
-        this.range = range;
     }
 
     public int getMorale() {

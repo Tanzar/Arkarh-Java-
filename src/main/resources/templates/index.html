@@ -4,24 +4,18 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
     <head>
-        <title>Test</title>
+        <title>TODO supply a title</title>
         <meta charset="UTF-8">
-	<script type="text/javascript" src="js/Game.js"></script>
-        <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="js/index.js"></script>
     </head>
     <body>
-        <input id="generateSeed" type="number">
-        <button id="generateButton" onclick="generate()">Generuj</button>
-        <br><br>
-        <canvas id="myCanvas" width="1000" height="500" style="border:1px solid #000000;"></canvas>
+        <button onclick="openInNewTab('/mapGenerator')">Map Generator</button><br>
+        <button onclick="openInNewTab('/unitEditor')">Unit Editor</button><br>
+        <button onclick="openInNewTab('/battleSim')">Battle Simulator</button><br>
+        <button onclick="openInNewTab('/testBattle')">Test battle</button><br>
+        <button onclick="openInNewTab('/test')">Test</button><br>
     </body>
-    <script>
-        var canvas = document.getElementById("myCanvas");
-        function generate(){
-            var seed = document.getElementById("generateSeed").value;
-            startGame(canvas, seed);
-        }
-    </script>
 </html>
