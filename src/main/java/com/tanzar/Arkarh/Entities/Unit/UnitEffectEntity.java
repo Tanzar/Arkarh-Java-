@@ -5,6 +5,7 @@
  */
 package com.tanzar.Arkarh.Entities.Unit;
 
+import com.tanzar.Arkarh.GamePlay.Units.UnitEffectGroup;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,6 +46,13 @@ public class UnitEffectEntity implements Serializable{
     private String effect;
 
     public UnitEffectEntity() {
+        this.id = 0;
+        this.unitId = 0;
+        this.effectName = "none";
+        this.effectGroup = UnitEffectGroup.attack.toString();
+        this.assetName = "none.png";
+        this.charges = -1;
+        this.effect = "";
     }
 
     public Integer getId() {

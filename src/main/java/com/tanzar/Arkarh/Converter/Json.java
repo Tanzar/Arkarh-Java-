@@ -46,4 +46,10 @@ public class Json {
     public int getInt(String name){
         return this.json.get(name).getAsInt();
     }
+    
+    public static String toJson(Object object){
+        Gson gson = new Gson();
+        String json = gson.toJson(object);
+        return json;
+    }
 }

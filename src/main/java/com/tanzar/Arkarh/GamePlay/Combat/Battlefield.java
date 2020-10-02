@@ -85,9 +85,8 @@ public class Battlefield {
         report.nextTick();
         report.battlefieldState(attackingSide, defendingSide);
         Unit[] fieldedUnits = this.groupUnits(attackingSide, defendingSide);
-        Trigger trigger = Trigger.onAction;
         for(Unit unit: fieldedUnits){
-            unit.useAbilities(trigger, this, report);
+            unit.useAbilities(Trigger.onAction, this, report);
         }
         this.reinforcementPhase(report);
     }
@@ -101,9 +100,33 @@ public class Battlefield {
     
     private void reinforcementPhase(CombatReport report){
         report.nextReinforcementPhase();
-        this.attackingSide.reorganizeLinesNew();
-        this.defendingSide.reorganizeLinesNew();
+        this.onDeathTrigger(report);
+        this.reinforceSides(report);
         report.battlefieldState(attackingSide, defendingSide);
+    }
+    
+    /**
+     * WARNING!!!
+     * DONT MAKE ABILITIES WITH ON DEATH TRIGGER THAT DEAL DAMAGE IT WILL BE BUGGY
+     */
+    private void onDeathTrigger(CombatReport report){
+        this.attackingSide.updateUnitsStatus();
+        this.defendingSide.updateUnitsStatus();
+        Units deadUnits = this.attackingSide.getDeadFieldedUnits();
+        Units deadDefenders = this.defendingSide.getDeadFieldedUnits();
+        deadUnits.addUnits(deadDefenders);
+        for(Unit unit: deadUnits.toArray()){
+            unit.useAbilities(Trigger.onDeath, this, report);
+        }
+    }
+    
+    private void reinforceSides(CombatReport report){
+        Units reinforcements = this.attackingSide.reorganizeLinesNew();
+        Units defendersReinforcements = this.defendingSide.reorganizeLinesNew();
+        reinforcements.addUnits(defendersReinforcements);
+        for(Unit unit: reinforcements.toArray()){
+            unit.useAbilities(Trigger.onEntry, this, report);
+        }
     }
     
     public Side getOppositeSide(Unit unit){

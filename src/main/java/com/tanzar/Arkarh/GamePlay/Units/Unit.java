@@ -43,7 +43,7 @@ public class Unit implements Comparable<Unit>{
     public Unit() {
         this.id = 0;
         this.name = "Unit";
-        this.assetName = "none";
+        this.assetName = "none.png";
         this.fraction = Fraction.none;
         this.role = Role.warrior;
         this.tier = Tier.base;
@@ -286,6 +286,10 @@ public class Unit implements Comparable<Unit>{
     
     public void useAbilities(Trigger trigger, Battlefield battlefield, CombatReport report){
         this.abilities.useAbilities(this, trigger, battlefield, report);
+    }
+    
+    public void updateStatus(){
+        this.status.updateState();
     }
     
     @Override

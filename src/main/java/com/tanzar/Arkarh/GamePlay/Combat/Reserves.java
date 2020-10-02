@@ -28,6 +28,22 @@ public class Reserves {
         return this.reserves.get(index);
     }
     
+    public Unit get(boolean front){
+        Unit result = null;
+        for(Unit unit: this.reserves){
+            if(unit.isCappableToFight()){
+                if(unit.isFront() == front){
+                    result = unit;
+                    break;
+                }
+            }
+        }
+        if(result != null){
+            this.reserves.remove(result);
+        }
+        return result;
+    }
+    
     public Unit getUnit(Role role){
         Unit result = null;
         for(Unit unit: this.reserves){
@@ -89,4 +105,9 @@ public class Reserves {
         }
         return count;
     }
+    
+    public void orderBySpeed(){
+        this.reserves.sort(null);
+    }
+    
 }

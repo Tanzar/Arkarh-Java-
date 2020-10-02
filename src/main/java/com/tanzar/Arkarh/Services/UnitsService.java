@@ -7,6 +7,7 @@ package com.tanzar.Arkarh.Services;
 
 import com.tanzar.Arkarh.Containers.UnitEffects;
 import com.tanzar.Arkarh.Containers.UnitEntities;
+import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.Converter.UnitsConverter;
 import com.tanzar.Arkarh.DAO.UnitEffectsDAO;
 import com.tanzar.Arkarh.DAO.UnitsDAO;
@@ -16,6 +17,7 @@ import com.tanzar.Arkarh.GamePlay.Combat.BattleSide;
 import com.tanzar.Arkarh.GamePlay.TMP.Category;
 import com.tanzar.Arkarh.GamePlay.TMP.Fraction;
 import com.tanzar.Arkarh.GamePlay.TMP.Tier;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Attack;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilities;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
 import com.tanzar.Arkarh.GamePlay.Units.TargetsSelection;
@@ -28,6 +30,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Stats.Offensive;
 import com.tanzar.Arkarh.GamePlay.Units.Stats.Special;
 import com.tanzar.Arkarh.GamePlay.Units.Stats.Status;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
+import com.tanzar.Arkarh.GamePlay.Units.UnitEffectGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -128,4 +131,22 @@ public class UnitsService {
         this.effectsDAO.delete(id);
     }
     
+    public String newUnitAsJson(){
+        Unit unit = new Unit();
+        UnitEffectEntity entity = new UnitEffectEntity();
+        entity.setEffectName("Attack");
+        entity.setEffectGroup(UnitEffectGroup.attack.toString());
+        Json json = new Json();
+        json.add("attackStyle", TargetsSelection.single.toString());
+        json.add("range", 1);
+        json.add("areaSize", 1);
+        json.add("school", EffectSchool.physical.toString());
+        String attackJson = json.formJson();
+        entity.setEffect(attackJson);
+        entity.setAssetName("none.png");
+        Attack attack = new Attack(entity);
+        unit.addAbility(attack);
+        String result = Json.toJson(unit);
+        return result;
+    }
 }

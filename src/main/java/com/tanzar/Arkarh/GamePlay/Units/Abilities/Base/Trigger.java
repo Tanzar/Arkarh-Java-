@@ -7,13 +7,13 @@ package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 
 /**
  *
+ * WARNING!!!
+ * DONT MAKE ABILITIES WITH ON DEATH TRIGGER THAT DEAL DAMAGE IT WILL BE BUGGY
  * @author spako
  */
 public enum Trigger {
-    onEntry,
     onAction,
-    onReorganize,
     onDeath,
-    onDamageTaken,
-    onKill;
+    onEntry,
+    onDamageTaken;
 }

@@ -49,53 +49,9 @@ public class UnitEditorController {
         return gson.toJson(enums);
     }
     
-    @RequestMapping(value = "/getFractions", method = RequestMethod.GET)
-    public String getFractions(){
-        Fraction fractions[] = Fraction.values();
-        Gson gson = new Gson();
-        return gson.toJson(fractions);
-    }
-    
-    @RequestMapping(value = "/getRoles", method = RequestMethod.GET)
-    public String getRoles(){
-        Role roles[] = Role.values();
-        Gson gson = new Gson();
-        return gson.toJson(roles);
-    }
-    
-    @RequestMapping(value = "/getTiers", method = RequestMethod.GET)
-    public String getTiers(){
-        Tier tiers[] = Tier.values();
-        Gson gson = new Gson();
-        return gson.toJson(tiers);
-    }
-    
-    @RequestMapping(value = "/getUnitsCategories", method = RequestMethod.GET)
-    public String getUnitCategories(){
-        Category categories[] = Category.values();
-        Gson gson = new Gson();
-        return gson.toJson(categories);
-    }
-    
-    @RequestMapping(value = "/getEffectTypes", method = RequestMethod.GET)
-    public String getEffectTypes(){
-        EffectSchool effects[] = EffectSchool.values();
-        Gson gson = new Gson();
-        return gson.toJson(effects);
-    }
-    
-    @RequestMapping(value = "/getAttackTypes", method = RequestMethod.GET)
-    public String getAttackTypes(){
-        TargetsSelection attacks[] = TargetsSelection.values();
-        Gson gson = new Gson();
-        return gson.toJson(attacks);
-    }
-    
     @RequestMapping(value = "/getUnitForm", method = RequestMethod.GET)
     public String getUnitForm(){
-        Unit unit = new Unit();
-        Gson gson = new Gson();
-        return gson.toJson(unit);
+        return this.unitsService.newUnitAsJson();
     }
     
     @RequestMapping(value="/addUnit", method=RequestMethod.POST, consumes="application/json; charset=UTF-8")

@@ -10,17 +10,25 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
         <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="css/editor/modal.css"/>
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.jqueryui.min.js"></script>
 	<script type="text/javascript" src="js/unitEditor/setup.js"></script>
+	<script type="text/javascript" src="js/unitEditor/newUnit.js"></script>
     </head>
     <body>
+        <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+    </div>
         <table style="width: 100%">
             <tr>
+                <td width="25%"></td>
                 <td width="50%">
                     <table>
+                        <button id="newUnitButton">New Unit</button><br><br>
                         <table id="units_table" class="cell-border" style="text-align: top">
                         <thead>
                             <tr>
@@ -35,116 +43,16 @@ and open the template in the editor.
                         <br>
                         <button id="button_delete">Delete</button>
                 </td>
-                <td>
-                    <table id="unit_paramaters_table">
-                        <thead>
-                            <tr>
-                                <th>Parameter</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tr>
-                            <td>Unit name</td>
-                            <td><input type="text" id="unit_name" value="none"></td>
-                        </tr>
-                        <tr>
-                            <td>Asset</td>
-                            <td><select id="unit_asset"></select></td>
-                            <td><img id="asset_preview" width="50" height="50" ></td>
-                        </tr>
-                        <tr>
-                            <td>Fraction</td>
-                            <td><select id="unit_fraction"></select></td>
-                        </tr>
-                        <tr>
-                            <td>Role on battlefield</td>
-                            <td><select id="unit_role"></select></td>
-                        </tr>
-                        <tr>
-                            <td>Unit tier</td>
-                            <td><select id="unit_tier"></select></td>
-                        </tr>
-                        <tr>
-                            <td>Category</td>
-                            <td><select id="unit_category"></select></td>
-                        </tr>
-                        <tr>
-                            <td>Attack</td>
-                            <td><input type="number" id="unit_attack" onkeydown="return false" min="1" value="1"></td>
-                        </tr>
-                        <tr>
-                            <td>Spell power</td>
-                            <td><input type="number" id="unit_spell_power" onkeydown="return false" min="0" value="0"></td>
-                        </tr>
-                        <tr>
-                            <td>Attack/Healing type</td>
-                            <td><select id="unit_effect_type"></select></td>
-                        </tr>
-                        <tr>
-                            <td>Base Damage</td>
-                            <td><input type="number" id="unit_damage" onkeydown="return false" min="1" value="1"></td>
-                        </tr>
-                        <tr>
-                            <td>Base Healing</td>
-                            <td><input type="number" id="unit_healing" onkeydown="return false" min="0" value="0"></td>
-                        </tr>
-                        <tr>
-                            <td>Attack type</td>
-                            <td><select id="unit_attack_type"></select></td>
-                        </tr>
-                        <tr>
-                            <td>Defense</td>
-                            <td><input type="number" id="unit_defense" onkeydown="return false" min="1" value="1"></td>
-                        </tr>
-                        <tr>
-                            <td>Armor</td>
-                            <td><input type="number" id="unit_armor" onkeydown="return false" min="0" max="75" value="0">%</td>
-                        </tr>
-                        <tr>
-                            <td>Ward</td>
-                            <td><input type="number" id="unit_ward" onkeydown="return false" min="0" max="75" value="0">%</td>
-                        </tr>
-                        <tr>
-                            <td>Health Points</td>
-                            <td><input type="number" id="unit_health" onkeydown="return false" min="1" value="1"></td>
-                        </tr>
-                        <tr>
-                            <td>Upkeep</td>
-                            <td><input type="number" id="unit_upkeep" onkeydown="return false" min="1" value="1"></td>
-                        </tr>
-                        <tr>
-                            <td>Speed</td>
-                            <td><input type="number" id="unit_speed" onkeydown="return false" min="1" value="1"></td>
-                        </tr>
-                        <tr>
-                            <td>Range</td>
-                            <td><input type="number" id="unit_range" onkeydown="return false" min="0" value="1"></td>
-                        </tr>
-                        <tr>
-                            <td>Morale</td>
-                            <td><input type="number" id="unit_morale" onkeydown="return false" min="1000" value="1000"></td>
-                        </tr>
-                        <tr>
-                            <td>Index</td>
-                            <td><input type="number" value="0" disabled></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button id="button_save">Save</button>
-                                <button id="button_update">Update</button>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
+                <td width="25%"></td>
             </tr>
         </table>
     </body>
     <script>
-        setup('units_table', 'unit_fraction', 'unit_asset', 'unit_role', 'unit_tier', 'unit_category', 'unit_effect_type', 'unit_attack_type', 'unit_paramaters_table');
-        var tab = document.getElementById('unit_paramaters_table');
-        var btn_save = document.getElementById('button_save');
-        var btn_update = document.getElementById('button_update');
-        var btn_delete = document.getElementById('button_delete');
-        setupButtons(btn_save, btn_update, btn_delete);
+        setup('units_table');
+        var newUnitButton = document.getElementById("newUnitButton");
+        newUnitButton.onclick = function(){
+            var modal = document.getElementById("myModal");
+            newUnit(modal);
+        }
     </script>
 </html>

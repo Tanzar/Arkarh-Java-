@@ -35,12 +35,13 @@ public class Side {
         this.sideSize = army.size();
         this.army.setSide(side);
         this.setupLines(army);
+        this.setupReserves(army);
+        this.reserves.orderBySpeed();
     }
     
     private void setupLines(Army army){
         int lineWidth = this.setupLine(army, this.front, Role.flanker, Role.warrior, false, this.width);
         this.setupLine(army, this.back, Role.mage, Role.shooter, true, lineWidth);
-        this.setupReserves(army);
         this.centerLines();
     }
     
@@ -120,28 +121,6 @@ public class Side {
     public int getWidth(){
         return this.width;
     }
-    /*
-    public int[] getUnitTargetsPositions(Unit attacker){
-        int position = attacker.getStatus().getPosition();
-        int range = attacker.getSpecial().getRange();
-        int[] firstPositions = new int[2 * range + 1];
-        int count = 0;
-        for(int i = 0; i <= firstPositions.length; i++){
-            firstPositions[i] = i + position - range;
-            if(firstPositions[i] >= 0){
-                count++;
-            }
-        }
-        int[] finalPositions = new int[count];
-        int index = 0;
-        for(int i = 0; i < firstPositions.length; i++){
-            if(firstPositions[i] <= 0 && firstPositions[i] < this.width){
-                finalPositions[index] = firstPositions[i];
-                index++;
-            }
-        }
-        return finalPositions;
-    }*/
     
     public boolean isSideCappableToFight(){
         if(this.isPercentageCappableToFight(20)){
@@ -174,38 +153,40 @@ public class Side {
         }
     }
     
-    public void reorganizeLinesNew(){
+    public Units reorganizeLinesNew(){
+        Units affectedUnits = new Units();
         int x = 0;
         for(int i = 0; i < this.width; i++){
             if(i % 2 == 1){
-                int index = (int) Math.round(this.width / 2) - x;
-                this.reinforceNew(this.front, index);
-                this.reinforceNew(this.back, index);
+                this.reinforcePosition(affectedUnits, -1 * x);
             }
             else{
-                int index = (int) Math.round(this.width / 2) + x;
+                this.reinforcePosition(affectedUnits, x);
                 x++;
-                this.reinforceNew(this.front, index);
-                this.reinforceNew(this.back, index);
             }
         }
         this.centerLines();
-    } 
+        return affectedUnits;
+    }
     
-    private void reinforceNew(Unit[] line, int index){
+    private void reinforcePosition(Units affectedUnits, int x){
+        int index = (int) Math.round(this.width / 2) + x;
+        this.reinforceNew(this.front, index, affectedUnits);
+        this.reinforceNew(this.back, index, affectedUnits);
+    }
+    
+    private void reinforceNew(Unit[] line, int index, Units affectedUnits){
         if(line[index] != null){
             Unit currentUnit = line[index];
             if(!currentUnit.isCappableToFight()){
                 this.reserves.addUnit(currentUnit);
                 line[index] = null;
-                Role currentRole = currentUnit.getRole();
-                Unit reinforcement = this.reserves.getUnit(currentRole);
-                if(reinforcement == null){
-                    reinforcement = this.reserves.getUnit(currentRole.nextRoleInLine());
-                }
+                boolean isFront = currentUnit.isFront();
+                Unit reinforcement = this.reserves.get(isFront);
                 if(reinforcement != null){
                     this.reserves.remove(reinforcement);
                     reinforcement.setPosition(index);
+                    affectedUnits.add(reinforcement);
                     line[index] = reinforcement;
                 }
             }
@@ -226,6 +207,34 @@ public class Side {
             }
             if(this.back[i] != null){
                 units.add(this.back[i]);
+            }
+        }
+        return units;
+    }
+    
+    public void updateUnitsStatus(){
+        for(int i = 0; i < this.front.length; i++){
+            if(this.front[i] != null){
+                this.front[i].updateStatus();
+            }
+            if(this.back[i] != null){
+                this.back[i].updateStatus();
+            }
+        }
+    }
+    
+    public Units getDeadFieldedUnits(){
+        Units units = new Units();
+        for(int i = 0; i < this.front.length; i++){
+            if(this.front[i] != null){
+                if(!this.front[i].isAlive()){
+                    units.add(this.front[i]);
+                }
+            }
+            if(this.back[i] != null){
+                if(!this.back[i].isAlive()){
+                    units.add(this.back[i]);
+                }
             }
         }
         return units;

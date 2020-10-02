@@ -21,7 +21,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Units;
 public class Heal extends UnitAbility{
 
     public Heal(UnitEffectEntity entity) {
-        super(entity, Trigger.onReorganize);
+        super(entity, Trigger.onAction);
     }
 
     @Override

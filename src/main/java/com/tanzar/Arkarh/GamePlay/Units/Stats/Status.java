@@ -78,7 +78,10 @@ public class Status {
     
     public void takeDamage(int damage){
         this.health = this.health - damage;
-        if(this.health < 1){
+    }
+    
+    public void updateState(){
+        if(this.health < 1 && this.state.equals(State.alive)){
             this.state = State.dead;
         }
     }
