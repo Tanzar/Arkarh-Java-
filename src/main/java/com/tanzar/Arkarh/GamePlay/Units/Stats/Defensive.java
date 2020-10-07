@@ -5,6 +5,8 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Stats;
 
+import com.tanzar.Arkarh.Converter.Json;
+
 /**
  *
  * @author spako
@@ -18,6 +20,10 @@ public class Defensive {
     private final int maxWard = 75;
 
     public Defensive() {
+        this.defense = 1;
+        this.armor = 0;
+        this.ward = 0;
+        this.baseHealth = 1;
     }
 
     public Defensive(int defense, int armor, int ward, int baseHealth) {
@@ -25,6 +31,14 @@ public class Defensive {
         this.armor = armor;
         this.ward = ward;
         this.baseHealth = baseHealth;
+    }
+    
+    public Defensive(String defensiveJson){
+        Json json = new Json(defensiveJson);
+        this.defense = json.getInt("defense");
+        this.armor = json.getInt("armor");
+        this.ward = json.getInt("ward");
+        this.baseHealth = json.getInt("baseHealth");
     }
     
     public void setDefense(int value){

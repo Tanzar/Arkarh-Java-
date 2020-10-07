@@ -6,6 +6,8 @@
 package com.tanzar.Arkarh.Converter;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -41,6 +43,22 @@ public class Json {
     
     public String getString(String name){
         return this.json.get(name).getAsString();
+    }
+    
+    public String getInnerJson(String name){
+        JsonElement element = json.get(name);
+        String str = this.gson.toJson(element);
+        return str;
+    }
+    
+    public String[] getStringArray(String name){
+        JsonArray jsonArray = this.json.get(name).getAsJsonArray();
+        String[] resultArray = new String[jsonArray.size()];
+        for(int i = 0; i < resultArray.length; i++){
+            JsonElement element = jsonArray.get(i);
+            resultArray[i] = this.gson.toJson(element);
+        }
+        return resultArray;
     }
     
     public int getInt(String name){

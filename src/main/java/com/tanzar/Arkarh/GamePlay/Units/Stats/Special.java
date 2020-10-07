@@ -5,6 +5,8 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Stats;
 
+import com.tanzar.Arkarh.Converter.Json;
+
 /**
  *
  * @author spako
@@ -16,12 +18,22 @@ public class Special {
     private int moraleLoss = 10;
 
     public Special() {
+        this.upkeep = 1;
+        this.speed = 1;
+        this.baseMorale = 1000;
     }
 
     public Special(int upkeep, int speed, int baseMorale) {
         this.upkeep = upkeep;
         this.speed = speed;
         this.baseMorale = baseMorale;
+    }
+    
+    public Special(String specialJson){
+        Json json = new Json(specialJson);
+        this.baseMorale = json.getInt("baseMorale");
+        this.speed = json.getInt("speed");
+        this.upkeep = json.getInt("upkeep");
     }
 
     public int getUpkeep() {

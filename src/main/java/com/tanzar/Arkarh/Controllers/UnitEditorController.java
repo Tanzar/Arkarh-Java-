@@ -10,6 +10,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tanzar.Arkarh.Containers.UnitEntities;
+import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.TMP.*;
 import com.tanzar.Arkarh.GamePlay.Units.TargetsSelection;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
@@ -18,6 +19,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 import com.tanzar.Arkarh.Services.UnitsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,9 +38,8 @@ public class UnitEditorController {
     
     @RequestMapping(value = "/getAllUnits", method = RequestMethod.GET)
     public String getAllUnits(){
-        Gson gson = new Gson();
-        UnitEntities units = this.unitsService.getAllUnitEntities();
-        String result = gson.toJson(units.toArray());
+        Units units = this.unitsService.getAll();
+        String result = Json.toJson(units.toArray());
         return result;
     }
     
@@ -57,10 +58,8 @@ public class UnitEditorController {
     @RequestMapping(value="/addUnit", method=RequestMethod.POST, consumes="application/json; charset=UTF-8")
     public String add(@RequestBody String form){
         String response = "Unit added.";
-        Gson gson = new Gson();
-        Unit newUnit = gson.fromJson(form, Unit.class);
         try{
-            this.unitsService.add(newUnit);
+            this.unitsService.add(form);
         }
         catch(Exception ex){
             response = "Could not add Unit. Possible reason: unit with that name already exists";
@@ -68,13 +67,17 @@ public class UnitEditorController {
         return response;
     }
     
+    @RequestMapping(value = "/removeUnit={id}", method = RequestMethod.GET)
+    public void removeUnit(@PathVariable(name="id") String id){
+        int index = Integer.parseInt(id);
+        this.unitsService.removeUnit(index);
+    }
+    
     @RequestMapping(value="/updateUnit", method=RequestMethod.POST, consumes="application/json; charset=UTF-8")
     public String update(@RequestBody String form){
         String response = "Unit updated.";
-        Gson gson = new Gson();
-        Unit newUnit = gson.fromJson(form, Unit.class);
         try{
-            this.unitsService.update(newUnit);
+            this.unitsService.update(form);
         }
         catch(Exception ex){
             response = "Could not update Unit.";

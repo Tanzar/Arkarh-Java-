@@ -7,6 +7,7 @@ package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.Entities.Unit.UnitEffectEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
@@ -35,6 +36,15 @@ public abstract class UnitAbility {
         this.asset = entity.getAssetName();
         this.trigger = trigger;
         this.charges = entity.getCharges();
+    }
+    
+    public UnitAbility(Json json){
+        this.id = json.getInt("id");
+        this.group = UnitEffectGroup.valueOf(json.getString("group"));
+        this.name = json.getString("name");
+        this.asset = json.getString("asset");
+        this.trigger = Trigger.valueOf(json.getString("trigger"));
+        this.charges = json.getInt("charges");
     }
     
     public void use(Unit source, Trigger mainTrigger, Battlefield battlefield, CombatReport report){

@@ -5,6 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Stats;
 
+import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.Units.TargetsSelection;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 
@@ -16,16 +17,24 @@ public class Offensive {
     private int attack;
     private int spellPower;
     private int damage;
-    private int baseHealingValue;
 
     public Offensive() {
+        this.attack = 1;
+        this.spellPower = 0;
+        this.damage = 1;
     }
 
-    public Offensive(int attack, int spellPower, int damage, int healing) {
+    public Offensive(int attack, int spellPower, int damage) {
         this.attack = attack;
         this.spellPower = spellPower;
         this.damage = damage;
-        this.baseHealingValue = healing;
+    }
+    
+    public Offensive(String offensiveJson){
+        Json json = new Json(offensiveJson);
+        this.attack = json.getInt("attack");
+        this.damage = json.getInt("damage");
+        this.spellPower = json.getInt("spellPower");
     }
     
     public void setAttack(int value){
@@ -64,19 +73,6 @@ public class Offensive {
         }
         else{
             return this.damage;
-        }
-    }
-    
-    public void setBaseHealing(int value){
-        this.baseHealingValue = value;
-    }
-    
-    public int getBaseHealingValue(){
-        if(this.baseHealingValue < 0){
-            return 0;
-        }
-        else{
-            return this.baseHealingValue;
         }
     }
     

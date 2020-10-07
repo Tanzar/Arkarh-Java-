@@ -15,21 +15,23 @@ and open the template in the editor.
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.jqueryui.min.js"></script>
-	<script type="text/javascript" src="js/unitEditor/setup.js"></script>
-	<script type="text/javascript" src="js/unitEditor/newUnit.js"></script>
+	<script type="text/javascript" src="js/unitEditor/unitsTable.js"></script>
+	<script type="text/javascript" src="js/unitEditor/UnitModal.js"></script>
     </head>
     <body>
         <!-- The Modal -->
-    <div id="myModal" class="modal">
+    <div id="new_unit_modal" class="modal">
 
     </div>
         <table style="width: 100%">
             <tr>
                 <td width="25%"></td>
                 <td width="50%">
-                    <table>
-                        <button id="newUnitButton">New Unit</button><br><br>
-                        <table id="units_table" class="cell-border" style="text-align: top">
+                    <button id="new_unit_button">New Unit</button>
+                    <button id="delete_unit_button">Delete</button>
+                    <button id="update_unit_button">Update</button>
+                    <br><br>
+                    <table id="units_table" class="cell-border" style="text-align: top">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -40,19 +42,44 @@ and open the template in the editor.
                             </tr>
                         </thead>
                     </table>
-                        <br>
-                        <button id="button_delete">Delete</button>
+                    <br><br>
+                    <button id="new_ability_button">New Ability</button>
+                    <button id="delete_ability_button">Delete</button>
+                    <button id="update_ability_button">Update</button>
+                    <br><br>
+                    <table id="unit_ability_table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Group</th>
+                                <th>Asset</th>
+                                <th>Charges</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </td>
                 <td width="25%"></td>
             </tr>
         </table>
     </body>
     <script>
-        setup('units_table');
-        var newUnitButton = document.getElementById("newUnitButton");
+        var unitsTables = new UnitsTables();
+        unitsTables.init('units_table', 'unit_ability_table');
+        var unitsTable = unitsTables.unitsTable;
+        var newUnitButton = document.getElementById("new_unit_button");
         newUnitButton.onclick = function(){
-            var modal = document.getElementById("myModal");
-            newUnit(modal);
+            var modal = document.getElementById("new_unit_modal");
+            createNewUnit(modal, unitsTable);
+        }
+        var updateUnitButton = document.getElementById("update_unit_button");
+        updateUnitButton.onclick = function(){
+            var modal = document.getElementById("new_unit_modal");
+            var unit = unitsTable.getSelected();
+            updateUnit(modal, unitsTable, unit);
+        }
+        var deleteButton = document.getElementById("delete_unit_button");
+        deleteButton.onclick = function(){
+            unitsTable.deleteSelected();
         }
     </script>
 </html>

@@ -5,10 +5,12 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 
+import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Attack;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
+import com.tanzar.Arkarh.GamePlay.Units.UnitEffectGroup;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,31 @@ public class UnitAbilities {
     
     public UnitAbilities(){
         this.abilities = new ArrayList<UnitAbility>();
+    }
+    
+    public UnitAbilities(String abilitiesJson){
+        this.abilities = new ArrayList<UnitAbility>();
+        Json json = new Json(abilitiesJson);
+        String[] str = json.getStringArray("abilities");
+        for(String item: str){
+            this.add(item);
+        }
+    }
+    
+    private void add(String jsonString){
+        Json json = new Json(jsonString);
+        UnitEffectGroup group = UnitEffectGroup.valueOf(json.getString("group"));
+        UnitAbility ability = this.createAbility(json, group);
+        this.add(ability);
+    }
+    
+    private UnitAbility createAbility(Json json, UnitEffectGroup group){
+        switch(group){
+            case attack:
+                return new Attack(json);
+            default:
+                return null;
+        }
     }
     
     public void add(UnitAbility ability){

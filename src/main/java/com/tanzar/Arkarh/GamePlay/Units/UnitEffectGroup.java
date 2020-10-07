@@ -10,7 +10,6 @@ package com.tanzar.Arkarh.GamePlay.Units;
  * @author spako
  */
 public enum UnitEffectGroup {
-    passive,
     applyPassive,//target, jaki buff
     attack,//target, za ile
     heal,//target, za ile

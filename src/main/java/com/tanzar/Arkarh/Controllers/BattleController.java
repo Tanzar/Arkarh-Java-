@@ -88,7 +88,7 @@ public class BattleController {
     }
     
     private Unit newUnit(Role role, int attack, int spellPower, EffectSchool damageType, int damage, TargetsSelection attackType, int defense, int armor, int ward, int baseHealth, int speed, int range, int areaSize){
-        Offensive offensive = new Offensive(attack, spellPower, damage, 0);
+        Offensive offensive = new Offensive(attack, spellPower, damage);
         Defensive defensive = new Defensive(defense, armor, ward, baseHealth);
         Special special = new Special(1, speed, 100);
         Unit unit = new Unit();

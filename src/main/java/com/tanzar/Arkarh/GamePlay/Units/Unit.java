@@ -5,6 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units;
 
+import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.TMP.Tier;
@@ -55,6 +56,24 @@ public class Unit implements Comparable<Unit>{
         this.passives = new Passives();
         this.abilities = new UnitAbilities();
     }
+    
+    public Unit(String unitJson){
+        Json json = new Json(unitJson);
+        this.id = json.getInt("id");
+        this.name = json.getString("name");
+        this.assetName = json.getString("assetName");
+        this.fraction = Fraction.valueOf(json.getString("fraction"));
+        this.role = Role.valueOf(json.getString("role"));
+        this.tier = Tier.valueOf(json.getString("tier"));
+        this.category = Category.valueOf(json.getString("category"));
+        this.offensive = new Offensive(json.getInnerJson("offensive"));
+        this.defensive = new Defensive(json.getInnerJson("defensive"));
+        this.special = new Special(json.getInnerJson("special"));
+        this.status = new Status(-1, this.defensive.getBaseHealth(), this.special.getBaseMorale());
+        this.passives = new Passives();
+        this.abilities = new UnitAbilities(json.getInnerJson("abilities"));
+    }
+    
     
     public int getId(){
         return this.id;
@@ -159,10 +178,7 @@ public class Unit implements Comparable<Unit>{
     }
     
     public void setAbilities(UnitAbilities abilities){
-        UnitAbility ability = abilities.get(0);
-        if(ability instanceof Attack){
-            this.abilities = abilities;
-        }
+        this.abilities = abilities;
     }
     
     public UnitAbilities getAbilities(){

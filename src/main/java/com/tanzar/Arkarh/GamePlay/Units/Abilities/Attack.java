@@ -44,6 +44,14 @@ public class Attack extends UnitAbility{
         this.school = EffectSchool.valueOf(tmp);
     }
     
+    public Attack(Json json){
+        super(json);
+        this.attackStyle = TargetsSelection.valueOf(json.getString("attackStyle"));
+        this.range = json.getInt("range");
+        this.areaSize = json.getInt("areaSize");
+        this.school = EffectSchool.valueOf(json.getString("school"));
+    }
+    
     @Override
     protected boolean additionalConditions(Unit source) {
         return true;

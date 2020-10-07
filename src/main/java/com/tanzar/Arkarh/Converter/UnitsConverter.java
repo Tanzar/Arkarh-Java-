@@ -67,8 +67,7 @@ public class UnitsConverter {
         int attack = entity.getAttack();
         int spellPower = entity.getSpellPower();
         int damage = entity.getDamage();
-        int healing = entity.getHealing();
-        Offensive stats = new Offensive(attack, spellPower, damage, healing);
+        Offensive stats = new Offensive(attack, spellPower, damage);
         return stats;
     }
     
@@ -109,7 +108,6 @@ public class UnitsConverter {
         entity.setAttack(offensiveStats.getAttack());
         entity.setSpellPower(offensiveStats.getSpellPower());
         entity.setDamage(offensiveStats.getDamage());
-        entity.setHealing(offensiveStats.getBaseHealingValue());
     }
     
     private static void convertDefensive(Unit unit, UnitEntity entity){

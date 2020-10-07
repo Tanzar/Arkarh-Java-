@@ -53,9 +53,6 @@ public class UnitEntity implements Serializable{
     @Column(name = "damage")
     private int damage;
     
-    @Column(name = "healing")
-    private int healing;
-    
     @Column(name = "defense")
     private int defense;
     
@@ -158,14 +155,6 @@ public class UnitEntity implements Serializable{
 
     public void setDamage(int damage) {
         this.damage = damage;
-    }
-
-    public int getHealing() {
-        return healing;
-    }
-
-    public void setHealing(int healing) {
-        this.healing = healing;
     }
 
     public int getDefense() {

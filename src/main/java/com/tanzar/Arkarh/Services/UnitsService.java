@@ -58,24 +58,11 @@ public class UnitsService {
         for(int i = 0; i < entities.size(); i++){
             UnitEntity entity = entities.get(i);
             Unit unit = UnitsConverter.convert(entity);
-            int id = unit.getId();
-            Passives passives = this.getPassivesByUnitId(id);
-            unit.setPassives(passives);
             UnitAbilities abilities = this.getUnitAbilities(unit);
             unit.setAbilities(abilities);
             units.add(unit);
         }
         return units;
-    }
-    
-    public Passives getPassivesByUnitId(int id){
-        UnitEffects passiveEffects = this.effectsDAO.getByUnitIdAndEffectGroup(id, "passive");
-        Passives passives = new Passives();
-        for(UnitEffectEntity entity: passiveEffects.toArray()){
-            Passive passive = UnitsConverter.convert(entity);
-            passives.add(passive);
-        }
-        return passives;
     }
     
     public UnitAbilities getUnitAbilities(Unit unit){
@@ -89,15 +76,15 @@ public class UnitsService {
         return abilities;
     }
     
+    public void add(String unitJson){
+        Unit newUnit = new Unit(unitJson);
+        this.add(newUnit);
+    }
+    
     public void add(Unit unit){
         UnitEntity entity = UnitsConverter.convert(unit);
         int id = this.unitsDAO.add(entity);
         unit.setId(id);
-        Passives passives = unit.getPassives();
-        for(Passive passive: passives.toArray()){
-            UnitEffectEntity effect = UnitsConverter.convert(id, passive);
-            this.effectsDAO.add(effect);
-        }
         UnitAbilities abilities = unit.getAbilities();
         for(UnitAbility ability: abilities.toArray()){
             UnitEffectEntity effect = ability.convert(unit);
@@ -105,15 +92,14 @@ public class UnitsService {
         }
     }
     
+    public void update(String unitJson){
+        Unit unit = new Unit(unitJson);
+        this.update(unit);
+    }
+    
     public void update(Unit unit){
         UnitEntity entity = UnitsConverter.convert(unit);
         this.unitsDAO.update(entity);
-        int id = unit.getId();
-        Passives passives = unit.getPassives();
-        for(Passive passive: passives.toArray()){
-            UnitEffectEntity effect = UnitsConverter.convert(id, passive);
-            this.effectsDAO.update(effect);
-        }
         UnitAbilities abilities = unit.getAbilities();
         for(UnitAbility ability: abilities.toArray()){
             UnitEffectEntity effect = ability.convert(unit);
@@ -123,6 +109,10 @@ public class UnitsService {
     
     public void remove(Unit unit){
         int id = unit.getId();
+        this.unitsDAO.delete(id);
+    }
+    
+    public void removeUnit(int id){
         this.unitsDAO.delete(id);
     }
     
