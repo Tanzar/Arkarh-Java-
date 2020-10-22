@@ -7,7 +7,7 @@ package com.tanzar.Arkarh.Controllers;
 
 import com.google.gson.Gson;
 import com.tanzar.Arkarh.Converter.Json;
-import com.tanzar.Arkarh.Entities.Unit.UnitEffectEntity;
+import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.TMP.Fraction;
@@ -97,7 +97,7 @@ public class BattleController {
         unit.setOffensive(offensive);
         unit.setDefensive(defensive);
         unit.setSpecial(special);
-        UnitEffectEntity entity = new UnitEffectEntity();
+        UnitAbilityEntity entity = new UnitAbilityEntity();
         entity.setAssetName("none.png");
         entity.setId(0);
         entity.setUnitId(unit.getId());

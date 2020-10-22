@@ -18,15 +18,15 @@ public enum PassiveEffect {
     defense(false),
     armor(false),
     ward(false),
-    baseHealth(false),
+    bonusHealth(false),
     upkeep(false),
     range(false),
     speed(false),
     baseMorale(false),
     bonusDamage(false),
-    ignoreArmor(true),
-    ignoreWard(true),
-    ignoreDefense(true),
+    ignoreArmorPercentage(true),
+    ignoreWardPercentage(true),
+    ignoreDefensePercentage(true),
     moraleDamage(false)
     ;
     

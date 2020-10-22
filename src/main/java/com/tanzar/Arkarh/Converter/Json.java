@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.util.Set;
 
 /**
  *
@@ -18,14 +19,14 @@ public class Json {
     private Gson gson;
     private JsonObject json;
     
-    public Json(String jsonString){
-        this.gson = new Gson();
-        this.json = this.gson.fromJson(jsonString, JsonObject.class);
-    }
-    
     public Json(){
         this.gson = new Gson();
         this.json = new JsonObject();
+    }
+    
+    public Json(String jsonString){
+        this.gson = new Gson();
+        this.json = this.gson.fromJson(jsonString, JsonObject.class);
     }
     
     public String formJson(){
@@ -41,14 +42,44 @@ public class Json {
         this.json.addProperty(name, value);
     }
     
+    public void add(String name, double value){
+        this.json.addProperty(name, value);
+    }
+    
+    public void add(String name, Json json){
+        this.json.add(name, json.getInnerJsonObject());
+    }
+    
+    public void add(String name, Object obj){
+        JsonElement tmp = this.gson.toJsonTree(obj);
+        this.json.add(name, tmp);
+    }
+    
     public String getString(String name){
         return this.json.get(name).getAsString();
+    }
+    
+    public Json getJson(String name){
+        JsonElement element = this.json.get(name);
+        String jsonString = this.gson.toJson(element);
+        return new Json(jsonString);
     }
     
     public String getInnerJson(String name){
         JsonElement element = json.get(name);
         String str = this.gson.toJson(element);
         return str;
+    }
+    
+    public String[] getProperitiesNames(){
+        Set<String> keySet = this.json.keySet();
+        String[] result = new String[keySet.size()];
+        keySet.toArray(result);
+        return result;
+    }
+    
+    public JsonObject getInnerJsonObject(){
+        return this.json;
     }
     
     public String[] getStringArray(String name){
@@ -65,9 +96,19 @@ public class Json {
         return this.json.get(name).getAsInt();
     }
     
+    public double getDouble(String name){
+        return this.json.get(name).getAsDouble();
+    }
+    
     public static String toJson(Object object){
         Gson gson = new Gson();
         String json = gson.toJson(object);
         return json;
+    }
+    
+    public static Object fromJson(String json, Object objectClass){
+        Gson gson = new Gson();
+        Object obj = gson.fromJson(json, objectClass.getClass());
+        return obj;
     }
 }

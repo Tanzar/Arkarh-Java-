@@ -7,9 +7,6 @@ package com.tanzar.Arkarh.GamePlay.Units;
 
 import com.tanzar.Arkarh.GamePlay.Combat.Position;
 import com.tanzar.Arkarh.GamePlay.Combat.Side;
-import com.tanzar.Arkarh.GamePlay.Units.Stats.Offensive;
-import com.tanzar.Arkarh.GamePlay.Units.Stats.Special;
-import com.tanzar.Arkarh.GamePlay.Units.Stats.Status;
 
 /**
  *
@@ -51,6 +48,9 @@ public enum TargetsSelection {
                 firstTargetPosition = index;
                 break;
             }
+            if(i % 2 == 0){
+                x++;
+            }
         }
         return firstTargetPosition;
     }
@@ -63,6 +63,9 @@ public enum TargetsSelection {
             int index = nextPosition(position, i, x);
             Unit unit = side.getUnit(index);
             units.add(unit);
+            if(i % 2 == 0){
+                x++;
+            }
         }
         return units;
     }
@@ -77,6 +80,9 @@ public enum TargetsSelection {
             units.add(unit);
             unit = side.getUnit(new Position(index, false));
             units.add(unit);
+            if(i % 2 == 0){
+                x++;
+            }
         }
         return units;
     }
@@ -88,7 +94,6 @@ public enum TargetsSelection {
         }
         else{
             index = (int) startPosition + x;
-            x++;
         }
         return index;
     }

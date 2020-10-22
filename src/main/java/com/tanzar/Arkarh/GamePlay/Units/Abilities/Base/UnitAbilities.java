@@ -10,7 +10,7 @@ import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Attack;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
-import com.tanzar.Arkarh.GamePlay.Units.UnitEffectGroup;
+import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +37,12 @@ public class UnitAbilities {
     
     private void add(String jsonString){
         Json json = new Json(jsonString);
-        UnitEffectGroup group = UnitEffectGroup.valueOf(json.getString("group"));
+        UnitAbilityGroup group = UnitAbilityGroup.valueOf(json.getString("group"));
         UnitAbility ability = this.createAbility(json, group);
         this.add(ability);
     }
     
-    private UnitAbility createAbility(Json json, UnitEffectGroup group){
+    private UnitAbility createAbility(Json json, UnitAbilityGroup group){
         switch(group){
             case attack:
                 return new Attack(json);

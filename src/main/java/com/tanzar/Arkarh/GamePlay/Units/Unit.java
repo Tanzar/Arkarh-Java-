@@ -6,6 +6,7 @@
 package com.tanzar.Arkarh.GamePlay.Units;
 
 import com.tanzar.Arkarh.Converter.Json;
+import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.TMP.Tier;
@@ -17,6 +18,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Abilities.Attack;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilities;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
+import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passive;
 import com.tanzar.Arkarh.GamePlay.Units.Stats.*;
 
 /**
@@ -74,6 +76,20 @@ public class Unit implements Comparable<Unit>{
         this.abilities = new UnitAbilities(json.getInnerJson("abilities"));
     }
     
+    public Unit(UnitEntity entity) {
+        this.id = entity.getId();
+        this.name = entity.getName();
+        this.assetName = entity.getAssetName();
+        this.fraction = Fraction.valueOf(entity.getFraction());
+        this.role = Role.valueOf(entity.getRole());
+        this.tier = Tier.valueOf(entity.getTier());
+        this.category = Category.valueOf(entity.getCategory());
+        this.offensive = new Offensive(entity.getAttack(), entity.getSpellPower(), entity.getDamage());
+        this.defensive = new Defensive(entity.getDefense(), entity.getArmor(), entity.getWard(), entity.getHealth());
+        this.special = new Special(entity.getUpkeep(), entity.getSpeed(), entity.getMorale());
+        this.status = new Status(-1, this.defensive.getBaseHealth(), this.special.getBaseMorale());
+        this.passives = new Passives();
+    }
     
     public int getId(){
         return this.id;
@@ -163,6 +179,10 @@ public class Unit implements Comparable<Unit>{
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+    
+    public void addPassive(Passive passive){
+        this.passives.add(passive);
     }
 
     public Passives getPassives() {
@@ -305,7 +325,16 @@ public class Unit implements Comparable<Unit>{
     }
     
     public void updateStatus(){
-        this.status.updateState();
+        int maxHealth = this.defensive.getBaseHealth();
+        int healthBonus = this.passives.summarizeValues(PassiveEffect.bonusHealth);
+        maxHealth = maxHealth + healthBonus;
+        this.status.updateState(maxHealth);
+    }
+    
+    public void heal(int value){
+        if(value > 0){
+            this.status.heal(value);
+        }
     }
     
     @Override

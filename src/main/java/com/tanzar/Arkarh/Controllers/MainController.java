@@ -40,12 +40,7 @@ public class MainController {
     }
     
     @RequestMapping("/test")
-    @ResponseBody
     public String test(Model model){
-        Gson gson = new Gson();
-        JsonObject obj = new JsonObject();
-        obj.addProperty("id", 10);
-        obj.addProperty("text", "test");
-        return gson.toJson(obj);
+        return "testPage";
     }
 }

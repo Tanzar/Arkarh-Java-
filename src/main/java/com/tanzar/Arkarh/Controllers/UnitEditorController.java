@@ -6,15 +6,9 @@
 package com.tanzar.Arkarh.Controllers;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.tanzar.Arkarh.Containers.UnitEntities;
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.TMP.*;
-import com.tanzar.Arkarh.GamePlay.Units.TargetsSelection;
-import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
-import com.tanzar.Arkarh.GamePlay.Units.Role;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilities;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 import com.tanzar.Arkarh.Services.UnitsService;
@@ -43,11 +37,33 @@ public class UnitEditorController {
         return result;
     }
     
+    @RequestMapping(value = "/getUnitAbilities={unitId}", method = RequestMethod.GET)
+    public String getUnitAbilities(@PathVariable(name="unitId") String id){
+        int index = Integer.parseInt(id);
+        String result = "[]";
+        try{
+            UnitAbilities abilities = this.unitsService.getUnitAbilities(index);
+            result = Json.toJson(abilities.toArray());
+        }
+        catch(Exception ex){
+            
+        }
+        return result;
+    }
+    
     @RequestMapping(value = "/getOptions", method = RequestMethod.GET)
     public String getOptions(){
-        Gson gson = new Gson();
-        EnumsCombined enums = new EnumsCombined();
-        return gson.toJson(enums);
+        return this.unitsService.getOptions();
+    }
+    
+    @RequestMapping(value = "/getAbilitiesForms", method = RequestMethod.GET)
+    public String getAbilitiesForms(){
+        return this.unitsService.getAbilitiesPatterns();
+    }
+    
+    @RequestMapping(value = "/getPassiveForm", method = RequestMethod.GET)
+    public String getPassiveForm(){
+        return this.unitsService.getPassiveForm();
     }
     
     @RequestMapping(value = "/getUnitForm", method = RequestMethod.GET)
@@ -67,10 +83,28 @@ public class UnitEditorController {
         return response;
     }
     
+    @RequestMapping(value="/addAbility", method=RequestMethod.POST, consumes="application/json; charset=UTF-8")
+    public String addAbility(@RequestBody String form){
+        String response = "Ability added.";
+        try{
+            this.unitsService.addAbility(form);
+        }
+        catch(Exception ex){
+            response = "Could not add Ability.";
+        }
+        return response;
+    }
+    
     @RequestMapping(value = "/removeUnit={id}", method = RequestMethod.GET)
     public void removeUnit(@PathVariable(name="id") String id){
         int index = Integer.parseInt(id);
         this.unitsService.removeUnit(index);
+    }
+    
+    @RequestMapping(value = "/removeAbility={id}", method = RequestMethod.GET)
+    public void removeAbility(@PathVariable(name="id") String id){
+        int index = Integer.parseInt(id);
+        this.unitsService.removeAbility(index);
     }
     
     @RequestMapping(value="/updateUnit", method=RequestMethod.POST, consumes="application/json; charset=UTF-8")
@@ -81,6 +115,18 @@ public class UnitEditorController {
         }
         catch(Exception ex){
             response = "Could not update Unit.";
+        }
+        return response;
+    }
+    
+    @RequestMapping(value="/updateAbility", method=RequestMethod.POST, consumes="application/json; charset=UTF-8")
+    public String updateAbility(@RequestBody String form){
+        String response = "Ability updated.";
+        try{
+            this.unitsService.updateAbility(form);
+        }
+        catch(Exception ex){
+            response = "Could not update Ability.";
         }
         return response;
     }

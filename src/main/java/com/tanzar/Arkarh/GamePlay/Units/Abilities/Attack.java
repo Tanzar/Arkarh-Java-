@@ -6,7 +6,7 @@
 package com.tanzar.Arkarh.GamePlay.Units.Abilities;
 
 import com.tanzar.Arkarh.Converter.Json;
-import com.tanzar.Arkarh.Entities.Unit.UnitEffectEntity;
+import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
@@ -32,7 +32,7 @@ public class Attack extends UnitAbility{
     private final int areaSize;
     private final EffectSchool school;
 
-    public Attack(UnitEffectEntity entity) {
+    public Attack(UnitAbilityEntity entity) {
         super(entity, Trigger.onAction);
         String tmp = entity.getEffect();
         Json json = new Json(tmp);
@@ -104,7 +104,7 @@ public class Attack extends UnitAbility{
     }
     
     private int calculateTargetDefense(Unit source, Unit target){
-        double multiplier = this.calculateIgnore(source, PassiveEffect.ignoreDefense);
+        double multiplier = this.calculateIgnore(source, PassiveEffect.ignoreDefensePercentage);
         return (int) Math.round(target.getTotalDefense() * multiplier);
     }
     
@@ -136,14 +136,14 @@ public class Attack extends UnitAbility{
     private double armorMultiplier(Unit source, Unit target){
         double value = target.getTotalArmor() / 100;
         value = 1 - value;
-        double multiplier = this.calculateIgnore(source, PassiveEffect.ignoreArmor);
+        double multiplier = this.calculateIgnore(source, PassiveEffect.ignoreArmorPercentage);
         return value * multiplier;
     }
     
     private double wardMultiplier(Unit source, Unit target){
         double value = target.getTotalWard() / 100;
         value = 1 - value;
-        double multiplier = this.calculateIgnore(source, PassiveEffect.ignoreWard);
+        double multiplier = this.calculateIgnore(source, PassiveEffect.ignoreWardPercentage);
         return value * multiplier;
     }
     
@@ -166,13 +166,11 @@ public class Attack extends UnitAbility{
     }
 
     @Override
-    protected String formJson() {
-        Json json = new Json();
+    protected void formJson(Json json) {
         json.add("attackStyle", this.attackStyle.toString());
         json.add("range", this.range);
         json.add("areaSize", this.areaSize);
         json.add("school", this.school.toString());
-        return json.formJson();
     }
     
 }

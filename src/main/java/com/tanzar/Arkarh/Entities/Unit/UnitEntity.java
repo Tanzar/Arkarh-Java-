@@ -5,6 +5,10 @@
  */
 package com.tanzar.Arkarh.Entities.Unit;
 
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Defensive;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Offensive;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.Special;
+import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -75,6 +79,29 @@ public class UnitEntity implements Serializable{
     private int morale;
 
     public UnitEntity() {
+    }
+
+    public UnitEntity(Unit unit){
+        this.id = unit.getId();
+        this.unitName = unit.getName();
+        this.assetName = unit.getAssetName();
+        this.fraction = unit.getFraction().toString();
+        this.role = unit.getRole().toString();
+        this.tier = unit.getTier().toString();
+        this.category = unit.getCategory().toString();
+        Offensive off = unit.getOffensive();
+        this.attack = off.getAttack();
+        this.spellPower = off.getSpellPower();
+        this.damage = off.getDamage();
+        Defensive def = unit.getDefensive();
+        this.defense = def.getDefense();
+        this.armor = def.getArmor();
+        this.ward = def.getWard();
+        this.health = def.getBaseHealth();
+        Special spec = unit.getSpecial();
+        this.upkeep = spec.getUpkeep();
+        this.speed = spec.getSpeed();
+        this.morale = spec.getBaseMorale();
     }
 
     public Integer getId() {

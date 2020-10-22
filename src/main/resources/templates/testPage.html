@@ -6,9 +6,10 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>Arkarh: Unit Editor</title>
+        <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="js/index.js"></script>
         <link rel="stylesheet" type="text/css" href="css/modal.css"/>
         <script type="text/javascript" src="js/tools/Modal.js"></script>
         <script type="text/javascript" src="js/tools/URLConnector.js"></script>
@@ -25,26 +26,16 @@ and open the template in the editor.
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.jqueryui.min.js"></script>
     </head>
     <body>
-        <!-- The Modals -->
-        <div id="new_unit_modal" class="modal"></div>
-        <div id="new_ability_modal" class="modal"></div>
-        
-        <table style="width: 100%">
-            <tr>
-                <td width="25%"></td>
-                <td width="50%">
-                    <div id="unitDiv"></div>
-                    <br>
-                    <br>
-                    <div id="abilityDiv"></div>
-                </td>
-                <td width="25%"></td>
-            </tr>
-        </table>
+        <button id="testButton">Test</button>
+        <div id="testDiv"></div>
+        <br>
+        <br>
+        <div id="testDivTf"></div>
     </body>
     <script>
-        var unitDiv = document.getElementById("unitDiv");
-        var abilityDiv = document.getElementById("abilityDiv");
-        var editor = new EditorSetup(unitDiv, abilityDiv);
+        
+        var dif = document.getElementById("testDiv");
+        var difTf = document.getElementById("testDivTf");
+        var editor = new EditorSetup(dif, difTf);
     </script>
 </html>

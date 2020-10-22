@@ -5,6 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Modifiers;
 
+import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import java.lang.reflect.Field;
@@ -16,52 +17,49 @@ import java.util.Objects;
  */
 public class Passive {
     
-    private int id;
-    private String name;
-    private String asset;
+    private int index;
     private int stacks;
     private int stacksLimit;
-    private boolean isStackable;
     private int value;
     private PassiveEffect effect;
     private EffectSchool school;
 
     public Passive() {
+        this.index = 0;
+        this.stacks = 1;
+        this.stacksLimit = 1;
+        this.value = 0;
+        this.effect = PassiveEffect.attack;
+        this.school = EffectSchool.physical;
     }
 
-    public Passive(String name, int stacks, int stacksLimit, boolean isStackable, int value, PassiveEffect effect, EffectSchool school) {
-        this.name = name;
+    public Passive(int index, int stacks, int stacksLimit, int value, PassiveEffect effect, EffectSchool school) {
+        this.index = index;
         this.stacks = stacks;
         this.stacksLimit = stacksLimit;
-        this.isStackable = isStackable;
         this.value = value;
         this.effect = effect;
         this.school = school;
         this.adjustStacks();
     }
     
-    public int getId(){
-        return this.id;
+    public Passive(String jsonString) {
+        Json json = new Json(jsonString);
+        this.index = json.getInt("index");
+        this.stacks = json.getInt("stacks");
+        this.stacksLimit = json.getInt("stacksLimit");
+        this.value = json.getInt("value");
+        this.effect = PassiveEffect.valueOf(json.getString("effect"));
+        this.school = EffectSchool.valueOf(json.getString("school"));
+        this.adjustStacks();
     }
     
-    public void setId(int id){
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public int getIndex(){
+        return this.index;
     }
     
-    public String getAsset(){
-        return this.asset;
-    }
-    
-    public void setAsset(String asset){
-        this.asset = asset;
+    public void setIndex(int index){
+        this.index = index;
     }
     
     public int getStacks() {
@@ -85,14 +83,6 @@ public class Passive {
     public void setStacksLimit(int stacksLimit) {
         this.stacksLimit = stacksLimit;
         this.adjustStacks();
-    }
-
-    public boolean isStackable() {
-        return isStackable;
-    }
-
-    public void setIsStackable(boolean isStackable) {
-        this.isStackable = isStackable;
     }
 
     public int getSingleValue() {
@@ -144,13 +134,10 @@ public class Passive {
             return false;
         }
         final Passive other = (Passive) obj;
-        if (this.isStackable != other.isStackable) {
-            return false;
-        }
         if (this.value != other.value) {
             return false;
         }
-        if (!Objects.equals(this.name, other.name)) {
+        if (!Objects.equals(this.index, other.index)) {
             return false;
         }
         if (this.effect != other.effect) {

@@ -5,13 +5,15 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Abilities;
 
-import com.tanzar.Arkarh.Entities.Unit.UnitEffectEntity;
+import com.tanzar.Arkarh.Converter.Json;
+import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Side;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
+import com.tanzar.Arkarh.GamePlay.Units.TargetsSelection;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
-import com.tanzar.Arkarh.GamePlay.Units.UnitEffectGroup;
+import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 
 /**
@@ -19,9 +21,31 @@ import com.tanzar.Arkarh.GamePlay.Units.Units;
  * @author Tanzar
  */
 public class Heal extends UnitAbility{
+    private double spellPowerBonus;
+    private int baseHealing;
+    private int range;
+    
+    public Heal(){
+        super(Trigger.onAction, UnitAbilityGroup.heal);
+        this.spellPowerBonus = 0.05;
+        this.baseHealing = 1;
+        this.range = 1;
+    }
 
-    public Heal(UnitEffectEntity entity) {
+    public Heal(UnitAbilityEntity entity) {
         super(entity, Trigger.onAction);
+        String tmp = entity.getEffect();
+        Json json = new Json(tmp);
+        this.spellPowerBonus = json.getDouble("spellPowerBonus");
+        this.baseHealing = json.getInt("baseHealing");
+        this.range = json.getInt("range");
+    }
+    
+    public Heal(Json json){
+        super(json);
+        this.spellPowerBonus = json.getDouble("spellPowerBonus");
+        this.baseHealing = json.getInt("baseHealing");
+        this.range = json.getInt("range");
     }
 
     @Override
@@ -32,17 +56,28 @@ public class Heal extends UnitAbility{
     @Override
     protected Units setupTargets(Unit source, Battlefield battlefield) {
         Side side = battlefield.getSide(source);
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int position = source.getPosition();
+        Units targets = TargetsSelection.getTargets(TargetsSelection.piercing, position, side, 0, range);
+        return targets;
     }
 
     @Override
     protected void onUse(Unit source, Units targets) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int healValue = this.baseHealing;
+        double spellPowerMultiplier = source.getTotalSpellPower() * this.spellPowerBonus;
+        healValue = (int) Math.round(healValue * spellPowerMultiplier);
+        for(Unit target: targets.toArray()){
+            target.heal(healValue);
+            String stringFormat = source.toString() + " heals " + target.toString() + " for " + healValue + ".";
+            this.report.abilityUse(source, target, stringFormat);
+        }
     }
 
     @Override
-    protected String formJson() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected void formJson(Json json) {
+        json.add("spellPowerBonus", this.spellPowerBonus);
+        json.add("baseHealing", this.baseHealing);
+        json.add("range", this.range);
     }
     
 }

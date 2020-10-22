@@ -5,9 +5,9 @@
  */
 package com.tanzar.Arkarh.DAO;
 
-import com.tanzar.Arkarh.Containers.UnitEffects;
+import com.tanzar.Arkarh.Containers.UnitAbilityEntities;
 import com.tanzar.Arkarh.DAO.abstracts.DAO;
-import com.tanzar.Arkarh.Entities.Unit.UnitEffectEntity;
+import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.Exceptions.QueryException;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -19,45 +19,45 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class UnitEffectsDAO extends DAO<UnitEffectEntity, UnitEffects> {
+public class UnitAbilitiesDAO extends DAO<UnitAbilityEntity, UnitAbilityEntities> {
 
-    public UnitEffectsDAO() {
-        super("UnitEffectEntity");
+    public UnitAbilitiesDAO() {
+        super("UnitAbilityEntity");
     }
 
     @Override
-    protected UnitEffects convertResults(List<UnitEffectEntity> list) {
-        UnitEffects effects = new UnitEffects();
-        for(UnitEffectEntity effect: list){
+    protected UnitAbilityEntities convertResults(List<UnitAbilityEntity> list) {
+        UnitAbilityEntities effects = new UnitAbilityEntities();
+        for(UnitAbilityEntity effect: list){
             effects.add(effect);
         }
         return effects;
     }
     
-    public UnitEffects getByUnitId(int id){
+    public UnitAbilityEntities getByUnitId(int id){
         try {
-            UnitEffects effects = this.get("where unit_id =" + id);
+            UnitAbilityEntities effects = this.get("where unit_id =" + id);
             return effects;
         } catch (QueryException ex) {
             
         }
-        return new UnitEffects();
+        return new UnitAbilityEntities();
     }
     
-    public UnitEffects getByUnitIdAndEffectGroup(int id, String group){
+    public UnitAbilityEntities getByUnitIdAndEffectGroup(int id, String group){
         try {
-            UnitEffects effects = this.get("where unit_id =" + id + " and effect_group='" + group + "'");
+            UnitAbilityEntities effects = this.get("where unit_id =" + id + " and effect_group='" + group + "'");
             return effects;
         } catch (QueryException ex) {
             
         }
-        return new UnitEffects();
+        return new UnitAbilityEntities();
     }
     
     public void delete(int id){
         try {
-            UnitEffects effects = this.get("where id =" + id);
-            UnitEffectEntity effect = effects.get(0);
+            UnitAbilityEntities effects = this.get("where id =" + id);
+            UnitAbilityEntity effect = effects.get(0);
             this.remove(effect);
         } catch (QueryException ex) {
             

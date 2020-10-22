@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.GamePlay.Units.Abilities;
+package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 
 /**
  *
  * @author Tanzar
  */
-public class BuffOther {
-    
+public enum TargetsGroup {
+    self,
+    allies,
+    enemies;
 }

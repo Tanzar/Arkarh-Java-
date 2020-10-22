@@ -80,9 +80,16 @@ public class Status {
         this.health = this.health - damage;
     }
     
-    public void updateState(){
+    public void heal(int value){
+        this.health = this.health + value;
+    }
+    
+    public void updateState(int maxHealth){
         if(this.health < 1 && this.state.equals(State.alive)){
             this.state = State.dead;
+        }
+        if(this.health > maxHealth){
+            this.health = maxHealth;
         }
     }
 

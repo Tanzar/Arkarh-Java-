@@ -5,18 +5,18 @@
  */
 package com.tanzar.Arkarh.Containers;
 
-import com.tanzar.Arkarh.Entities.Unit.UnitEffectEntity;
+import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import java.util.HashSet;
 
 /**
  *
  * @author spako
  */
-public class UnitEffects  extends HashSetContainer<UnitEffectEntity>{
+public class UnitAbilityEntities  extends HashSetContainer<UnitAbilityEntity>{
 
     @Override
-    protected UnitEffectEntity[] toArray(HashSet<UnitEffectEntity> data) {
-        UnitEffectEntity[] array = new UnitEffectEntity[data.size()];
+    protected UnitAbilityEntity[] toArray(HashSet<UnitAbilityEntity> data) {
+        UnitAbilityEntity[] array = new UnitAbilityEntity[data.size()];
         data.toArray(array);
         return array;
     }

@@ -45,6 +45,15 @@ public class UnitsDAO extends DAO<UnitEntity, UnitEntities> {
         }
     }
     
+    public UnitEntity getById(int id){
+        try{
+            UnitEntities units = this.get("where id ='" + id + "'");
+            return units.get(0);
+        } catch (QueryException ex) {
+            return null;
+        }
+    }
+    
     public void delete(int id){
         try {
             UnitEntities units = this.get("where id =" + id);

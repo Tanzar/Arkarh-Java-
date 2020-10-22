@@ -5,6 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Modifiers;
 
+import com.tanzar.Arkarh.Converter.Json;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,27 +14,46 @@ import java.util.List;
  * @author spako
  */
 public class Passives {
-    
     private List<Passive> passives;
     
     public Passives(){
         this.passives = new ArrayList<Passive>();
     }
     
+    public Passives(Json json){
+        this.passives = new ArrayList<Passive>();
+        String[] items = json.getStringArray("passives");
+        for(String item: items){
+            Passive passive = new Passive(item);
+            this.add(passive);
+        }
+    }
+    
+    public Passives(String jsonString){
+        this.passives = new ArrayList<Passive>();
+        Json json = new Json(jsonString);
+        String[] items = json.getStringArray("passives");
+        for(String item: items){
+            Passive passive = new Passive(item);
+            this.add(passive);
+        }
+    }
+    
     public void add(Passive passive){
         if(passive != null){
-            boolean found = false;
+            Passive found = null;
             for(Passive item: this.passives){
                 if(item.equals(passive)){
-                    if(!item.isAtStacksLimit()){
-                        item.addStacks(passive.getStacks());
-                    }
-                    found = true;
+                    found = item;
                     break;
                 }
             }
-            if(!found){
+            if(found == null){
                 this.passives.add(passive);
+            }
+            else{
+                int stacks = passive.getStacks();
+                found.addStacks(stacks);
             }
         }
     }

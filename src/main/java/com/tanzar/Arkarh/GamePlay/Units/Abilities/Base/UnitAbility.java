@@ -8,11 +8,11 @@ package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.tanzar.Arkarh.Converter.Json;
-import com.tanzar.Arkarh.Entities.Unit.UnitEffectEntity;
+import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
-import com.tanzar.Arkarh.GamePlay.Units.UnitEffectGroup;
+import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 
 /**
@@ -25,13 +25,46 @@ public abstract class UnitAbility {
     protected String name;
     protected CombatReport report;
     private int charges;
+    private int unitId;
     private Trigger trigger;
-    private UnitEffectGroup group;
+    private UnitAbilityGroup group;
     
-    public UnitAbility(UnitEffectEntity entity, Trigger trigger){
+    public UnitAbility(){
+        this.id = 0;
+        this.unitId = 0;
+        this.group = UnitAbilityGroup.none;
+        this.name = "Noname";
+        this.asset = "none.png";
+        this.trigger = Trigger.onAction;
+        this.charges = 0;
+    }
+    
+    public UnitAbility(Trigger trigger){
+        this.id = 0;
+        this.unitId = 0;
+        this.group = UnitAbilityGroup.none;
+        this.name = "Noname";
+        this.asset = "none.png";
+        this.trigger = trigger;
+        this.charges = 0;
+    }
+    
+    public UnitAbility(Trigger trigger, UnitAbilityGroup group){
+        this.id = 0;
+        this.unitId = 0;
+        this.group = group;
+        this.name = "Noname";
+        this.asset = "none.png";
+        this.trigger = trigger;
+        this.charges = 0;
+    }
+    
+    
+    public UnitAbility(UnitAbilityEntity entity, Trigger trigger){
         this.id = entity.getId();
+        this.unitId = entity.getUnitId();
         String groupStr = entity.getEffectGroup();
-        this.group = UnitEffectGroup.valueOf(groupStr);
+        this.group = UnitAbilityGroup.valueOf(groupStr);
         this.name = entity.getEffectName();
         this.asset = entity.getAssetName();
         this.trigger = trigger;
@@ -40,13 +73,14 @@ public abstract class UnitAbility {
     
     public UnitAbility(Json json){
         this.id = json.getInt("id");
-        this.group = UnitEffectGroup.valueOf(json.getString("group"));
+        this.unitId = json.getInt("unitId");
+        this.group = UnitAbilityGroup.valueOf(json.getString("group"));
         this.name = json.getString("name");
         this.asset = json.getString("asset");
         this.trigger = Trigger.valueOf(json.getString("trigger"));
         this.charges = json.getInt("charges");
     }
-    
+
     public void use(Unit source, Trigger mainTrigger, Battlefield battlefield, CombatReport report){
         if(this.charges != 0){
             if(this.trigger.equals(mainTrigger) && this.additionalConditions(source)){
@@ -64,17 +98,20 @@ public abstract class UnitAbility {
     
     protected abstract void onUse(Unit source, Units targets);
     
-    public String toJson(){
-        JsonObject object = new JsonObject();
-        object.addProperty("charges", this.charges);
-        object.addProperty("trigger", this.trigger.toString());
-        String details = formJson();
-        object.addProperty("details", details);
-        Gson gson = new Gson();
-        return gson.toJson(object);
+    public Json toJson(){
+        Json json = new Json();
+        json.add("id", this.id);
+        json.add("unitId", this.unitId);
+        json.add("group", this.group.toString());
+        json.add("name", this.name);
+        json.add("asset", this.asset);
+        json.add("charges", this.charges);
+        json.add("trigger", this.trigger.toString());
+        this.formJson(json);
+        return json;
     }
     
-    protected abstract String formJson();
+    protected abstract void formJson(Json json);
     
     private void reduceCharges(){
         if(this.charges > 0){
@@ -118,16 +155,16 @@ public abstract class UnitAbility {
         this.trigger = trigger;
     }
 
-    public UnitEffectGroup getGroup() {
+    public UnitAbilityGroup getGroup() {
         return group;
     }
 
-    public void setGroup(UnitEffectGroup group) {
+    public void setGroup(UnitAbilityGroup group) {
         this.group = group;
     }
     
-    public UnitEffectEntity convert(Unit source){
-        UnitEffectEntity entity = new UnitEffectEntity();
+    public UnitAbilityEntity convert(Unit source){
+        UnitAbilityEntity entity = new UnitAbilityEntity();
         entity.setId(this.id);
         int unitId = source.getId();
         entity.setUnitId(unitId);
@@ -136,8 +173,24 @@ public abstract class UnitAbility {
         String groupStr = this.group.toString();
         entity.setEffectGroup(groupStr);
         entity.setCharges(this.charges);
-        String json = this.formJson();
-        entity.setEffect(json);
+        Json json = new Json();
+        this.formJson(json);
+        entity.setEffect(json.formJson());
+        return entity;
+    }
+    
+    public UnitAbilityEntity convert(int unitId){
+        UnitAbilityEntity entity = new UnitAbilityEntity();
+        entity.setId(this.id);
+        entity.setUnitId(unitId);
+        entity.setEffectName(this.name);
+        entity.setAssetName(this.asset);
+        String groupStr = this.group.toString();
+        entity.setEffectGroup(groupStr);
+        entity.setCharges(this.charges);
+        Json json = new Json();
+        this.formJson(json);
+        entity.setEffect(json.formJson());
         return entity;
     }
 }

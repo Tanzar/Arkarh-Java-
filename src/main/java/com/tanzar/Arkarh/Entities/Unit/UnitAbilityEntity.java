@@ -5,7 +5,8 @@
  */
 package com.tanzar.Arkarh.Entities.Unit;
 
-import com.tanzar.Arkarh.GamePlay.Units.UnitEffectGroup;
+import com.tanzar.Arkarh.Converter.Json;
+import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,8 +20,8 @@ import javax.persistence.Table;
  * @author spako
  */
 @Entity
-@Table(name = "units_effects")
-public class UnitEffectEntity implements Serializable{
+@Table(name = "units_abilities")
+public class UnitAbilityEntity implements Serializable{
      
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +31,14 @@ public class UnitEffectEntity implements Serializable{
     @Column(name = "unit_id")
     private int unitId;
     
-    @Column(name = "effect_name")
-    private String effectName;
+    @Column(name = "name")
+    private String name;
     
-    @Column(name = "effect_group")
-    private String effectGroup;
+    @Column(name = "ability_group")
+    private String group;
     
-    @Column(name = "asset_name")
-    private String assetName;
+    @Column(name = "asset")
+    private String asset;
     
     @Column(name = "charges")
     private int charges;
@@ -45,16 +46,16 @@ public class UnitEffectEntity implements Serializable{
     @Column(name = "effect_json")
     private String effect;
 
-    public UnitEffectEntity() {
+    public UnitAbilityEntity() {
         this.id = 0;
         this.unitId = 0;
-        this.effectName = "none";
-        this.effectGroup = UnitEffectGroup.attack.toString();
-        this.assetName = "none.png";
+        this.name = "none";
+        this.group = UnitAbilityGroup.attack.toString();
+        this.asset = "none.png";
         this.charges = -1;
         this.effect = "";
     }
-
+    
     public Integer getId() {
         return id;
     }
@@ -72,27 +73,27 @@ public class UnitEffectEntity implements Serializable{
     }
 
     public String getEffectName() {
-        return effectName;
+        return name;
     }
 
     public void setEffectName(String effectName) {
-        this.effectName = effectName;
+        this.name = effectName;
     }
 
     public String getEffectGroup() {
-        return effectGroup;
+        return group;
     }
 
     public void setEffectGroup(String effectGroup) {
-        this.effectGroup = effectGroup;
+        this.group = effectGroup;
     }
 
     public String getAssetName() {
-        return assetName;
+        return asset;
     }
 
     public void setAssetName(String assetName) {
-        this.assetName = assetName;
+        this.asset = assetName;
     }
 
     public String getEffect() {

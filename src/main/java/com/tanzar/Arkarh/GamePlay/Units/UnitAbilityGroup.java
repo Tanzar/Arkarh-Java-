@@ -9,12 +9,14 @@ package com.tanzar.Arkarh.GamePlay.Units;
  *
  * @author spako
  */
-public enum UnitEffectGroup {
-    applyPassive,//target, jaki buff
+public enum UnitAbilityGroup {
+    none,
     attack,//target, za ile
     heal,//target, za ile
+    buff,
     ressurect,//target, ile % hp
     necromancy,//tagret, jako który unit
+    reincarnate,
     summon,//return unit, zwracaj target w parametrze(?), kogo przywołuje
-    moraleDamage,
+    
 }
