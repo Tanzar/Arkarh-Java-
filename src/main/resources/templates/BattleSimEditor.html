@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Arkarh: Battle Simulator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="js/tools/URLConnector.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/tools/DivElement.js"></script>
+        <script type="text/javascript" src="js/BattleSimulator/BattleSimEditor.js"></script>
+        <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+        <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td valign="top">
+                    <div id="attackers"></div>
+                </td>
+                <td valign="top">
+                    <div id="defenders"></div>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <button id="startButton">Start</button>
+    </body>
+    <script>
+        var attackersDiv = document.getElementById("attackers");
+        var defendersDiv = document.getElementById("defenders");
+        var startButton = document.getElementById("startButton");
+        var editor = new BattleSimEditor(attackersDiv, defendersDiv, startButton);
+    </script>
+</html>

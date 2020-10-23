@@ -30,6 +30,25 @@ function DivElement(){
         this.element.appendChild(select);
     }
     
+    this.addSelectDiffrentValueAndText = function(text, optionsValues, optionsText, item, properity){
+        var title = document.createTextNode(text);
+        var select = document.createElement('select');
+        for(var i = 0; i < optionsValues.length; i++){
+            var option = document.createElement('option');
+            option.value = optionsValues[i];
+            var textNode = document.createTextNode(optionsText[i]);
+            option.appendChild(textNode);
+            select.appendChild(option);
+        }
+        select.onchange = function(){
+            item[properity] = Number(this.options[this.selectedIndex].value);
+        }
+        select.style.width = "100px";
+        this.element.appendChild(title);
+        this.element.appendChild(select);
+        return select;
+    }
+    
     this.addText = function(text, item, properity){
         var title = document.createTextNode(text);
         var input = document.createElement('input');
@@ -73,7 +92,7 @@ function DivElement(){
         return this.element;
     }
     
-    this.addAsChild = function(div){
+    this.addThisAsChild = function(div){
         div.appendChild(this.element);
     }
 }

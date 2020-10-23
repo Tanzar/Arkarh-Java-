@@ -76,27 +76,31 @@ public class Side {
     }
     
     private int initLine(Unit[] line, Units sides, Units center){
-        int leftSide = (int) Math.round(sides.size() / 2);
+        int breakLeft = (int) Math.round(sides.size() / 2);
+        int breakRight = breakLeft + center.size();
         int sum = sides.size() + center.size();
+        int si = 0;
+        int ci = 0;
         for(int i = 0; i < sum; i++){
             Unit unit = null;
-            if(i < leftSide){
-                unit = sides.get(2 * i);
+            if(i < breakLeft || i >= breakRight){
+                unit = sides.get(si);
+                si++;
             }
-            else{
-                if(i < leftSide + center.size()){
-                    unit = center.get(i - leftSide);
-                }
-                else{
-                    unit = sides.get(2 * (i - center.size() - leftSide) + 1);
-                }
+            if(i >= breakLeft && i < breakRight){
+                unit = center.get(ci);
+                ci++;
             }
-            line[i] = unit;
-            if(unit!= null){
-                unit.getStatus().setPosition(i);
-            }
+            this.placeInLine(line, i, unit);
         }
         return sum;
+    }
+    
+    private void placeInLine(Unit[] line, int i, Unit unit){
+        line[i] = unit;
+        if(unit!= null){
+            unit.getStatus().setPosition(i);
+        }
     }
     
     private void setupReserves(Army army){

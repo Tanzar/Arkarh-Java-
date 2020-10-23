@@ -36,7 +36,7 @@ function AbilityModalBody(form, group, options, assets, url){
                 passiveDiv.addNumber('Value per stack', passive, 'value', 0);
                 passiveDiv.addSelect('Effect', options.passiveEffects, passive, 'effect');
                 passiveDiv.addSelect('School', options.schools, passive, 'school');
-                passiveDiv.addAsChild(div);
+                passiveDiv.addThisAsChild(div);
             }
             var deleteButton = document.createElement('button');
             deleteButton.innerHTML = 'Remove last';
@@ -57,7 +57,7 @@ function AbilityModalBody(form, group, options, assets, url){
                 passiveDiv.addNumber('Value per stack', passive, 'value', 0);
                 passiveDiv.addSelect('Effect', options.passiveEffects, passive, 'effect');
                 passiveDiv.addSelect('School', options.schools, passive, 'school');
-                passiveDiv.addAsChild(div);
+                passiveDiv.addThisAsChild(div);
             }
             this.table.addCustom('Passives', div);
             break;

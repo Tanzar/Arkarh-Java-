@@ -20,6 +20,9 @@ import com.tanzar.Arkarh.GamePlay.Units.Stats.Defensive;
 import com.tanzar.Arkarh.GamePlay.Units.Stats.Offensive;
 import com.tanzar.Arkarh.GamePlay.Units.Stats.Special;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
+import com.tanzar.Arkarh.Services.BattleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +33,21 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class BattleController {
+    
+    @Autowired
+    private BattleService battleService;
+    
+    @RequestMapping(value="/Simulate", method=RequestMethod.POST, consumes="application/json; charset=UTF-8")
+    public String add(@RequestBody String form){
+        String result = "";
+        try{
+            result = this.battleService.battleSimulation(form);
+        }
+        catch(Exception ex){
+            
+        }
+        return result;
+    }
     
     @RequestMapping(value = "/testBattle", method = RequestMethod.GET)
     public String getAllTerrains(){

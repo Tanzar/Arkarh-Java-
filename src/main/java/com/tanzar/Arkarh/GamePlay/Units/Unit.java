@@ -6,6 +6,7 @@
 package com.tanzar.Arkarh.GamePlay.Units;
 
 import com.tanzar.Arkarh.Converter.Json;
+import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
@@ -15,6 +16,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Modifiers.PassiveEffect;
 import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passives;
 import com.tanzar.Arkarh.GamePlay.TMP.Fraction;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Attack;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.AbilityFactory;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilities;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
@@ -89,6 +91,26 @@ public class Unit implements Comparable<Unit>{
         this.special = new Special(entity.getUpkeep(), entity.getSpeed(), entity.getMorale());
         this.status = new Status(-1, this.defensive.getBaseHealth(), this.special.getBaseMorale());
         this.passives = new Passives();
+    }
+    
+    public Unit(UnitEntity entity, UnitAbilityEntity[] abilitiesEntities) {
+        this.id = entity.getId();
+        this.name = entity.getName();
+        this.assetName = entity.getAssetName();
+        this.fraction = Fraction.valueOf(entity.getFraction());
+        this.role = Role.valueOf(entity.getRole());
+        this.tier = Tier.valueOf(entity.getTier());
+        this.category = Category.valueOf(entity.getCategory());
+        this.offensive = new Offensive(entity.getAttack(), entity.getSpellPower(), entity.getDamage());
+        this.defensive = new Defensive(entity.getDefense(), entity.getArmor(), entity.getWard(), entity.getHealth());
+        this.special = new Special(entity.getUpkeep(), entity.getSpeed(), entity.getMorale());
+        this.status = new Status(-1, this.defensive.getBaseHealth(), this.special.getBaseMorale());
+        this.passives = new Passives();
+        this.abilities = new UnitAbilities();
+        for(UnitAbilityEntity uae: abilitiesEntities){
+            UnitAbility ability = AbilityFactory.convertAbility(uae);
+            this.abilities.add(ability);
+        }
     }
     
     public int getId(){

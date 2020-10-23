@@ -6,10 +6,11 @@
 
 var simulator = new Simulator();
 
-function startSimulation(attackersCanvas, defendersCanvas, battleCanvas, combatlog){
+function startSimulation(attackersCanvas, defendersCanvas, battleCanvas, combatlog, data){
     if(!simulator.auto){
         simulator.stop();
-        simulator.init(attackersCanvas, defendersCanvas, battleCanvas, combatlog);
+        console.log(data);
+        simulator.init(attackersCanvas, defendersCanvas, battleCanvas, combatlog, data);
         simulator.start();
     }
 }
@@ -70,13 +71,13 @@ function Simulator(){
     this.firstPhase = true;
     this.run = true;
     this.auto = false;
-    this.init = function(attackersCanvas, defendersCanvas, battleCanvas, combatTextArea){
+    this.init = function(attackersCanvas, defendersCanvas, battleCanvas, combatTextArea, data){
         this.attackersCanvas = attackersCanvas;
         this.defendersCanvas = defendersCanvas;
         this.battleCanvas = battleCanvas;
         this.combatlog = new CombatLog(combatTextArea);
         this.setAssets();
-        this.getSimulation();
+        this.getSimulation(data);
         this.updateBattleState();
         console.log(this.stagesIndexes);
     }
@@ -98,13 +99,14 @@ function Simulator(){
         });
         this.assets = new Assets(response.responseJSON);
     }
-    this.getSimulation = function(){
+    this.getSimulation = function(data){
         var response = $.ajax({
             async: false,
-            type: "GET",
-            contentType:"application/json; charset=utf-8",
+            type: "POST",
+            contentType:"application/json",
+            data: JSON.stringify(data),
             dataType: "json",
-            url: "/testBattle",
+            url: '/Simulate',
             success: function (response) {
                 return response;
             },

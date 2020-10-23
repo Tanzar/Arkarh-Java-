@@ -9,6 +9,12 @@ function openInNewTab(url) {
   win.focus();
 }
 
+function openInNewTabWithData(url, data) {
+  var win = window.open(url, '_blank');
+  win.givenData = data;
+  win.focus();
+}
+
 function getFromUrl(url){
     var response = $.ajax({
         async: false,

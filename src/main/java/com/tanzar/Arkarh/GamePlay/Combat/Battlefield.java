@@ -84,18 +84,19 @@ public class Battlefield {
     public void tick(CombatReport report){
         report.nextTick();
         report.battlefieldState(attackingSide, defendingSide);
-        Unit[] fieldedUnits = this.groupUnits(attackingSide, defendingSide);
-        for(Unit unit: fieldedUnits){
+        Units fieldedUnits = this.groupUnits(attackingSide, defendingSide);
+        for(Unit unit: fieldedUnits.toArray()){
             unit.useAbilities(Trigger.onAction, this, report);
         }
         this.reinforcementPhase(report);
     }
     
-    private Unit[] groupUnits(Side attackers, Side defenders){
+    private Units groupUnits(Side attackers, Side defenders){
         Units groupedUnits = new Units();
         groupedUnits.addUnits(attackers.getFieldedUnits());
         groupedUnits.addUnits(defenders.getFieldedUnits());
-        return groupedUnits.toArray();
+        groupedUnits.orderBySpeed();
+        return groupedUnits;
     }
     
     private void reinforcementPhase(CombatReport report){

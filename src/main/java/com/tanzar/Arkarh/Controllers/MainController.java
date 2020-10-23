@@ -29,6 +29,11 @@ public class MainController {
         return "mapGenerator";
     }
     
+    @RequestMapping("/battleSimEditor")
+    public String battleSimEditor(Model model){
+        return "BattleSimEditor";
+    }
+    
     @RequestMapping("/battleSim")
     public String battleSim(Model model){
         return "battleSim";

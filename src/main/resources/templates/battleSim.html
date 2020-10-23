@@ -8,7 +8,7 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script type="text/javascript" src="js/BattleSimulator.js"></script>
+	<script type="text/javascript" src="js/BattleSimulator/BattleSimulator.js"></script>
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     </head>
     <body>
@@ -32,7 +32,6 @@ and open the template in the editor.
             <tr>
                 <td><textarea id="combatlog" rows="10" cols="140" style="resize: none;" readonly></textarea></td>
                 <td>
-                    <button id="startBtn" onclick="start()">Get battle simulation</button><br><br>
                     <button id="nextTick" onclick="nextStage()">Next Stage</button><br><br>
                     <button id="previousTick" onclick="previousStage()">Previous Stage</button><br><br>
                     <button id="startAutoBattle" onclick="autoBattle()">Start auto battle</button><br><br>
@@ -42,12 +41,11 @@ and open the template in the editor.
         </table>
     </body>
     <script>
-        function start(){
-            var attackerCanvas = document.getElementById("attackerCanvas");
-            var defenderCanvas = document.getElementById("defenderCanvas");
-            var battleCanvas = document.getElementById("battleCanvas");
-            var combatlog = document.getElementById("combatlog");
-            startSimulation(attackerCanvas, defenderCanvas, battleCanvas, combatlog);
-        }
+        var combatData = window.opener.editor.armies;
+        var attackerCanvas = document.getElementById("attackerCanvas");
+        var defenderCanvas = document.getElementById("defenderCanvas");
+        var battleCanvas = document.getElementById("battleCanvas");
+        var combatlog = document.getElementById("combatlog");
+        startSimulation(attackerCanvas, defenderCanvas, battleCanvas, combatlog, combatData);
     </script>
 </html>
