@@ -52,6 +52,10 @@ public class Battlefield {
     public CombatReport fight(){
         BattleState battleState = BattleState.ongoing;
         CombatReport report = new CombatReport(this.fieldWidth);
+        Units fieldedUnits = this.groupUnits(attackingSide, defendingSide);
+        for(Unit unit: fieldedUnits.toArray()){
+            unit.useAbilities(Trigger.onEntry, this, report);
+        }
         while(battleState == BattleState.ongoing){
             this.tick(report);
             battleState = this.getState();

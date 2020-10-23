@@ -22,6 +22,7 @@ function AbilityModalBody(form, group, options, assets, url){
             break;
         case 'buff':
             this.table.addSelect('Targets group', options.targetsGroup, 'targetsGroup', this.item);
+            this.table.addSelect('Buff trigger', options.triggers, 'trigger', this.item);
             var div = document.createElement("div");
             var addButton = document.createElement('button');
             addButton.innerHTML = "Add";
@@ -33,7 +34,7 @@ function AbilityModalBody(form, group, options, assets, url){
                 form.passives.passives.push(passive);
                 passiveDiv.addNumber('Stacks', passive, 'stacks', 1);
                 passiveDiv.addNumber('Max Stacks', passive, 'stacksLimit', 1);
-                passiveDiv.addNumber('Value per stack', passive, 'value', 0);
+                passiveDiv.addNumber('Value per stack', passive, 'value');
                 passiveDiv.addSelect('Effect', options.passiveEffects, passive, 'effect');
                 passiveDiv.addSelect('School', options.schools, passive, 'school');
                 passiveDiv.addThisAsChild(div);

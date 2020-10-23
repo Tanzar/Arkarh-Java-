@@ -32,8 +32,10 @@ public class Buff extends UnitAbility{
     }
     
     public Buff(UnitAbilityEntity entity){
-        super(entity, Trigger.onAction);
+        super(entity, Trigger.onEntry);
         Json json = new Json(entity.getEffect());
+        String triggerString = json.getString("trigger");
+        this.trigger = Trigger.valueOf(triggerString);
         String targetsGroupString = json.getString("targetsGroup");
         this.targetsGroup = TargetsGroup.valueOf(targetsGroupString);
         Json passives = json.getJson("passives");
@@ -42,9 +44,11 @@ public class Buff extends UnitAbility{
     
     public Buff(Json json){
         super(json);
+        String triggerString = json.getString("trigger");
+        this.trigger = Trigger.valueOf(triggerString);
         String targetsGroupString = json.getString("targetsGroup");
         this.targetsGroup = TargetsGroup.valueOf(targetsGroupString);
-        String passivesString = json.getString("passives");
+        Json passivesString = json.getJson("passives");
         this.passives = new Passives(passivesString);
     }
 
@@ -81,6 +85,7 @@ public class Buff extends UnitAbility{
 
     @Override
     protected void formJson(Json json) {
+        json.add("trigger", this.trigger);
         json.add("targetsGroup", this.targetsGroup.toString());
         json.add("passives", this.passives);
     }

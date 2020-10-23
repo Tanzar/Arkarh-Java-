@@ -25,6 +25,7 @@ function DivElement(){
         select.onchange = function(){
             item[properity] = this.options[this.selectedIndex].value;
         }
+        select.value = item[properity];
         select.style.width = "100px";
         this.element.appendChild(title);
         this.element.appendChild(select);
@@ -43,6 +44,7 @@ function DivElement(){
         select.onchange = function(){
             item[properity] = Number(this.options[this.selectedIndex].value);
         }
+        select.value = item[properity];
         select.style.width = "100px";
         this.element.appendChild(title);
         this.element.appendChild(select);
@@ -58,6 +60,7 @@ function DivElement(){
         input.onchange = function(){
             item[properity] = input.value;
         }
+        input.value = item[properity];
         this.element.appendChild(title);
         this.element.appendChild(input);
     }
@@ -77,6 +80,7 @@ function DivElement(){
         input.onchange = function(){
             item[properity] = Number(input.value);
         }
+        input.value = item[properity];
         this.element.appendChild(title);
         this.element.appendChild(input);
     }

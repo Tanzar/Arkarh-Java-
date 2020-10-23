@@ -64,7 +64,7 @@ public class Heal extends UnitAbility{
     @Override
     protected void onUse(Unit source, Units targets) {
         int healValue = this.baseHealing;
-        double spellPowerMultiplier = source.getTotalSpellPower() * this.spellPowerBonus;
+        double spellPowerMultiplier = 1 + source.getTotalSpellPower() * this.spellPowerBonus;
         healValue = (int) Math.round(healValue * spellPowerMultiplier);
         for(Unit target: targets.toArray()){
             target.heal(healValue);

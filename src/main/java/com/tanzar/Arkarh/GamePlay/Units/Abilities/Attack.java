@@ -88,6 +88,9 @@ public class Attack extends UnitAbility{
         double attackDefenseMultiplier = this.calculateAttackDefenseMultiplier(source, target, attack);
         double armorMultiplier = this.armorMultiplier(source, target);
         damage = (int) Math.round(damage * attackDefenseMultiplier * armorMultiplier);
+        if(damage <= 0){
+            damage = 1;
+        }
         target.takeDamage(damage);
         return damage;
     }
@@ -112,6 +115,9 @@ public class Attack extends UnitAbility{
         double spellPowerMultiplier = spellPower * this.spellPowerBonus;
         double wardMultiplier = this.wardMultiplier(source, target);
         damage = (int) Math.round(damage * spellPowerMultiplier * wardMultiplier);
+        if(damage <= 0){
+            damage = 1;
+        }
         target.takeDamage(damage);
         return damage;
     }

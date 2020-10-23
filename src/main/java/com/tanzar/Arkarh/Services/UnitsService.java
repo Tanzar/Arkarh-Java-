@@ -18,6 +18,7 @@ import com.tanzar.Arkarh.GamePlay.TMP.Fraction;
 import com.tanzar.Arkarh.GamePlay.TMP.Tier;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Attack;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.TargetsGroup;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilities;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
 import com.tanzar.Arkarh.GamePlay.Units.TargetsSelection;
@@ -209,6 +210,8 @@ public class UnitsService {
         json.add("targetsGroup", targetsGroup);
         PassiveEffect[] passiveEffects = PassiveEffect.values();
         json.add("passiveEffects", passiveEffects);
+        Trigger[] triggers = Trigger.values();
+        json.add("triggers", triggers);
         return json.formJson();
     }
 }

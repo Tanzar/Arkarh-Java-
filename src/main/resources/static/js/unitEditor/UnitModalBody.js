@@ -24,7 +24,7 @@ function UnitModalBody(unit, options, assets){
     this.table.addSelect("Attack Style", options.attacks, 'attackStyle', this.unit.abilities.abilities[0]);
     this.table.addSelect("Attack School", options.schools, 'school', this.unit.abilities.abilities[0]);
     this.table.addNumberNoMax("Range", 'range', this.unit.abilities.abilities[0], 1);
-    this.table.addNumberNoMax("Cleave range", 'areaSize', this.unit.abilities.abilities[0], 1);
+    this.table.addNumberNoMax("Cleave range", 'areaSize', this.unit.abilities.abilities[0], 0);
     
     this.table.addTextRow("Defensive");
     this.table.addNumberNoMax("Defense", 'defense', this.unit.defensive, 1);
@@ -33,7 +33,7 @@ function UnitModalBody(unit, options, assets){
     this.table.addNumber("Ward", 'ward', this.unit.defensive, 0, 75);
       
     this.table.addTextRow("Special");
-    this.table.addNumberNoMax("Upkeep", 1, 'upkeep', this.unit.special);
+    this.table.addNumberNoMax("Upkeep", 'upkeep', this.unit.special, 1);
     this.table.addNumberNoMax("Speed", 'speed', this.unit.special, 1);
     this.table.addNumberNoMax("Base Morale", 'baseMorale', this.unit.special, 1000);
     
