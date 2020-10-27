@@ -10,7 +10,29 @@ package com.tanzar.Arkarh.GamePlay.TMP;
  * @author spako
  */
 public enum Tier {
-    base,
-    advanced,
-    elite;
+    base(1),
+    baseUpgrade(2),
+    advanced(3),
+    advancedUpgrade(4),
+    elite(5),
+    eliteUpgrade(6);
+    
+    private int rank;
+    
+    Tier(int rank){
+        this.rank = rank;
+    }
+    
+    public int getRank(){
+        return this.rank;
+    }
+    
+    public boolean isHigherTierThan(Tier comparable){
+        if(this.rank > comparable.getRank()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

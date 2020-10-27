@@ -48,6 +48,18 @@ public class Status {
         return this.state;
     }
     
+    public void setState(State state){
+        this.state = state;
+    }
+    
+    public int getHealth(){
+        return this.health;
+    }
+    
+    public void setHealth(int health){
+        this.health = health;
+    }
+    
     public boolean isAlive(){
         if(this.state.equals(State.alive)){
             return true;

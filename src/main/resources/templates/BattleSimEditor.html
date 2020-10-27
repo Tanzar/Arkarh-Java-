@@ -28,12 +28,12 @@ and open the template in the editor.
             </tr>
         </table>
         <br>
-        <button id="startButton">Start</button>
+        <div id="starterDiv">Start</div>
     </body>
     <script>
         var attackersDiv = document.getElementById("attackers");
         var defendersDiv = document.getElementById("defenders");
-        var startButton = document.getElementById("startButton");
-        var editor = new BattleSimEditor(attackersDiv, defendersDiv, startButton);
+        var starter = document.getElementById("starterDiv");
+        var editor = new BattleSimEditor(attackersDiv, defendersDiv, starter);
     </script>
 </html>

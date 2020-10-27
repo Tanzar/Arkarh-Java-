@@ -91,6 +91,7 @@ public class Battlefield {
         Units fieldedUnits = this.groupUnits(attackingSide, defendingSide);
         for(Unit unit: fieldedUnits.toArray()){
             unit.useAbilities(Trigger.onAction, this, report);
+            unit.takeMoraleDamage();
         }
         this.reinforcementPhase(report);
     }

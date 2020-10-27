@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-function BattleSimEditor(attackersDiv, defendersDiv, startButton){
+function BattleSimEditor(attackersDiv, defendersDiv, starterDiv){
     this.attackers = {
         leader: 'WIP',
         army : []
@@ -53,9 +53,18 @@ function BattleSimEditor(attackersDiv, defendersDiv, startButton){
     this.initArmyEditor(attackersDiv, this.attackers.army);
     this.initArmyEditor(defendersDiv, this.defenders.army);
     
-    var armies = this.armies;
-    startButton.onclick = function(){
-        console.log(armies);
-        openInNewTabWithData('/battleSim');
+    
+    this.initStarter = function(starterDiv){
+        var element = new DivElement();
+        var armies = this.armies;
+        element.addNumber('Battlefield Width', armies, 'width', 0, 20);
+        element.newLine();
+        element.newLine();
+        element.addButton('Start', function(){
+            console.log(armies);
+            openInNewTabWithData('/battleSim');
+        });
+        element.addThisAsChild(starterDiv);
     }
+    this.initStarter(starterDiv);
 }

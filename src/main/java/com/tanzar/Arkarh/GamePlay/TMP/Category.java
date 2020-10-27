@@ -10,19 +10,28 @@ package com.tanzar.Arkarh.GamePlay.TMP;
  * @author spako
  */
 public enum Category {
-    living,
-    undead,
-    demon,
-    elemental,
-    construct,
-    drake,
-    spirit;
+    living(true, true),
+    undead(false, false),
+    demon(false, true),
+    elemental(false, false),
+    construct(false, false),
+    drake(true, false),
+    spirit(false, false);
     
-    private boolean takeMoraleDamage;
+    private boolean ressurectable;
+    private boolean takesMoraleDamage;
     
     
+    Category(boolean ressurectable, boolean moraleDamage){
+        this.ressurectable = ressurectable;
+        this.takesMoraleDamage = moraleDamage;
+    }
     
-    Category(){
-        
+    public boolean isRessurectable(){
+        return this.ressurectable;
+    }
+    
+    public boolean takesMoraleDamage(){
+        return this.takesMoraleDamage;
     }
 }

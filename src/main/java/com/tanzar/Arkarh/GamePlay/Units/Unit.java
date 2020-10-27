@@ -309,8 +309,44 @@ public class Unit implements Comparable<Unit>{
         return this.status.isAlive();
     }
     
+    public boolean isNotAlive(){
+        return !this.status.isAlive();
+    }
+    
+    public boolean isNotRisen(){
+        if(this.status.getState() != State.risen){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    public boolean canBeRessurected(){
+        if(this.category.isRessurectable() && this.isNotAlive() && this.isNotRisen()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    public boolean isHigherTierThan(Unit unit){
+        Tier comparable = unit.getTier();
+        if(this.tier.isHigherTierThan(comparable)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
     public boolean isCappableToFight(){
         return this.status.isCappableToFight();
+    }
+    
+    public boolean isNotCappableToFight(){
+        return !this.status.isCappableToFight();
     }
     
     public boolean isFasterThan(Unit unit){
@@ -357,6 +393,28 @@ public class Unit implements Comparable<Unit>{
         if(value > 0){
             this.status.heal(value);
         }
+    }
+    
+    public void takeMoraleDamage(){
+        if(this.category.takesMoraleDamage()){
+            int moraleLoss = this.special.getMoraleLoss();
+            this.status.damageMorale(moraleLoss);
+        }
+    }
+    
+    public int ressurect(int percentage){
+        int restoredHealth = 0;
+        if(percentage > 0){
+            if(percentage > 100){
+                percentage = 100;
+            }
+            int maxHealth = this.defensive.getBaseHealth() + this.passives.summarizeValues(PassiveEffect.bonusHealth);
+            int newHealth = (int) Math.round(maxHealth * (percentage/100));
+            this.status.setHealth(newHealth);
+            this.status.setState(State.alive);
+            restoredHealth = newHealth;
+        }
+        return restoredHealth;
     }
     
     @Override

@@ -25,7 +25,7 @@ public abstract class UnitAbility {
     protected String name;
     protected CombatReport report;
     protected Trigger trigger;
-    private int charges;
+    protected int charges;
     private int unitId;
     private UnitAbilityGroup group;
     

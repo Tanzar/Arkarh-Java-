@@ -175,26 +175,40 @@ public class Side {
     
     private void reinforcePosition(Units affectedUnits, int x){
         int index = (int) Math.round(this.width / 2) + x;
-        this.reinforceNew(this.front, index, affectedUnits);
-        this.reinforceNew(this.back, index, affectedUnits);
+        this.reinforceNew(this.front, index, affectedUnits, true);
+        this.reinforceNew(this.back, index, affectedUnits, false);
     }
     
-    private void reinforceNew(Unit[] line, int index, Units affectedUnits){
+    private void reinforceNew(Unit[] line, int index, Units affectedUnits, boolean isFront){
+        Unit unit = null;
         if(line[index] != null){
-            Unit currentUnit = line[index];
-            if(!currentUnit.isCappableToFight()){
-                this.reserves.addUnit(currentUnit);
-                line[index] = null;
-                boolean isFront = currentUnit.isFront();
-                Unit reinforcement = this.reserves.get(isFront);
-                if(reinforcement != null){
-                    this.reserves.remove(reinforcement);
-                    reinforcement.setPosition(index);
-                    affectedUnits.add(reinforcement);
-                    line[index] = reinforcement;
-                }
-            }
+            unit = this.replaceUnit(line[index], index, affectedUnits);
         }
+        else{
+            unit = this.checkReserves(isFront, index, affectedUnits);
+        }
+        line[index] = unit;
+    }
+    
+    private Unit replaceUnit(Unit currentUnit, int index, Units affectedUnits){
+        if(currentUnit.isNotCappableToFight()){
+            this.reserves.addUnit(currentUnit);
+            boolean isFront = currentUnit.isFront();
+            Unit reinforcement = this.checkReserves(isFront, index, affectedUnits);
+            return reinforcement;
+        }
+        return currentUnit;
+    }
+    
+    private Unit checkReserves(boolean isFront, int index, Units affectedUnits){
+        Unit reinforcement = null;
+        reinforcement = this.reserves.get(isFront);
+        if(reinforcement != null){
+            this.reserves.remove(reinforcement);
+            reinforcement.setPosition(index);
+            affectedUnits.add(reinforcement);
+        }
+        return reinforcement;
     }
     
     public Units getFieldedUnitsOrderedBySpeed(){
@@ -211,6 +225,17 @@ public class Side {
             }
             if(this.back[i] != null){
                 units.add(this.back[i]);
+            }
+        }
+        return units;
+    }
+    
+    public Units getDeadReserves(){
+        Units units = new Units();
+        Units reservesList = this.getReserves();
+        for(Unit unit: reservesList.toArray()){
+            if(unit.isNotAlive()){
+                units.add(unit);
             }
         }
         return units;
@@ -245,7 +270,7 @@ public class Side {
     }
     
     public Unit getUnit(int position){
-        if(position < this.width - 1 && position > -1){
+        if(position < this.width && position > -1){
             if(this.front[position] != null){
                 return this.front[position];
             }
@@ -274,7 +299,7 @@ public class Side {
     }
     
     public boolean isAnyOnPosition(int position){
-        if(position < this.width - 1 && position > -1){
+        if(position < this.width && position > -1){
             if(this.front[position] != null){
                 return true;
             }

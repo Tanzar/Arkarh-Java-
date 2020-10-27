@@ -5,26 +5,13 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
-import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
-import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passive;
-import com.tanzar.Arkarh.GamePlay.TMP.Category;
-import com.tanzar.Arkarh.GamePlay.TMP.Fraction;
-import com.tanzar.Arkarh.GamePlay.TMP.Tier;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Attack;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.*;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Buff;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Heal;
-import com.tanzar.Arkarh.GamePlay.Units.TargetsSelection;
-import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
-import com.tanzar.Arkarh.GamePlay.Units.Modifiers.PassiveEffect;
-import com.tanzar.Arkarh.GamePlay.Units.Role;
-import com.tanzar.Arkarh.GamePlay.Units.Stats.*;
-import com.tanzar.Arkarh.GamePlay.Units.Unit;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Reincarnate;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Ressurect;
 import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 
 /**
@@ -43,6 +30,10 @@ public class AbilityFactory {
                 return new Heal(json);
             case buff:
                 return new Buff(json);
+            case reincarnate:
+                return new Reincarnate(json);
+            case ressurect:
+                return new Ressurect(json);
             default:
                 return null;
         }
@@ -58,6 +49,10 @@ public class AbilityFactory {
                 return new Heal(entity);
             case buff:
                 return new Buff(entity);
+            case reincarnate:
+                return new Reincarnate(entity);
+            case ressurect:
+                return new Ressurect(entity);
             default:
                 return null;
         }
@@ -71,6 +66,10 @@ public class AbilityFactory {
                 return new Heal();
             case buff:
                 return new Buff();
+            case reincarnate:
+                return new Reincarnate();
+            case ressurect:
+                return new Ressurect();
             default:
                 return null;
         }

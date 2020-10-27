@@ -62,6 +62,13 @@ function AbilityModalBody(form, group, options, assets, url){
             }
             this.table.addCustom('Passives', div);
             break;
+        case 'reincarnate':
+            this.table.addNumber('Health percentage', 'healthPercentage', this.item, 1, 100);
+            break;
+        case 'ressurect':
+            this.table.addNumberNoMax('Number of targets', 'ressurected', this.item, 1);
+            this.table.addNumber('Health percentage', 'healthPercentage', this.item, 1, 100);
+            break;
     }
     
     this.getHTMLElement = function(){
