@@ -5,7 +5,7 @@
  */
 package com.tanzar.Arkarh.DAO;
 
-import com.tanzar.Arkarh.Containers.UnitAbilityEntities;
+import com.tanzar.Arkarh.Containers.Gameplay.UnitAbilityEntities;
 import com.tanzar.Arkarh.DAO.abstracts.DAO;
 import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.Exceptions.QueryException;

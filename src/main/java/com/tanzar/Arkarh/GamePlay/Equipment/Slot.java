@@ -10,14 +10,17 @@ package com.tanzar.Arkarh.GamePlay.Equipment;
  * @author spako
  */
 public enum Slot {
-    helmet(0),
-    armor(1),
-    boots(2),
-    weapon(3),
-    shield(4),
-    necklace(5),
-    ring(6),
-    equipment(7);
+    head(0),
+    neck(1),
+    chest(2),
+    hands(3),
+    legs(4),
+    feet(5),
+    mainhand(6),
+    offhand(7),
+    ring(8),
+    bonus(9),
+    ;
     
     private int index;
     
@@ -25,7 +28,7 @@ public enum Slot {
         this.index = index;
     }
     
-    public int toInt(){
+    public int getIndex(){
         return this.index;
     }
 }

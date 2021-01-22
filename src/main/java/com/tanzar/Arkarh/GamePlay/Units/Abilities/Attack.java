@@ -167,7 +167,7 @@ public class Attack extends UnitAbility{
     }
     
     private void report(Unit source, Unit target, int value, EffectSchool school){
-        String stringFormat = source.getStatus().getSide() + source.toString() + " attacks " + target.toString() + " for " + value + " " + school + " damage.";
+        String stringFormat = source.toString() + " attacks " + target.toString() + " for " + value + " " + school + " damage.";
         this.report.abilityUse(source, target, stringFormat);
     }
 

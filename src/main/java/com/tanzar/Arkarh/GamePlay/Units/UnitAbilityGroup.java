@@ -15,8 +15,9 @@ public enum UnitAbilityGroup {
     heal,//target, za ile
     buff,
     ressurect,//target, ile % hp
-    necromancy,//tagret, jako który unit
     reincarnate,
+    demoralize,
+    necromancy,//tagret, jako który unit
     summon,//return unit, zwracaj target w parametrze(?), kogo przywołuje
     
 }

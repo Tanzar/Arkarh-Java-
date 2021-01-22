@@ -12,6 +12,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.TargetsGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
 import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passive;
+import com.tanzar.Arkarh.GamePlay.Units.Modifiers.PassiveSource;
 import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passives;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
@@ -78,7 +79,10 @@ public class Buff extends UnitAbility{
     protected void onUse(Unit source, Units targets) {
         for(Unit target: targets.toArray()){
             for(Passive passive: this.passives.toArray()){
-                target.addPassive(passive);
+                Passive copy = new Passive(passive);
+                copy.setIndex(this.id);
+                copy.setSource(PassiveSource.unit);
+                target.addPassive(copy);
             }
         }
     }

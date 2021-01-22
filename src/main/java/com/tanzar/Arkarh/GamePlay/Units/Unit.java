@@ -398,7 +398,11 @@ public class Unit implements Comparable<Unit>{
     public void takeMoraleDamage(){
         if(this.category.takesMoraleDamage()){
             int moraleLoss = this.special.getMoraleLoss();
-            this.status.damageMorale(moraleLoss);
+            int moraleLossModifier = this.passives.summarizeValues(PassiveEffect.moraleLoss);
+            moraleLoss = moraleLoss + moraleLossModifier;
+            if(moraleLoss > 0){
+                this.status.damageMorale(moraleLoss);
+            }
         }
     }
     
@@ -419,7 +423,7 @@ public class Unit implements Comparable<Unit>{
     
     @Override
     public String toString(){
-        String result = "";
+        String result = this.status.getSide().toString() + "";
         if(this.name.equals("")){
             result += this.role;
         }

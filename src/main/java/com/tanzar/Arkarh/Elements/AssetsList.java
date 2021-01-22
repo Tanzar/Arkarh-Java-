@@ -38,7 +38,7 @@ public class AssetsList {
     }
     
     public boolean isCategory(String category){
-        return this.category.equals(category);
+        return this.category.contains(category);
     }
     
     public Asset[] toArray(){

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tanzar.Arkarh.Containers;
+package com.tanzar.Arkarh.Containers.Gameplay;
 
+import com.tanzar.Arkarh.Containers.HashSetContainer;
 import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import java.util.HashSet;
 

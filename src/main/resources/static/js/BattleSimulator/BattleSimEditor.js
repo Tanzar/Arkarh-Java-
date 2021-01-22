@@ -6,11 +6,11 @@
 
 function BattleSimEditor(attackersDiv, defendersDiv, starterDiv){
     this.attackers = {
-        leader: 'WIP',
+        leader: new Leader(),
         army : []
     };
     this.defenders = {
-        leader: 'WIP',
+        leader: new Leader(),
         army : []
     };
     this.armies = {
@@ -20,7 +20,16 @@ function BattleSimEditor(attackersDiv, defendersDiv, starterDiv){
     }
     this.URL = new URLConnector();
     
-    this.initArmyEditor = function(div, army){
+    this.initArmyEditor = function(div, side){
+        var leaderDiv = new DivElement();
+        leaderDiv.addNumber("Attack", side.leader, 'attack', 1, 100);
+        leaderDiv.newLine();
+        leaderDiv.addNumber("Defense", side.leader, 'defense', 1, 100);
+        leaderDiv.newLine();
+        leaderDiv.addNumber("Spell Power", side.leader, 'spellPower', 1, 100);
+        leaderDiv.newLine();
+        leaderDiv.addThisAsChild(div);
+        var army = side.army;
         var unitsDiv = new DivElement();
         var units = this.URL.getFromURL("/unitEditor/getAllUnits");
         var unitsIds = [];
@@ -48,10 +57,9 @@ function BattleSimEditor(attackersDiv, defendersDiv, starterDiv){
             }
         });
         unitsDiv.addThisAsChild(div);
-        var leaderDiv = new DivElement();
     }
-    this.initArmyEditor(attackersDiv, this.attackers.army);
-    this.initArmyEditor(defendersDiv, this.defenders.army);
+    this.initArmyEditor(attackersDiv, this.attackers);
+    this.initArmyEditor(defendersDiv, this.defenders);
     
     
     this.initStarter = function(starterDiv){
@@ -67,4 +75,14 @@ function BattleSimEditor(attackersDiv, defendersDiv, starterDiv){
         element.addThisAsChild(starterDiv);
     }
     this.initStarter(starterDiv);
+}
+
+function Leader(){
+    this.level = 1;
+    this.experience = 1;
+    this.attack = 1;
+    this.defense = 1;
+    this.spellPower = 1;
+    this.equipment = [];
+    this.inventory = [];
 }

@@ -5,16 +5,21 @@
  */
 package com.tanzar.Arkarh.Services;
 
-import com.tanzar.Arkarh.Containers.UnitAbilityEntities;
+import com.tanzar.Arkarh.Containers.Gameplay.UnitAbilityEntities;
 import com.tanzar.Arkarh.Converter.Json;
+import com.tanzar.Arkarh.DAO.ArtifactsDAO;
 import com.tanzar.Arkarh.DAO.UnitAbilitiesDAO;
 import com.tanzar.Arkarh.DAO.UnitsDAO;
+import com.tanzar.Arkarh.Entities.Leader.ArtifactEntity;
 import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
+import com.tanzar.Arkarh.GamePlay.Equipment.Artifact;
+import com.tanzar.Arkarh.GamePlay.Leader.Leader;
 import com.tanzar.Arkarh.GamePlay.Units.Army;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
+import com.tanzar.Arkarh.GamePlay.Units.Units;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +36,9 @@ public class BattleService {
     @Autowired
     private UnitAbilitiesDAO abilitiesDAO;
     
+    @Autowired
+    private ArtifactsDAO artifactsDAO;
+    
     public String battleSimulation(String simulationString){
         Json json = new Json(simulationString);
         Json attackersJson = json.getJson("attackers");
@@ -45,7 +53,15 @@ public class BattleService {
     }
     
     private Army convertJson(Json json){
-        Army army = new Army();
+        Units units = this.convetrUnits(json);
+        Leader leader = this.convertLeader(json);
+        Army army = new Army(leader);
+        army.addUnits(units);
+        return army;
+    }
+    
+    private Units convetrUnits(Json json){
+        Units units = new Units();
         String[] dataStrings = json.getStringArray("army");
         for(String dataString: dataStrings){
             Json unitJson = new Json(dataString);
@@ -56,9 +72,29 @@ public class BattleService {
             int count = unitJson.getInt("count");
             for(int i = 0; i < count; i++){
                 Unit unit = new Unit(entity, unitAbilities);
-                army.addUnit(unit);
+                units.add(unit);
             }
         }
-        return army;
+        return units;
+    }
+    
+    private Leader convertLeader(Json json){
+        Json leaderJson = json.getJson("leader");
+        Leader leader = new Leader(leaderJson);
+        String[] equipped = leaderJson.getStringArray("equipment");
+        for(String index: equipped){
+            int id = Integer.valueOf(index);
+            ArtifactEntity entity = this.artifactsDAO.getById(id);
+            Artifact artifact = new Artifact(entity);
+            leader.equip(artifact);
+        }
+        String[] inventory = leaderJson.getStringArray("inventory");
+        for(String index: equipped){
+            int id = Integer.valueOf(index);
+            ArtifactEntity entity = this.artifactsDAO.getById(id);
+            Artifact artifact = new Artifact(entity);
+            leader.addArtifactToInventory(artifact);
+        }
+        return leader;
     }
 }

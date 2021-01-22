@@ -5,47 +5,100 @@
  */
 package com.tanzar.Arkarh.GamePlay.Equipment;
 
+import com.tanzar.Arkarh.GamePlay.Leader.Leader;
+import com.tanzar.Arkarh.GamePlay.Units.Unit;
+
 /**
  *
  * @author spako
  */
 public class Equipment {
     
-    //private Item 
-    private Item rings[];
-    private Item equipment[];
-    private Item bag[];
-    
+    private Artifacts[] equipped;
+    private Artifacts bag;
     
     public Equipment(){
-        Slot slots[] = Slot.values();
-        this.equipment = new Item[slots.length];
-        this.bag = new Item[20];
+        Slot[] slots = Slot.values();
+        this.equipped = new Artifacts[slots.length];
+        for(int i = 0; i < slots.length; i++){
+            switch(slots[i]){
+                case ring:
+                    this.equipped[i] = new Artifacts(2);
+                    break;
+                case bonus:
+                    this.equipped[i] = new Artifacts(4);
+                    break;
+                default:
+                    this.equipped[i] = new Artifacts(1);
+                    break;
+            }
+        }
+        this.bag = new Artifacts(40);
     }
     
-    public void equip(int bagIndex){
-        Item itemToEquip = this.getItemFromBag(bagIndex);
-        if(itemToEquip != null){
-            //Item itemToUnequip = this.getItem(itemToEquip.getSlot());
-            //this.equipment[]
+    public Artifacts getEquipped(){
+        Artifacts result = new Artifacts();
+        for(Artifacts equippedInSlot: this.equipped){
+            for(Artifact item: equippedInSlot.toArray()){
+                result.add(item);
+            }
+        }
+        return result;
+    }
+    
+    public void addArtifact(Artifact artifact){
+        this.bag.add(artifact);
+    }
+    
+    public void equip(int index){
+        Artifact artifact = this.bag.get(index);
+        if(artifact != null){
+            Slot slot = artifact.getSlot();
+            Artifacts itemsInSlot = this.equipped[slot.getIndex()];
+            if(itemsInSlot.isFull()){
+                if(!this.bag.isFull()){
+                    Artifact item = itemsInSlot.get(0);
+                    itemsInSlot.remove(0);
+                    this.bag.add(item);
+                    itemsInSlot.add(artifact);
+                }
+            }
+            else{
+                itemsInSlot.add(artifact);
+            }
         }
     }
     
-    private Item getItemFromBag(int bagIndex){
-        if(bagIndex >= 0 && bagIndex < this.bag.length){
-            return this.bag[bagIndex];
+    public boolean equip(Artifact artifact){
+        if(artifact != null){
+            Slot slot = artifact.getSlot();
+            Artifacts itemsInSlot = this.equipped[slot.getIndex()];
+            if(itemsInSlot.isFull()){
+                if(!this.bag.isFull()){
+                    Artifact item = itemsInSlot.get(0);
+                    itemsInSlot.remove(0);
+                    this.bag.add(item);
+                    itemsInSlot.add(artifact);
+                }
+            }
+            else{
+                itemsInSlot.add(artifact);
+            }
         }
-        else{
-            return null;
+        return false;//TMP
+    }
+    
+    public void applyBonuses(Leader leader){
+        Artifacts equipped = this.getEquipped();
+        for(Artifact artifact: equipped.toArray()){
+            artifact.applyBonus(leader);
         }
     }
     
-    public void unequip(Slot slot){
-        
-    }
-    
-    public Item getItem(Slot slot){
-        int index = slot.toInt();
-        return this.equipment[index];
+    public void applyBonuses(Unit unit){
+        Artifacts equipped = this.getEquipped();
+        for(Artifact artifact: equipped.toArray()){
+            artifact.applyBonus(unit);
+        }
     }
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Artifacts Editor</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="css/modal.css"/>
+        <script type="text/javascript" src="js/tools/Modal.js"></script>
+        <script type="text/javascript" src="js/tools/URLConnector.js"></script>
+        <script type="text/javascript" src="js/tools/Table.js"></script>
+        <script type="text/javascript" src="js/tools/DivElement.js"></script>
+        <script type="text/javascript" src="js/artifactsEditor/EditorSetup.js"></script>
+        <script type="text/javascript" src="js/artifactsEditor/ArtifactModalBody.js"></script>
+        <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+        <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+        <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script type="text/javascript" language="javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.jqueryui.min.js"></script>
+    </head>
+    <body>
+        <!-- The Modals -->
+        <div id="artifact_modal" class="modal"></div>
+        
+        <table style="width: 100%">
+            <tr>
+                <td width="25%"></td>
+                <td width="50%">
+                    <div id="editorDiv"></div>
+                </td>
+                <td width="25%"></td>
+            </tr>
+        </table>
+    </body>
+    <script>
+        var div = document.getElementById("editorDiv");
+        var editor = new EditorSetup(div);
+    </script>
+</html>

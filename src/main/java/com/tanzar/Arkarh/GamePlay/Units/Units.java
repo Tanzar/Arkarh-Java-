@@ -108,15 +108,6 @@ public class Units {
             return false;
         }
     }
-    /*
-    public Units copy(){
-        Units copy = new Units();
-        for(Unit unit : this.unitList){
-            Unit unitCopy = unit.copy();
-            copy.add(unitCopy);
-        }
-        return copy;
-    }*/
     
     public void orderBySpeed(){
         this.unitList.sort(null);

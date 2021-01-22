@@ -23,6 +23,7 @@ public class Passive {
     private int value;
     private PassiveEffect effect;
     private EffectSchool school;
+    private PassiveSource source;
 
     public Passive() {
         this.index = 0;
@@ -31,15 +32,28 @@ public class Passive {
         this.value = 0;
         this.effect = PassiveEffect.attack;
         this.school = EffectSchool.physical;
+        this.source = PassiveSource.unit;
     }
 
-    public Passive(int index, int stacks, int stacksLimit, int value, PassiveEffect effect, EffectSchool school) {
+    public Passive(int index, int stacks, int stacksLimit, int value, PassiveEffect effect, EffectSchool school, PassiveSource source) {
         this.index = index;
         this.stacks = stacks;
         this.stacksLimit = stacksLimit;
         this.value = value;
         this.effect = effect;
         this.school = school;
+        this.source = source;
+        this.adjustStacks();
+    }
+    
+    public Passive(Passive original){
+        this.index = original.getIndex();
+        this.stacks = original.getStacks();
+        this.stacksLimit = original.getStacksLimit();
+        this.value = original.getSingleValue();
+        this.effect = original.getEffect();
+        this.school = original.getSchool();
+        this.source = original.getSource();
         this.adjustStacks();
     }
     
@@ -51,6 +65,7 @@ public class Passive {
         this.value = json.getInt("value");
         this.effect = PassiveEffect.valueOf(json.getString("effect"));
         this.school = EffectSchool.valueOf(json.getString("school"));
+        this.source = PassiveSource.valueOf(json.getString("source"));
         this.adjustStacks();
     }
     
@@ -112,6 +127,14 @@ public class Passive {
     public void setSchool(EffectSchool school){
         this.school = school;
     }
+
+    public PassiveSource getSource() {
+        return source;
+    }
+
+    public void setSource(PassiveSource source) {
+        this.source = source;
+    }
     
     public boolean isAtStacksLimit(){
         if(this.stacks == this.stacksLimit){
@@ -137,10 +160,13 @@ public class Passive {
         if (this.value != other.value) {
             return false;
         }
-        if (!Objects.equals(this.index, other.index)) {
+        if (this.index != other.index) {
             return false;
         }
         if (this.effect != other.effect) {
+            return false;
+        }
+        if (this.source != other.source) {
             return false;
         }
         return true;

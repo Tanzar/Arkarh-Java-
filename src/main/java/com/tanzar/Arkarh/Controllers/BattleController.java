@@ -79,7 +79,7 @@ public class BattleController {
     }
     
     private Army newArmy(int flankers, int warriors, int mages, int shooters){
-        Army army = new Army();
+        Army army = new Army(null);
         for(int i = 0; i < flankers; i++){
             Unit unit = this.newUnit(Role.flanker, 10, 0, EffectSchool.physical, 20, TargetsSelection.single, 5, 25, 15, 200, 20, 3, 1);
             unit.setName(unit.getRole().toString());

@@ -69,6 +69,10 @@ function AbilityModalBody(form, group, options, assets, url){
             this.table.addNumberNoMax('Number of targets', 'ressurected', this.item, 1);
             this.table.addNumber('Health percentage', 'healthPercentage', this.item, 1, 100);
             break;
+        case 'demoralize':
+            this.table.addNumberNoMax('Range around unit', 'range', this.item, 1);
+            this.table.addNumberNoMax('Multiplier', 'multiplier', this.item, 1);
+            break;
     }
     
     this.getHTMLElement = function(){

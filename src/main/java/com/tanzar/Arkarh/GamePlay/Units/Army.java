@@ -5,6 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units;
 
+import com.tanzar.Arkarh.GamePlay.Leader.Leader;
 import com.tanzar.Arkarh.GamePlay.Combat.BattleSide;
 import java.util.List;
 
@@ -18,7 +19,8 @@ public class Army {
     
     private Units unitsSplitPerRole[];
     
-    public Army(){
+    public Army(Leader leader){
+        this.leader = leader;
         this.unitsSplitPerRole = new Units[Role.countRoles()];
         for(int i = 0; i < this.unitsSplitPerRole.length; i++){
             this.unitsSplitPerRole[i] = new Units();
@@ -33,15 +35,6 @@ public class Army {
             }
         }
     }
-    /*
-    public Army copy(){
-        Army copy = new Army();
-        for(int i = 0; i < this.unitsSplitPerRole.length; i++){
-            Units unitsCopy = this.unitsSplitPerRole[i].copy();
-            copy.addUnits(unitsCopy);
-        }
-        return copy;
-    }*/
     
     public void addUnits(Units units){
         for(int i = 0; i < units.size(); i++){
@@ -51,6 +44,9 @@ public class Army {
     }
     
     public void addUnit(Unit unit){
+        if(this.leader != null){
+            leader.applyBonuses(unit);
+        }
         Role unitRole = unit.getRole();
         int roleIndex = unitRole.getIndex();
         this.unitsSplitPerRole[roleIndex].add(unit);
@@ -79,4 +75,5 @@ public class Army {
         }
         return size;
     }
+    
 }

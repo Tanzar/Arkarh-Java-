@@ -44,6 +44,11 @@ public class MainController {
         return "unitEdit";
     }
     
+    @RequestMapping("/artifactsEditor")
+    public String artifactsEdit(Model model){
+        return "artifactsEditor";
+    }
+    
     @RequestMapping("/test")
     public String test(Model model){
         return "testPage";

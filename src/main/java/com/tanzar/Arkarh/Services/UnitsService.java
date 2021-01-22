@@ -5,8 +5,8 @@
  */
 package com.tanzar.Arkarh.Services;
 
-import com.tanzar.Arkarh.Containers.UnitAbilityEntities;
-import com.tanzar.Arkarh.Containers.UnitEntities;
+import com.tanzar.Arkarh.Containers.Gameplay.UnitAbilityEntities;
+import com.tanzar.Arkarh.Containers.Gameplay.UnitEntities;
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.AbilityFactory;
 import com.tanzar.Arkarh.DAO.UnitAbilitiesDAO;

@@ -34,6 +34,8 @@ public class AbilityFactory {
                 return new Reincarnate(json);
             case ressurect:
                 return new Ressurect(json);
+            case demoralize:
+                return new Demoralize(json);
             default:
                 return null;
         }
@@ -53,6 +55,8 @@ public class AbilityFactory {
                 return new Reincarnate(entity);
             case ressurect:
                 return new Ressurect(entity);
+            case demoralize:
+                return new Demoralize(entity);
             default:
                 return null;
         }
@@ -70,6 +74,8 @@ public class AbilityFactory {
                 return new Reincarnate();
             case ressurect:
                 return new Ressurect();
+            case demoralize:
+                return new Demoralize();
             default:
                 return null;
         }

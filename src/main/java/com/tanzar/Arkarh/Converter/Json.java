@@ -46,6 +46,10 @@ public class Json {
         this.json.addProperty(name, value);
     }
     
+    public void add(String name, boolean value){
+        this.json.addProperty(name, value);
+    }
+    
     public void add(String name, Json json){
         this.json.add(name, json.getInnerJsonObject());
     }
@@ -98,6 +102,10 @@ public class Json {
     
     public double getDouble(String name){
         return this.json.get(name).getAsDouble();
+    }
+    
+    public boolean getBoolean(String name){
+        return this.json.get(name).getAsBoolean();
     }
     
     public static String toJson(Object object){
