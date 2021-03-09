@@ -37,6 +37,17 @@ public class ArtifactsService {
         return artifacts;
     }
     
+    public Json getAllSeparatedBySlot(){
+        Artifacts artifacts = this.getAll();
+        Json output = new Json();
+        Artifacts[] separated = artifacts.separateBySlot();
+        Slot[] slots = Slot.values();
+        for(int i = 0; i < slots.length && i < separated.length; i++){
+            output.add(slots[i].name(), separated[i].toArray());
+        }
+        return output;
+    }
+    
     public Artifact getForm(){
         return new Artifact();
     }

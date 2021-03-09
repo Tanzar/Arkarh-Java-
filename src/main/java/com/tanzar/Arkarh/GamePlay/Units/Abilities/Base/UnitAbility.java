@@ -193,4 +193,8 @@ public abstract class UnitAbility {
         entity.setEffect(json.formJson());
         return entity;
     }
+    
+    protected void recoverCharge(){
+        this.charges++;
+    }
 }

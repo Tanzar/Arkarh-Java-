@@ -24,8 +24,8 @@ import com.tanzar.Arkarh.GamePlay.Units.Units;
  * @author spako
  */
 public class Attack extends UnitAbility{
-    private final double attackDefenseBonus = 0.05;
-    private final double spellPowerBonus = 0.10;
+    private final double attackDefenseBonus = 0.03;
+    private final double spellPowerBonus = 0.05;
     private final double minBonus = -0.75;
     private final TargetsSelection attackStyle;
     private final int range;
@@ -80,6 +80,7 @@ public class Attack extends UnitAbility{
                 totalDamage = this.magicAttack(source, target, damage, spellPower);
             }
             this.report(source, target, totalDamage, school);
+            this.lifeSteal(source, target, totalDamage);
             this.bonusDamage(source, target);
         }
     }
@@ -112,9 +113,10 @@ public class Attack extends UnitAbility{
     }
     
     private int magicAttack(Unit source, Unit target, int damage, int spellPower){
-        double spellPowerMultiplier = spellPower * this.spellPowerBonus;
+        double spellPowerMultiplier = 1 + (spellPower * this.spellPowerBonus);
         double wardMultiplier = this.wardMultiplier(source, target);
-        damage = (int) Math.round(damage * spellPowerMultiplier * wardMultiplier);
+        damage = (int) Math.round(damage * spellPowerMultiplier);
+        damage = (int) Math.round(damage * wardMultiplier);
         if(damage <= 0){
             damage = 1;
         }
@@ -136,21 +138,24 @@ public class Attack extends UnitAbility{
             }
             target.takeDamage(damage);
             this.report(source, target, damage, school);
+            this.lifeSteal(source, target, damage);
         }
     }
     
     private double armorMultiplier(Unit source, Unit target){
-        double value = target.getTotalArmor() / 100;
-        value = 1 - value;
+        double armor = target.getTotalArmor();
         double multiplier = this.calculateIgnore(source, PassiveEffect.ignoreArmorPercentage);
-        return value * multiplier;
+        double value = (armor * multiplier) / 100;
+        value = 1 - value;
+        return value;
     }
     
     private double wardMultiplier(Unit source, Unit target){
-        double value = target.getTotalWard() / 100;
-        value = 1 - value;
+        double ward = target.getTotalWard();
         double multiplier = this.calculateIgnore(source, PassiveEffect.ignoreWardPercentage);
-        return value * multiplier;
+        double value = (ward * multiplier) / 100;
+        value = 1 - value;
+        return value;
     }
     
     private double calculateIgnore(Unit source, PassiveEffect ignore){
@@ -164,6 +169,17 @@ public class Attack extends UnitAbility{
         }
         double multiplier = 1 - (value/100);
         return multiplier;
+    }
+    
+    private void lifeSteal(Unit source, Unit target, int damage){
+        double percentage = source.getPassiveValue(PassiveEffect.lifeSteal);
+        if(percentage > 0){
+            double lifestealMultiplier = percentage / 100;
+            double stolenHealth = ((double) damage) * lifestealMultiplier;
+            source.heal((int) stolenHealth);
+            String text = source.toString() + " steals " + ((int) stolenHealth) + " health from " + target;
+            this.report.abilityUse(source, target, text);
+        }
     }
     
     private void report(Unit source, Unit target, int value, EffectSchool school){

@@ -73,6 +73,31 @@ function AbilityModalBody(form, group, options, assets, url){
             this.table.addNumberNoMax('Range around unit', 'range', this.item, 1);
             this.table.addNumberNoMax('Multiplier', 'multiplier', this.item, 1);
             break;
+        case 'summon':
+            this.table.addSelect('Trigger', options.triggers, 'trigger', this.item);
+            this.table.addNumberNoMax('Number of summoned', 'count', this.item, 1);
+            var units = url.getFromURL('/unitEditor/getAllUnits');
+            var names = [];
+            var ids = [];
+            for(var i = 0; i < units.length; i++){
+                names.push(units[i].name);
+                ids.push(units[i].id);
+            }
+            this.table.addSelectDifferentValues('Summoned unit', names, ids, 'summonedId', this.item);
+            break;
+        case 'necromancy':
+            this.table.addNumberNoMax('Number of risen units', 'count', this.item, 1);
+            var units = url.getFromURL('/unitEditor/getAllUnits');
+            var names = [];
+            var ids = [];
+            for(var i = 0; i < units.length; i++){
+                if(units[i].category == "undead"){
+                    names.push(units[i].name);
+                    ids.push(units[i].id);
+                }
+            }
+            this.table.addSelectDifferentValues('Summoned unit', names, ids, 'summonedId', this.item);
+            break;
     }
     
     this.getHTMLElement = function(){

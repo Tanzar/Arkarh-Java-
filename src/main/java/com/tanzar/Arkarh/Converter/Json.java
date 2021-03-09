@@ -54,6 +54,14 @@ public class Json {
         this.json.add(name, json.getInnerJsonObject());
     }
     
+    public void add(String name, Json[] json){
+        JsonObject[] tmp = new JsonObject[json.length];
+        for(int i = 0; i < json.length; i++){
+            tmp[i] = json[i].getInnerJsonObject();
+        }
+        this.add(name, tmp);
+    }
+    
     public void add(String name, Object obj){
         JsonElement tmp = this.gson.toJsonTree(obj);
         this.json.add(name, tmp);

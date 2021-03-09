@@ -25,6 +25,13 @@ public class Defensive {
         this.ward = 0;
         this.baseHealth = 1;
     }
+    
+    public Defensive(Defensive template){
+        this.defense = template.getDefense();
+        this.armor = template.getArmor();
+        this.ward = template.getWard();
+        this.baseHealth = template.getBaseHealth();
+    }
 
     public Defensive(int defense, int armor, int ward, int baseHealth) {
         this.defense = defense;

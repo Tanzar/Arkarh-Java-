@@ -178,6 +178,7 @@ public class Leader {
     
     public void applyBonuses(Unit unit){
         this.applyBaseStats(unit);
+        this.applyOtherBonuses(unit);
     }
     
     private void applyBaseStats(Unit unit){
@@ -190,6 +191,10 @@ public class Leader {
         unit.addPassive(attackBonus);
         unit.addPassive(defenseBonus);
         unit.addPassive(spellPowerBonus);
+    }
+    
+    private void applyOtherBonuses(Unit unit){
+        this.equipment.applyBonuses(unit);
     }
     
     public int getTotalAttack(){

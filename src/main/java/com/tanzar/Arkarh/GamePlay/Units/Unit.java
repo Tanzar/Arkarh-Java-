@@ -8,6 +8,7 @@ package com.tanzar.Arkarh.GamePlay.Units;
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
+import com.tanzar.Arkarh.GamePlay.Combat.BattleSide;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.TMP.Tier;
@@ -205,6 +206,27 @@ public class Unit implements Comparable<Unit>{
     
     public void addPassive(Passive passive){
         this.passives.add(passive);
+        PassiveEffect effect = passive.getEffect();
+        if(effect.equals(PassiveEffect.bonusHealth)){
+            this.updateHealth();
+        }
+        if(effect.equals(PassiveEffect.baseMorale)){
+            this.updateMorale();
+        }
+    }
+    
+    private void updateHealth(){
+        int maxHealth = this.defensive.getBaseHealth();
+        int healthBonus = this.passives.summarizeValues(PassiveEffect.bonusHealth);
+        maxHealth = maxHealth + healthBonus;
+        this.status.setHealth(maxHealth);
+    }
+    
+    private void updateMorale(){
+        int maxMorale = this.special.getBaseMorale();
+        int moraleBonus = this.passives.summarizeValues(PassiveEffect.baseMorale);
+        maxMorale = maxMorale + moraleBonus;
+        this.status.setMorale(maxMorale);
     }
 
     public Passives getPassives() {
@@ -237,6 +259,14 @@ public class Unit implements Comparable<Unit>{
     
     public void setPosition(int position){
         this.status.setPosition(position);
+    }
+    
+    public void setSide(BattleSide side){
+        this.status.setSide(side);
+    }
+    
+    public BattleSide getSide(){
+        return this.status.getSide();
     }
     
     public int getTotalAttack(){
@@ -322,6 +352,15 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
+    public boolean isState(State state){
+        if(this.status.getState() == state){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
     public boolean canBeRessurected(){
         if(this.category.isRessurectable() && this.isNotAlive() && this.isNotRisen()){
             return true;
@@ -399,9 +438,12 @@ public class Unit implements Comparable<Unit>{
         if(this.category.takesMoraleDamage()){
             int moraleLoss = this.special.getMoraleLoss();
             int moraleLossModifier = this.passives.summarizeValues(PassiveEffect.moraleLoss);
-            moraleLoss = moraleLoss + moraleLossModifier;
+            moraleLoss = moraleLoss - moraleLossModifier;
             if(moraleLoss > 0){
                 this.status.damageMorale(moraleLoss);
+            }
+            else{
+                this.status.damageMorale(1);
             }
         }
     }
@@ -421,6 +463,16 @@ public class Unit implements Comparable<Unit>{
         return restoredHealth;
     }
     
+    public boolean rise(){
+        if(this.canBeRessurected()){
+            this.status.rise();
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
     @Override
     public String toString(){
         String result = this.status.getSide().toString() + "";
@@ -438,6 +490,11 @@ public class Unit implements Comparable<Unit>{
             result += "on frontline ";
         }
         return result;
+    }
+    
+    public int getPassiveValue(PassiveEffect effect){
+        int value = this.passives.summarizeValues(effect);
+        return value;
     }
 
     @Override

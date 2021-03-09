@@ -5,6 +5,8 @@
  */
 package com.tanzar.Arkarh.GamePlay.TMP;
 
+import com.tanzar.Arkarh.Converter.Json;
+
 /**
  *
  * @author spako
@@ -18,7 +20,7 @@ public enum Fraction {
     tribes(Alliance.councilOfTribes),
     dwarves(Alliance.union),
     humans(Alliance.union),
-    orderOfTheBlueShield(Alliance.union),
+    orderOfTheAzureShield(Alliance.union),
     magesCircle(Alliance.union),
     sentinels(Alliance.sentinels),
     wildOrcs(Alliance.none),
@@ -31,5 +33,22 @@ public enum Fraction {
     
     Fraction(Alliance alliance){
         this.alliance = alliance;
+    }
+    
+    public Alliance getAlliance(){
+        return this.alliance;
+    }
+    
+    public static Json[] getRelations(){
+        Fraction[] allFractions = Fraction.values();
+        int count = allFractions.length;
+        Json[] fractions = new Json[count];
+        for(int i = 0; i < count; i++){
+            Json item = new Json();
+            item.add("fraction", allFractions[i]);
+            item.add("alliance", allFractions[i].getAlliance());
+            fractions[i] = item;
+        }
+        return fractions;
     }
 }

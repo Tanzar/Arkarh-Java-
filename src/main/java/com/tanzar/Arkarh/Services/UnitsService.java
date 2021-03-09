@@ -13,6 +13,7 @@ import com.tanzar.Arkarh.DAO.UnitAbilitiesDAO;
 import com.tanzar.Arkarh.DAO.UnitsDAO;
 import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
+import com.tanzar.Arkarh.GamePlay.TMP.Alliance;
 import com.tanzar.Arkarh.GamePlay.TMP.Category;
 import com.tanzar.Arkarh.GamePlay.TMP.Fraction;
 import com.tanzar.Arkarh.GamePlay.TMP.Tier;
@@ -60,6 +61,18 @@ public class UnitsService {
             units.add(unit);
         }
         return units;
+    }
+    
+    public Unit getById(int id){
+        UnitEntity entity = this.unitsDAO.getById(id);
+        Unit unit = new Unit(entity);
+        UnitAbilities abilities = this.getUnitAbilities(unit);
+        unit.setAbilities(abilities);
+        return unit;
+    }
+    
+    public UnitEntity getByIdAsEntity(int id){
+        return this.unitsDAO.getById(id);
     }
     
     public UnitAbilities getUnitAbilities(Unit unit){
@@ -159,7 +172,7 @@ public class UnitsService {
         Json json = new Json();
         json.add("attackStyle", TargetsSelection.single.toString());
         json.add("range", 1);
-        json.add("areaSize", 1);
+        json.add("areaSize", 0);
         json.add("school", EffectSchool.physical.toString());
         String attackJson = json.formJson();
         entity.setEffect(attackJson);
@@ -194,6 +207,10 @@ public class UnitsService {
         Json json = new Json();
         Fraction[] fractions = Fraction.values();
         json.add("fractions", fractions);
+        Alliance[] alliances = Alliance.values();
+        json.add("alliances", alliances);
+        Json[] relations = Fraction.getRelations();
+        json.add("allianceRelations", relations);
         Role[] roles = Role.values();
         json.add("roles", roles);
         Tier[] tiers = Tier.values();

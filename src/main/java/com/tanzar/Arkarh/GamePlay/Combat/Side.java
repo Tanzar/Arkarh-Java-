@@ -15,6 +15,8 @@ import com.tanzar.Arkarh.GamePlay.Units.Units;
  * @author spako
  */
 public class Side {
+    private final int percentageCappable = 10;
+    
     private int width;
     private int sideSize;
     private Army army;
@@ -40,12 +42,12 @@ public class Side {
     }
     
     private void setupLines(Army army){
-        int lineWidth = this.setupLine(army, this.front, Role.flanker, Role.warrior, false, this.width);
-        this.setupLine(army, this.back, Role.mage, Role.shooter, true, lineWidth);
+        this.setupLine(army, this.front, Role.flanker, Role.warrior, false, this.width);
+        this.setupLine(army, this.back, Role.mage, Role.shooter, true, this.width);
         this.centerLines();
     }
     
-    private int setupLine(Army army, Unit[] line, Role priority, Role second, boolean prioritiesInCenter, int limit){
+    private void setupLine(Army army, Unit[] line, Role priority, Role second, boolean prioritiesInCenter, int limit){
         Units priorityUnits = army.getUnits(priority);
         Units secondUnits = army.getUnits(second);
         Units priorityUnitsToPlace = this.getUnitsToPlace(priorityUnits, limit);
@@ -57,8 +59,6 @@ public class Side {
         else{
             this.initLine(line, priorityUnitsToPlace, secondUnitsToPlace);
         }
-        int lineWidth = priorityUnitsToPlace.size() + secondUnitsToPlace.size();
-        return lineWidth;
     }
     
     private Units getUnitsToPlace(Units units, int availableWidth){
@@ -76,22 +76,25 @@ public class Side {
     }
     
     private int initLine(Unit[] line, Units sides, Units center){
-        int breakLeft = (int) Math.round(sides.size() / 2);
-        int breakRight = breakLeft + center.size();
         int sum = sides.size() + center.size();
-        int si = 0;
-        int ci = 0;
+        int x = 0;
         for(int i = 0; i < sum; i++){
             Unit unit = null;
-            if(i < breakLeft || i >= breakRight){
-                unit = sides.get(si);
-                si++;
+            int index = 0;
+            if(i % 2 == 1){
+                index = (int) Math.floor(this.width / 2) - x;
             }
-            if(i >= breakLeft && i < breakRight){
-                unit = center.get(ci);
-                ci++;
+            else{
+                index = (int) Math.floor(this.width / 2) + x;
+                x++;
             }
-            this.placeInLine(line, i, unit);
+            if(center.isEmpty()){
+                unit = sides.getAndRemoveFirst();
+            }
+            else{
+                unit = center.getAndRemoveFirst();
+            }
+            this.placeInLine(line, index, unit);
         }
         return sum;
     }
@@ -127,7 +130,7 @@ public class Side {
     }
     
     public boolean isSideCappableToFight(){
-        if(this.isPercentageCappableToFight(20)){
+        if(this.isPercentageCappableToFight(this.percentageCappable)){
             return true;
         }
         else{
@@ -204,7 +207,6 @@ public class Side {
         Unit reinforcement = null;
         reinforcement = this.reserves.get(isFront);
         if(reinforcement != null){
-            this.reserves.remove(reinforcement);
             reinforcement.setPosition(index);
             affectedUnits.add(reinforcement);
         }
@@ -358,10 +360,10 @@ public class Side {
     private void centerLines(){
         int frontWidth = this.countLineUnits(this.front);
         int backWidth = this.countLineUnits(this.back);
-        if(frontWidth < this.width - 1){
+        if(frontWidth <= this.width - 1){
             this.front = this.centerLine(this.front, frontWidth);
         }
-        if(backWidth < this.width - 1){
+        if(backWidth <= this.width - 1){
             this.back = this.centerLine(this.back, backWidth);
         }
     }
@@ -377,7 +379,7 @@ public class Side {
     }
     
     private Unit[] centerLine(Unit[] line, int width){
-        int pushRange = (int) Math.round((this.width - width) / 2);
+        int pushRange = (int) Math.round(((double) (this.width - width)) / 2);
         if(pushRange > 0){
             Unit[] pushedLine = new Unit[line.length];
             int index = pushRange;
@@ -406,6 +408,11 @@ public class Side {
                 this.back[i].getStatus().setPosition(i);
             }
         }
+    }
+    
+    public void addUnit(Unit unit){
+        unit.setSide(this.battleSide);
+        this.reserves.addUnit(unit);
     }
     
 }

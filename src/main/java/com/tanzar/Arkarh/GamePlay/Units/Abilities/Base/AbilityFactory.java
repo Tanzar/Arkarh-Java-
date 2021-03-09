@@ -8,10 +8,6 @@ package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.*;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Buff;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Heal;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Reincarnate;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Ressurect;
 import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 
 /**
@@ -36,6 +32,10 @@ public class AbilityFactory {
                 return new Ressurect(json);
             case demoralize:
                 return new Demoralize(json);
+            case summon:
+                return new Summon(json);
+            case necromancy:
+                return new Necromancy(json);
             default:
                 return null;
         }
@@ -57,6 +57,10 @@ public class AbilityFactory {
                 return new Ressurect(entity);
             case demoralize:
                 return new Demoralize(entity);
+            case summon:
+                return new Summon(entity);
+            case necromancy:
+                return new Necromancy(entity);
             default:
                 return null;
         }
@@ -76,6 +80,10 @@ public class AbilityFactory {
                 return new Ressurect();
             case demoralize:
                 return new Demoralize();
+            case summon:
+                return new Summon();
+            case necromancy:
+                return new Necromancy();
             default:
                 return null;
         }

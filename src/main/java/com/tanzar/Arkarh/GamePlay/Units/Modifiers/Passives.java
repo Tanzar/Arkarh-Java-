@@ -39,6 +39,15 @@ public class Passives {
         }
     }
     
+    public Passives(Passives template){
+        this.passives = new ArrayList<Passive>();
+        Passive[] templates = template.toArray();
+        for(Passive passive: templates){
+            Passive copy = new Passive(passive);
+            this.passives.add(copy);
+        }
+    }
+    
     public void add(Passive passive){
         if(passive != null){
             Passive found = null;

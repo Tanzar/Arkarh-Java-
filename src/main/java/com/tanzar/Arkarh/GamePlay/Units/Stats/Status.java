@@ -28,6 +28,14 @@ public class Status {
         this.state = State.alive;
     }
     
+    public Status(Status template){
+        this.position = template.getPosition();
+        this.state = template.getState();
+        this.side = template.getSide();
+        this.health = template.getHealth();
+        this.morale = template.getMorale();
+    }
+    
     public int getPosition() {
         return position;
     }
@@ -44,6 +52,10 @@ public class Status {
         this.side = side;
     }
     
+    public void setMorale(int morale){
+        this.morale = morale;
+    }
+    
     public State getState(){
         return this.state;
     }
@@ -58,6 +70,10 @@ public class Status {
     
     public void setHealth(int health){
         this.health = health;
+    }
+    
+    public int getMorale(){
+        return this.morale;
     }
     
     public boolean isAlive(){

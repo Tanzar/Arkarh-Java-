@@ -15,12 +15,20 @@ public class Special {
     private int upkeep;
     private int speed;
     private int baseMorale;
-    private int moraleLoss = 10;
+    private int moraleLoss;
 
     public Special() {
         this.upkeep = 1;
         this.speed = 1;
         this.baseMorale = 1000;
+        this.moraleLoss = 10;
+    }
+    
+    public Special(Special template){
+        this.upkeep = template.getUpkeep();
+        this.speed = template.getSpeed();
+        this.baseMorale = template.getBaseMorale();
+        this.moraleLoss = template.getMoraleLoss();
     }
 
     public Special(int upkeep, int speed, int baseMorale) {

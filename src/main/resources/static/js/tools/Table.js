@@ -59,6 +59,22 @@ function Table(){
         this.addRow(textNode, select);
     }
     
+    this.addSelectDifferentValues = function(text, textArray, valuesArray, properity, item){
+        var textNode = document.createTextNode(text);
+        var select = document.createElement("select");
+        if(textArray.length == valuesArray.length){
+            for(var i = 0; i < textArray.length; i++){
+                this.newOption(select, textArray[i], valuesArray[i]);
+                if(item[properity] == valuesArray[i]){
+                    select.selectedIndex = i;
+                }
+            }
+        }
+        select.value = item[properity];
+        this.addOnChange(properity, item, select);
+        this.addRow(textNode, select);
+    }
+    
     this.addCustom = function(text, div){
         var textNode = document.createTextNode(text);
         this.addRow(textNode, div);

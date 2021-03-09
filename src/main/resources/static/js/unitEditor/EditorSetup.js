@@ -7,7 +7,7 @@
 function EditorSetup(unitsDiv, abilitiesDiv){
     this.URL = new URLConnector();
     this.options = this.URL.getFromURL("unitEditor/getOptions");
-    this.unitsAssets = this.URL.getFromURL("asset/category=abilities");
+    this.unitsAssets = this.URL.getFromURL("/getUnitsAssets");
     this.abilitiesAssets = [];
     this.addUnitButton;
     this.editUnitButton;

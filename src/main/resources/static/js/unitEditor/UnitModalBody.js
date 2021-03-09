@@ -24,7 +24,7 @@ function UnitModalBody(unit, options, assets){
     this.table.addSelect("Attack Style", options.attacks, 'attackStyle', this.unit.abilities.abilities[0]);
     this.table.addSelect("Attack School", options.schools, 'school', this.unit.abilities.abilities[0]);
     this.table.addNumberNoMax("Range", 'range', this.unit.abilities.abilities[0], 1);
-    this.table.addNumberNoMax("Cleave range", 'areaSize', this.unit.abilities.abilities[0], 0);
+    this.table.addNumberNoMax("Cleave range (0 - no cleave)", 'areaSize', this.unit.abilities.abilities[0], 0);
     
     this.table.addTextRow("Defensive");
     this.table.addNumberNoMax("Defense", 'defense', this.unit.defensive, 1);

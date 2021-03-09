@@ -77,4 +77,18 @@ public class Artifacts {
         }
         return array;
     }
+    
+    public Artifacts[] separateBySlot(){
+        Slot[] slots = Slot.values();
+        Artifacts[] separated = new Artifacts[slots.length];
+        for(int i = 0; i < slots.length; i++){
+            separated[i] = new Artifacts();
+        }
+        for(Artifact artifact: this.list){
+            Slot slot = artifact.getSlot();
+            int index = slot.getIndex();
+            separated[index].add(artifact);
+        }
+        return separated;
+    }
 }

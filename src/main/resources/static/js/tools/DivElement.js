@@ -7,7 +7,11 @@
 function DivElement(){
     this.element = document.createElement('div');
     
-    this.newLine = function(){
+    this.newLine = function(text){
+        if(text != undefined){
+            var txtNode = document.createTextNode(text);
+            this.element.appendChild(txtNode);
+        }
         var br = document.createElement('br');
         this.element.appendChild(br);
     }
@@ -29,6 +33,7 @@ function DivElement(){
         select.style.width = "100px";
         this.element.appendChild(title);
         this.element.appendChild(select);
+        return select;
     }
     
     this.addSelectDiffrentValueAndText = function(text, optionsValues, optionsText, item, properity){
@@ -51,6 +56,31 @@ function DivElement(){
         return select;
     }
     
+    this.addSelectValueFromSelectedItem = function(text, options, optionValueProperity, optionTextProperity, item, properity){
+        var title = document.createTextNode(text);
+        var select = document.createElement('select');
+        for(var i = 0; i < options.length; i++){
+            var option = document.createElement('option');
+            option.value = options[i][optionValueProperity];
+            var textNode = document.createTextNode(options[i][optionTextProperity]);
+            option.appendChild(textNode);
+            select.appendChild(option);
+        }
+        select.onchange = function(){
+            if(!isNaN(item[properity])){
+                item[properity] = Number(this.options[this.selectedIndex].value);
+            }
+            else{
+                item[properity] = this.options[this.selectedIndex].value;
+            }
+        }
+        select.value = item[properity];
+        select.style.width = "100px";
+        this.element.appendChild(title);
+        this.element.appendChild(select);
+        return select;
+    }
+    
     this.addText = function(text, item, properity){
         var title = document.createTextNode(text);
         var input = document.createElement('input');
@@ -63,6 +93,14 @@ function DivElement(){
         input.value = item[properity];
         this.element.appendChild(title);
         this.element.appendChild(input);
+    }
+    
+    this.addTextDisplay = function(text, item, properity){
+        var title = document.createTextNode(text);
+        var input = document.createTextNode(item[properity]);
+        this.element.appendChild(title);
+        this.element.appendChild(input);
+        return input;
     }
     
     this.addNumber = function(text, item, properity, min, max){
@@ -83,6 +121,7 @@ function DivElement(){
         input.value = item[properity];
         this.element.appendChild(title);
         this.element.appendChild(input);
+        return input;
     }
     
     this.addButton = function(text, onClick){
@@ -98,5 +137,9 @@ function DivElement(){
     
     this.addThisAsChild = function(div){
         div.appendChild(this.element);
+    }
+    
+    this.clear = function(){
+        this.element.innerHTML = "";
     }
 }

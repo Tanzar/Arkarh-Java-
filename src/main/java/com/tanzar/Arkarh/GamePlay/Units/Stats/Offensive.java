@@ -23,6 +23,12 @@ public class Offensive {
         this.spellPower = 0;
         this.damage = 1;
     }
+    
+    public Offensive(Offensive template){
+        this.attack = template.getAttack();
+        this.spellPower = template.getSpellPower();
+        this.damage = template.getDamage();
+    }
 
     public Offensive(int attack, int spellPower, int damage) {
         this.attack = attack;

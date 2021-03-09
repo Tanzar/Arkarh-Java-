@@ -147,13 +147,13 @@ function Simulator(){
                 this.attackersFront = entry.frontLine;
                 this.attackersBack = entry.backLine;
                 this.attackersReserves = entry.reserves;
-                this.attackersReservesState = entry.aliveReserves;
+                this.attackersReservesState = entry.reservesState;
             }
             else{
                 this.defendersFront = entry.frontLine;
                 this.defendersBack = entry.backLine;
                 this.defendersReserves = entry.reserves;
-                this.defendersReservesState = entry.aliveReserves;
+                this.defendersReservesState = entry.reservesState;
             }
         }
         else{
@@ -223,8 +223,11 @@ function Simulator(){
             var y = Math.floor(index / (width/scale) ) * scale;
             var asset = this.assets.findUnit(reserves[index]);
             ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
-            if(state[index] == false){
+            if(state[index] == 1){
                 ctx.drawImage(this.assets.marker, x, y, scale, scale);                       // draw image at current position
+            }
+            if(state[index] == 2){
+                ctx.drawImage(this.assets.markerGreen, x, y, scale, scale);                       // draw image at current position
             }
             ctx.restore();
         }
@@ -318,6 +321,8 @@ function Assets(pattern){
     this.units = [];
     this.marker = new Image();
     this.marker.src = "/img/units/marker.png";
+    this.markerGreen = new Image();
+    this.markerGreen.src = "/img/units/markerGreen.png";
     
     for(i = 0; i < pattern.length; i++){
         asset = new Asset();
@@ -329,9 +334,18 @@ function Assets(pattern){
         var result;
         for(i = 0; i < this.units.length; i++){
             if(this.units[i].name.includes(name)){
-                result = this.units[i];
-                break;
+                if(name != "none"){
+                    result = this.units[i];
+                    break;
+                }
+                else{
+                    if(this.units[i].name == "none.png"){
+                        result = this.units[i];
+                        break;
+                    }
+                }
             }
+            
         }
         return result;
     }

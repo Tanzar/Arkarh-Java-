@@ -36,6 +36,13 @@ public class ArtifactsController {
         return json;
     }
     
+    @RequestMapping(value = "/getAllBySlot", method = RequestMethod.GET)
+    public String getAllBySlot(){
+        Json json = this.service.getAllSeparatedBySlot();
+        String result = json.formJson();
+        return result;
+    }
+    
     @RequestMapping(value = "/getOptions", method = RequestMethod.GET)
     public String getOptions(){
         return this.service.getOptions();

@@ -10,6 +10,7 @@ import com.tanzar.Arkarh.GamePlay.Combat.Position;
 import com.tanzar.Arkarh.GamePlay.Combat.Side;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
+import com.tanzar.Arkarh.GamePlay.Units.Stats.State;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 
@@ -26,7 +27,7 @@ public class ReportEntry {
     private String[] frontLine;
     private String[] backLine;
     private String[] reserves;
-    private boolean[] aliveReserves;
+    private int[] reservesState; //0 - alive, 1 - dead, 2 - risen
 
     public ReportEntry(Entry action, Position sourcePosition, Position targetPosition, String stringFormat) {
         this.entryCategory = action;
@@ -59,11 +60,22 @@ public class ReportEntry {
     private void setReserves(Side side){
         Units units = side.getReserves();
         this.reserves = new String[units.size()];
-        this.aliveReserves = new boolean[units.size()];
+        this.reservesState = new int[units.size()];
         for(int i = 0; i < this.reserves.length; i++){
             Unit unit = units.get(i);
             this.reserves[i] = unit.getAssetName();
-            this.aliveReserves[i] = unit.isAlive();
+            if(unit.isState(State.alive)){
+                this.reservesState[i] = 0;
+            }
+            else{
+                if(unit.isState(State.dead)){
+                    this.reservesState[i] = 1;
+                }
+                else{
+                    this.reservesState[i] = 2;
+                }
+            }
+            
         }
     }
 
