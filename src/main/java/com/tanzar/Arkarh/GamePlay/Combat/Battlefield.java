@@ -6,15 +6,10 @@
 package com.tanzar.Arkarh.GamePlay.Combat;
 
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
-import com.tanzar.Arkarh.GamePlay.Combat.Log.ReportEntry;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilities;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
 import com.tanzar.Arkarh.GamePlay.Units.Army;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -127,8 +122,8 @@ public class Battlefield {
     }
     
     private void reinforceSides(CombatReport report){
-        Units reinforcements = this.attackingSide.reorganizeLinesNew();
-        Units defendersReinforcements = this.defendingSide.reorganizeLinesNew();
+        Units reinforcements = this.attackingSide.reorganizeLines();
+        Units defendersReinforcements = this.defendingSide.reorganizeLines();
         reinforcements.addUnits(defendersReinforcements);
         for(Unit unit: reinforcements.toArray()){
             unit.useAbilities(Trigger.onEntry, this, report);

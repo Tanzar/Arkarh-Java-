@@ -12,18 +12,13 @@ import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Side;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
-import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilities;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
-import com.tanzar.Arkarh.GamePlay.Units.Stats.Status;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 import com.tanzar.Arkarh.Services.BeanUtil;
 import com.tanzar.Arkarh.Services.UnitsService;
-import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  *

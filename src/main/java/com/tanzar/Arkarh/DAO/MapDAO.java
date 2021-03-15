@@ -10,8 +10,6 @@ import com.tanzar.Arkarh.Containers.MapContainer;
 import com.tanzar.Arkarh.Entities.Map;
 import com.tanzar.Arkarh.Exceptions.QueryException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.tanzar.Arkarh.DAO.abstracts.MapDAOInterface;
 import org.springframework.stereotype.Repository;
 

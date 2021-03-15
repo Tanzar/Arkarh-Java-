@@ -5,7 +5,6 @@
  */
 package com.tanzar.Arkarh.Entities.Unit;
 
-import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 import java.io.Serializable;
 import javax.persistence.Column;

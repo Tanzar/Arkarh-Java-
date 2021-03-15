@@ -10,8 +10,6 @@ import com.tanzar.Arkarh.DAO.abstracts.DAO;
 import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
 import com.tanzar.Arkarh.Exceptions.QueryException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

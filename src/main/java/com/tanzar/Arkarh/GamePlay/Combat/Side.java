@@ -160,7 +160,7 @@ public class Side {
         }
     }
     
-    public Units reorganizeLinesNew(){
+    public Units reorganizeLines(){
         Units affectedUnits = new Units();
         int x = 0;
         for(int i = 0; i < this.width; i++){
@@ -178,11 +178,11 @@ public class Side {
     
     private void reinforcePosition(Units affectedUnits, int x){
         int index = (int) Math.round(this.width / 2) + x;
-        this.reinforceNew(this.front, index, affectedUnits, true);
-        this.reinforceNew(this.back, index, affectedUnits, false);
+        this.reinforce(this.front, index, affectedUnits, true);
+        this.reinforce(this.back, index, affectedUnits, false);
     }
     
-    private void reinforceNew(Unit[] line, int index, Units affectedUnits, boolean isFront){
+    private void reinforce(Unit[] line, int index, Units affectedUnits, boolean isFront){
         Unit unit = null;
         if(line[index] != null){
             unit = this.replaceUnit(line[index], index, affectedUnits);
@@ -204,8 +204,7 @@ public class Side {
     }
     
     private Unit checkReserves(boolean isFront, int index, Units affectedUnits){
-        Unit reinforcement = null;
-        reinforcement = this.reserves.get(isFront);
+        Unit reinforcement = this.reserves.get(isFront);
         if(reinforcement != null){
             reinforcement.setPosition(index);
             affectedUnits.add(reinforcement);
@@ -412,6 +411,7 @@ public class Side {
     
     public void addUnit(Unit unit){
         unit.setSide(this.battleSide);
+        this.army.addUnit(unit);
         this.reserves.addUnit(unit);
     }
     

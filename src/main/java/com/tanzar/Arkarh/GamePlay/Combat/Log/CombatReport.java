@@ -8,7 +8,6 @@ package com.tanzar.Arkarh.GamePlay.Combat.Log;
 import com.tanzar.Arkarh.GamePlay.Combat.BattleState;
 import com.tanzar.Arkarh.GamePlay.Combat.Position;
 import com.tanzar.Arkarh.GamePlay.Combat.Side;
-import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import java.util.ArrayList;
 import java.util.List;

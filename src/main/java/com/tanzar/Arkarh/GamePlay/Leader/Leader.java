@@ -12,7 +12,6 @@ import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passive;
 import com.tanzar.Arkarh.GamePlay.Units.Modifiers.PassiveEffect;
 import com.tanzar.Arkarh.GamePlay.Units.Modifiers.PassiveSource;
-import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passives;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 

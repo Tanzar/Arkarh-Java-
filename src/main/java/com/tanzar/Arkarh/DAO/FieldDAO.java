@@ -11,8 +11,6 @@ import com.tanzar.Arkarh.DAO.abstracts.FieldDAOInterface;
 import com.tanzar.Arkarh.Entities.Field;
 import com.tanzar.Arkarh.Exceptions.QueryException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 
 /**

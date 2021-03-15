@@ -5,11 +5,8 @@
  */
 package com.tanzar.Arkarh.GamePlay.Combat.Log;
 
-import com.tanzar.Arkarh.GamePlay.Combat.BattleSide;
 import com.tanzar.Arkarh.GamePlay.Combat.Position;
 import com.tanzar.Arkarh.GamePlay.Combat.Side;
-import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
-import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Stats.State;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Units;

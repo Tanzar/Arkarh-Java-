@@ -78,7 +78,7 @@ public class Ressurect extends UnitAbility{
         }
         return targets;
     }
-
+    
     @Override
     protected void onUse(Unit source, Units targets) {
         int bonus = source.getTotalSpellPower() * 2;

@@ -7,9 +7,6 @@ package com.tanzar.Arkarh.GamePlay.Units.Modifiers;
 
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
-import com.tanzar.Arkarh.GamePlay.Units.Unit;
-import java.lang.reflect.Field;
-import java.util.Objects;
 
 /**
  *

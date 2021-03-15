@@ -67,22 +67,27 @@ public class Attack extends UnitAbility{
     
     @Override
     protected void onUse(Unit source, Units targets) {
-        int damage = source.getTotalBaseDamage();
-        int attack = source.getTotalAttack();
-        int spellPower = source.getTotalSpellPower();
         Unit[] units = targets.toArray();
         for(Unit target: units){
-            int totalDamage = 0;
-            if(this.school.equals(EffectSchool.physical)){
-                totalDamage = this.physicalAttack(source, target, damage, attack);
-            }
-            else{
-                totalDamage = this.magicAttack(source, target, damage, spellPower);
-            }
+            int totalDamage = this.calculateDamage(source, target);
             this.report(source, target, totalDamage, school);
             this.lifeSteal(source, target, totalDamage);
             this.bonusDamage(source, target);
         }
+    }
+    
+    private int calculateDamage(Unit source, Unit target){
+        int damage = source.getTotalBaseDamage();
+        int attack = source.getTotalAttack();
+        int spellPower = source.getTotalSpellPower();
+        int totalDamage = 0;
+        if(this.school.equals(EffectSchool.physical)){
+            totalDamage = this.physicalAttack(source, target, damage, attack);
+        }
+        else{
+            totalDamage = this.magicAttack(source, target, damage, spellPower);
+        }
+        return totalDamage;
     }
     
     private int physicalAttack(Unit source, Unit target, int damage, int attack){

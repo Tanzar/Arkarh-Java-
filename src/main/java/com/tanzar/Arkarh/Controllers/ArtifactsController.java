@@ -7,9 +7,7 @@ package com.tanzar.Arkarh.Controllers;
 
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.Equipment.Artifact;
-import com.tanzar.Arkarh.GamePlay.Equipment.ArtifactEffect;
 import com.tanzar.Arkarh.GamePlay.Equipment.Artifacts;
-import com.tanzar.Arkarh.GamePlay.Equipment.Slot;
 import com.tanzar.Arkarh.Services.ArtifactsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
