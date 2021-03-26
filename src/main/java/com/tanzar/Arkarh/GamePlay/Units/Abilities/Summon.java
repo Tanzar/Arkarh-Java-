@@ -14,7 +14,7 @@ import com.tanzar.Arkarh.GamePlay.Combat.Side;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
-import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilityGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 import com.tanzar.Arkarh.Services.BeanUtil;
 import com.tanzar.Arkarh.Services.UnitsService;

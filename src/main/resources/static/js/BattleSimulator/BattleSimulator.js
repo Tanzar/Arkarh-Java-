@@ -216,7 +216,7 @@ function Simulator(){
         ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
     }
     this.drawReserves = function(width, ctx, reserves, state){
-        var scale = 20;
+        var scale = 25;
         for(var index = 0; index < reserves.length; index++){
             ctx.save();
             var x = (index % (width/scale)) * scale;

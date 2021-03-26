@@ -10,7 +10,6 @@ import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Attack;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
-import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -15,7 +15,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Units;
  * @author spako
  */
 public class Side {
-    private final int percentageCappable = 10;
+    private final int percentageCappable = 0;
     
     private int width;
     private int sideSize;
@@ -139,7 +139,7 @@ public class Side {
     }
     
     private boolean isPercentageCappableToFight(int percentage){
-        if(percentage < 1 || percentage > 100){
+        if(percentage < 0 || percentage > 100){
             return false;
         }
         int cappableToFight = 0;
@@ -152,7 +152,7 @@ public class Side {
             }
         }
         cappableToFight += this.reserves.countCappableToFight();
-        if(cappableToFight >= (0.01 * percentage * this.sideSize)){
+        if(cappableToFight > (0.01 * percentage * this.sideSize)){
             return true;
         }
         else{

@@ -24,7 +24,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Units;
  * @author spako
  */
 public class Attack extends UnitAbility{
-    private final double attackDefenseBonus = 0.03;
+    private final double attackDefenseBonus = 0.05;
     private final double spellPowerBonus = 0.05;
     private final double minBonus = -0.75;
     private final TargetsSelection attackStyle;

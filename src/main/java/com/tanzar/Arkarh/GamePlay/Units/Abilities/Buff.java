@@ -15,7 +15,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passive;
 import com.tanzar.Arkarh.GamePlay.Units.Modifiers.PassiveSource;
 import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passives;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
-import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilityGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 
 /**

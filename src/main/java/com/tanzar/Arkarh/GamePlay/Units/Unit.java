@@ -334,6 +334,12 @@ public class Unit implements Comparable<Unit>{
         }
     }
     
+    public int getTotalHealth() {
+        int value = this.defensive.getBaseHealth();
+        value += this.passives.summarizeValues(PassiveEffect.bonusHealth);
+        return value;
+    }
+    
     public boolean isAlive(){
         return this.status.isAlive();
     }
@@ -502,4 +508,5 @@ public class Unit implements Comparable<Unit>{
         int compareSpeed = specialStats.getSpeed();
         return compareSpeed - this.special.getSpeed();
     }
+
 }

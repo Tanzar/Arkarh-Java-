@@ -5,14 +5,11 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
-import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 
 /**
@@ -25,6 +22,8 @@ public abstract class UnitAbility {
     protected String name;
     protected CombatReport report;
     protected Trigger trigger;
+    protected int cooldown;
+    protected int currentCooldown;
     protected int charges;
     private int unitId;
     private UnitAbilityGroup group;
@@ -37,6 +36,8 @@ public abstract class UnitAbility {
         this.asset = "none.png";
         this.trigger = Trigger.onAction;
         this.charges = 0;
+        this.cooldown = 0;
+        this.currentCooldown = 0;
     }
     
     public UnitAbility(Trigger trigger){
@@ -47,6 +48,8 @@ public abstract class UnitAbility {
         this.asset = "none.png";
         this.trigger = trigger;
         this.charges = 0;
+        this.cooldown = 0;
+        this.currentCooldown = 0;
     }
     
     public UnitAbility(Trigger trigger, UnitAbilityGroup group){
@@ -57,6 +60,8 @@ public abstract class UnitAbility {
         this.asset = "none.png";
         this.trigger = trigger;
         this.charges = 0;
+        this.cooldown = 0;
+        this.currentCooldown = 0;
     }
     
     
@@ -69,6 +74,8 @@ public abstract class UnitAbility {
         this.asset = entity.getAssetName();
         this.trigger = trigger;
         this.charges = entity.getCharges();
+        this.cooldown = entity.getCooldown();
+        this.currentCooldown = entity.getInitialCooldown();
     }
     
     public UnitAbility(Json json){
@@ -79,15 +86,21 @@ public abstract class UnitAbility {
         this.asset = json.getString("asset");
         this.trigger = Trigger.valueOf(json.getString("trigger"));
         this.charges = json.getInt("charges");
+        this.cooldown = json.getInt("cooldown");;
+        this.currentCooldown = json.getInt("currentCooldown");;
     }
 
     public void use(Unit source, Trigger mainTrigger, Battlefield battlefield, CombatReport report){
-        if(this.charges != 0){
-            if(this.trigger.equals(mainTrigger) && this.additionalConditions(source)){
+        if(this.trigger.equals(mainTrigger) && this.additionalConditions(source)){
+            if(this.isReady()){
                 this.report = report;
                 Units targets = this.setupTargets(source, battlefield);
                 this.onUse(source, targets);
                 this.reduceCharges();
+                this.startCooldown();
+            }
+            else{
+                this.reduceCooldown();
             }
         }
     }
@@ -106,6 +119,8 @@ public abstract class UnitAbility {
         json.add("name", this.name);
         json.add("asset", this.asset);
         json.add("charges", this.charges);
+        json.add("cooldown", this.cooldown);
+        json.add("currentCooldown", this.currentCooldown);
         json.add("trigger", this.trigger.toString());
         this.formJson(json);
         return json;
@@ -173,6 +188,8 @@ public abstract class UnitAbility {
         String groupStr = this.group.toString();
         entity.setEffectGroup(groupStr);
         entity.setCharges(this.charges);
+        entity.setCooldown(this.cooldown);
+        entity.setInitialCooldown(this.currentCooldown);
         Json json = new Json();
         this.formJson(json);
         entity.setEffect(json.formJson());
@@ -188,6 +205,8 @@ public abstract class UnitAbility {
         String groupStr = this.group.toString();
         entity.setEffectGroup(groupStr);
         entity.setCharges(this.charges);
+        entity.setCooldown(this.cooldown);
+        entity.setInitialCooldown(this.currentCooldown);
         Json json = new Json();
         this.formJson(json);
         entity.setEffect(json.formJson());
@@ -196,5 +215,28 @@ public abstract class UnitAbility {
     
     protected void recoverCharge(){
         this.charges++;
+    }
+    
+    protected boolean isReady(){
+        if(this.currentCooldown == 0 && this.charges != 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    protected void reduceCooldown(){
+        if(this.currentCooldown > 0){
+            this.currentCooldown--;
+        }
+    }
+    
+    protected void startCooldown(){
+        this.currentCooldown = this.cooldown;
+    }
+    
+    protected void clearCooldown(){
+        this.currentCooldown = 0;
     }
 }

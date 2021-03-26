@@ -218,7 +218,7 @@ function Leader(){
     this.defense = 1;
     this.spellPower = 1;
     this.equipment = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    this.upkeep = 100;
+    this.upkeep = 150;
 }
 
 function Unit(id){

@@ -28,7 +28,7 @@ import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passive;
 import com.tanzar.Arkarh.GamePlay.Units.Modifiers.PassiveEffect;
 import com.tanzar.Arkarh.GamePlay.Units.Role;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
-import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilityGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -5,7 +5,7 @@
  */
 package com.tanzar.Arkarh.Entities.Unit;
 
-import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
+import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilityGroup;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,6 +42,12 @@ public class UnitAbilityEntity implements Serializable{
     @Column(name = "charges")
     private int charges;
     
+    @Column(name = "cooldown")
+    private int cooldown;
+    
+    @Column(name = "initial_cooldown")
+    private int initialCooldown;
+    
     @Column(name = "effect_json")
     private String effect;
 
@@ -52,6 +58,8 @@ public class UnitAbilityEntity implements Serializable{
         this.group = UnitAbilityGroup.attack.toString();
         this.asset = "none.png";
         this.charges = -1;
+        this.cooldown = 0;
+        this.initialCooldown = 0;
         this.effect = "";
     }
     
@@ -109,6 +117,46 @@ public class UnitAbilityEntity implements Serializable{
 
     public void setCharges(int charges) {
         this.charges = charges;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public String getAsset() {
+        return asset;
+    }
+
+    public void setAsset(String asset) {
+        this.asset = asset;
+    }
+
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public void setCooldown(int cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public int getInitialCooldown() {
+        return initialCooldown;
+    }
+
+    public void setInitialCooldown(int initialCooldown) {
+        this.initialCooldown = initialCooldown;
     }
 
     

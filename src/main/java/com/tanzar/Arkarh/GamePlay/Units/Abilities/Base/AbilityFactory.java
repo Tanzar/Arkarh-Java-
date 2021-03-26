@@ -8,7 +8,6 @@ package com.tanzar.Arkarh.GamePlay.Units.Abilities.Base;
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.*;
-import com.tanzar.Arkarh.GamePlay.Units.UnitAbilityGroup;
 
 /**
  *
@@ -36,6 +35,8 @@ public class AbilityFactory {
                 return new Summon(json);
             case necromancy:
                 return new Necromancy(json);
+            case regeneration:
+                return new Regeneration(json);
             default:
                 return null;
         }
@@ -61,6 +62,8 @@ public class AbilityFactory {
                 return new Summon(entity);
             case necromancy:
                 return new Necromancy(entity);
+            case regeneration:
+                return new Regeneration(entity);
             default:
                 return null;
         }
@@ -84,6 +87,8 @@ public class AbilityFactory {
                 return new Summon();
             case necromancy:
                 return new Necromancy();
+            case regeneration:
+                return new Regeneration();
             default:
                 return null;
         }

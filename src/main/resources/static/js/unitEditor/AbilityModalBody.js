@@ -13,6 +13,8 @@ function AbilityModalBody(form, group, options, assets, url){
     this.table.addTextInput('Ability Name', 'name', this.item);
     this.table.addAssetsSelect(this.item, "asset", assets);
     this.table.addNumberNoMax('Charges (-1 - unlimited)', 'charges', this.item, -1);
+    this.table.addNumber('Cooldown (0 - no cooldown)', 'cooldown', this.item, 0, 50);
+    this.table.addNumber('Initial Cooldown (0 - no cooldown)', 'currentCooldown', this.item, 0, 50);
     
     this.table.addTextRow('Specific for ability group');
     switch(group){
@@ -97,6 +99,9 @@ function AbilityModalBody(form, group, options, assets, url){
                 }
             }
             this.table.addSelectDifferentValues('Summoned unit', names, ids, 'summonedId', this.item);
+            break;
+        case 'regeneration':
+            this.table.addNumber('Base Healing percentage', 'baseHealing', this.item, 1, 100);
             break;
     }
     

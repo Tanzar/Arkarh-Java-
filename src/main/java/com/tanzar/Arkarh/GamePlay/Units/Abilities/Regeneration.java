@@ -18,24 +18,24 @@ import com.tanzar.Arkarh.GamePlay.Units.Units;
  *
  * @author Tanzar
  */
-public class Reincarnate extends UnitAbility{
-    private int healthPercentage;
+public class Regeneration extends UnitAbility{
+    private int baseHealing;
     
-    public Reincarnate(){
-        super(Trigger.onDeath, UnitAbilityGroup.reincarnate);
-        this.healthPercentage = 20;
+    public Regeneration(){
+        super(Trigger.onAction, UnitAbilityGroup.regeneration);
+        this.baseHealing = 1;
     }
-    
-    public Reincarnate(UnitAbilityEntity entity){
-        super(entity, Trigger.onDeath);
+
+    public Regeneration(UnitAbilityEntity entity) {
+        super(entity, Trigger.onAction);
         String tmp = entity.getEffect();
         Json json = new Json(tmp);
-        this.healthPercentage = json.getInt("healthPercentage");
+        this.baseHealing = json.getInt("baseHealing");
     }
     
-    public Reincarnate(Json json){
+    public Regeneration(Json json){
         super(json);
-        this.healthPercentage = json.getInt("healthPercentage");
+        this.baseHealing = json.getInt("baseHealing");
     }
 
     @Override
@@ -52,17 +52,15 @@ public class Reincarnate extends UnitAbility{
 
     @Override
     protected void onUse(Unit source, Units targets) {
-        int bonus = source.getTotalSpellPower() * 2;
-        int totalPercentage = this.healthPercentage + bonus;
-        source.ressurect(totalPercentage);
-        int health = source.getStatus().getHealth();
-        String stringFormat = source.toString() + " rises with " + health + " (" + this.healthPercentage + "%) health";
-        this.report.abilityUse(source, source, stringFormat);
+        int health = source.getTotalHealth();
+        double percentage = ((double) this.baseHealing) / 100;
+        int value = (int) Math.round(percentage * health);
+        source.heal(value);
+        this.report.abilityUse(source, source, source.toString() + " regenerates " + value + " health.");
     }
 
     @Override
     protected void formJson(Json json) {
-        json.add("healthPercentage", this.healthPercentage);
+        json.add("baseHealing", this.baseHealing);
     }
-    
 }
