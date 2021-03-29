@@ -29,7 +29,7 @@ public class BattleController {
             result = this.battleService.battleSimulation(form);
         }
         catch(Exception ex){
-            
+            int k = 0;
         }
         return result;
     }

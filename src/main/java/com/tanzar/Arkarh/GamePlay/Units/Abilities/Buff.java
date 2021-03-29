@@ -77,6 +77,7 @@ public class Buff extends UnitAbility{
 
     @Override
     protected void onUse(Unit source, Units targets) {
+        this.report(source);
         for(Unit target: targets.toArray()){
             for(Passive passive: this.passives.toArray()){
                 Passive copy = new Passive(passive);
@@ -85,6 +86,11 @@ public class Buff extends UnitAbility{
                 target.addPassive(copy);
             }
         }
+    }
+    
+    private void report(Unit source){
+        String text = source.toString() + " uses " + this.getName() + " on " + this.targetsGroup + ".";
+        this.report.abilityUse(this, source, source, text);
     }
 
     @Override

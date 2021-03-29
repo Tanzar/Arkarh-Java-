@@ -57,7 +57,7 @@ public class Necromancy extends UnitAbility{
         int risenCount = this.setupRisenUnits(source, battlefield);
         Units summonedUnits = this.getSummonedUnits(risenCount);
         if(summonedUnits.isEmpty()){
-            report.abilityUse(source, source, "None can answer call of " + source.toString());
+            report.abilityUse(this, source, source, "None can answer call of " + source.toString());
         }
         else{
             Side side = battlefield.getSide(source);
@@ -104,7 +104,7 @@ public class Necromancy extends UnitAbility{
     @Override
     protected void onUse(Unit source, Units targets) {
         for(Unit summoned: targets.toArray()){
-            this.report.abilityUse(source, summoned, source.toString() + " rises " + summoned.toString());
+            this.report.abilityUse(this, source, summoned, source.toString() + " rises " + summoned.toString());
         }
     }
 

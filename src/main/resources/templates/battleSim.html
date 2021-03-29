@@ -6,36 +6,49 @@ and open the template in the editor.
 -->
 <html>
     <head>
+        <title>Arkarh: Battle Simulation</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script type="text/javascript" src="js/BattleSimulator/BattleSimulator.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/battleSimulation.css"/>
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     </head>
     <body>
-        <table>
+        <table class="center">
             <tr>
-                <th>Visuals</th>
-                <th>Options</th>
+                <th></th>
             </tr>
             <tr>
-                <td><canvas id="attackerCanvas" width="1000" height="200" style="border:1px solid #000000;"></canvas><br></td>
-                <td>Attackers Reserves(WIP)</td>
+                <td>Attackers Reserves
+                    <br>
+                    <canvas id="attackerCanvas" width="1000" height="150" style="border:1px solid #000000;"></canvas>
+                    <br>
+                </td>
             </tr>
             <tr>
-                <td><canvas id="battleCanvas" width="1000" height="250" style="border:1px solid #000000;"></canvas><br></td>
-                <td>Battlefield(WIP)</td>
+                <td>Battlefield
+                    <br>
+                    <canvas id="battleCanvas" width="1000" height="250" style="border:1px solid #000000;"></canvas>
+                    <br>
+                </td>
             </tr>
             <tr>
-                <td><canvas id="defenderCanvas" width="1000" height="200" style="border:1px solid #000000;"></canvas><br></td>
-                <td>Defenders Reserves(WIP)</td>
+                <td>Defenders Reserves
+                    <br>
+                    <canvas id="defenderCanvas" width="1000" height="150" style="border:1px solid #000000;"></canvas>
+                    <br>
+                </td>
             </tr>
             <tr>
-                <td><textarea id="combatlog" rows="10" cols="140" style="resize: none;" readonly></textarea></td>
                 <td>
-                    <button id="nextTick" onclick="nextStage()">Next Stage</button><br><br>
-                    <button id="previousTick" onclick="previousStage()">Previous Stage</button><br><br>
-                    <button id="startAutoBattle" onclick="autoBattle()">Start auto battle</button><br><br>
-                    <button id="stopAutoBattle" onclick="stopAutoBattle()">Stop</button>
+                    <table>
+                        <th>
+                            <textarea id="combatlog" rows="10" cols="100" style="resize: none;" readonly></textarea>
+                        </th>
+                        <th>
+                            <div id="simulationControls"></div>
+                        </th>
+                    </table>
                 </td>
             </tr>
         </table>
@@ -46,6 +59,7 @@ and open the template in the editor.
         var defenderCanvas = document.getElementById("defenderCanvas");
         var battleCanvas = document.getElementById("battleCanvas");
         var combatlog = document.getElementById("combatlog");
-        startSimulation(attackerCanvas, defenderCanvas, battleCanvas, combatlog, combatData);
+        var simulationControls = document.getElementById("simulationControls");
+        var sim = new Simulation(attackerCanvas, defenderCanvas, battleCanvas, combatlog, combatData, simulationControls);
     </script>
 </html>

@@ -57,7 +57,7 @@ public class Reincarnate extends UnitAbility{
         source.ressurect(totalPercentage);
         int health = source.getStatus().getHealth();
         String stringFormat = source.toString() + " rises with " + health + " (" + this.healthPercentage + "%) health";
-        this.report.abilityUse(source, source, stringFormat);
+        this.report.abilityUse(this, source, source, stringFormat);
     }
 
     @Override

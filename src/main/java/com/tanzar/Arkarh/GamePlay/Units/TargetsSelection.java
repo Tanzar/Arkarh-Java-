@@ -76,9 +76,9 @@ public enum TargetsSelection {
         int numberOfTargetsInRange = 2 * areaSize + 1;
         for(int i = 0; i < numberOfTargetsInRange; i++){
             int index = nextPosition(position, i, x);
-            Unit unit = side.getUnit(new Position(index, true));
+            Unit unit = side.getUnit(new Position(index, true, side.getBattleSide()));
             units.add(unit);
-            unit = side.getUnit(new Position(index, false));
+            unit = side.getUnit(new Position(index, false, side.getBattleSide()));
             units.add(unit);
             if(i % 2 == 0){
                 x++;

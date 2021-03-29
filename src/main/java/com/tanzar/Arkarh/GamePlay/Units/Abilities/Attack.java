@@ -183,13 +183,13 @@ public class Attack extends UnitAbility{
             double stolenHealth = ((double) damage) * lifestealMultiplier;
             source.heal((int) stolenHealth);
             String text = source.toString() + " steals " + ((int) stolenHealth) + " health from " + target;
-            this.report.abilityUse(source, target, text);
+            this.report.abilityUse(this, source, target, text);
         }
     }
     
     private void report(Unit source, Unit target, int value, EffectSchool school){
         String stringFormat = source.toString() + " attacks " + target.toString() + " for " + value + " " + school + " damage.";
-        this.report.abilityUse(source, target, stringFormat);
+        this.report.abilityUse(this, source, target, stringFormat);
     }
 
     @Override

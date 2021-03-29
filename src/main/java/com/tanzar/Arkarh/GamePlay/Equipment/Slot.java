@@ -14,12 +14,11 @@ public enum Slot {
     neck(1),
     chest(2),
     hands(3),
-    legs(4),
-    feet(5),
-    mainhand(6),
-    offhand(7),
-    ring(8),
-    bonus(9),
+    feet(4),
+    mainhand(5),
+    offhand(6),
+    ring(7),
+    bonus(8),
     ;
     
     private int index;

@@ -86,7 +86,7 @@ public class Ressurect extends UnitAbility{
         for(Unit target: targets.toArray()){
             int restoredHealth = target.ressurect(percentage);
             String stringFormat = source.toString() + " ressurects " + target.toString() + " with " + restoredHealth + " health.";
-            this.report.abilityUse(source, target, stringFormat);
+            this.report.abilityUse(this, source, target, stringFormat);
         }
     }
 

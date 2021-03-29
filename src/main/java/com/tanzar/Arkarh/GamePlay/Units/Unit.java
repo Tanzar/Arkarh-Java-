@@ -203,6 +203,10 @@ public class Unit implements Comparable<Unit>{
         this.status = status;
     }
     
+    public State getState(){
+        return this.status.getState();
+    }
+    
     public void addPassive(Passive passive){
         this.passives.add(passive);
         PassiveEffect effect = passive.getEffect();
@@ -460,7 +464,7 @@ public class Unit implements Comparable<Unit>{
                 percentage = 100;
             }
             int maxHealth = this.defensive.getBaseHealth() + this.passives.summarizeValues(PassiveEffect.bonusHealth);
-            int newHealth = (int) Math.round(maxHealth * (percentage/100));
+            int newHealth = (int) Math.round(((double) maxHealth) * ( ((double)percentage)/100));
             this.status.setHealth(newHealth);
             this.status.setState(State.alive);
             restoredHealth = newHealth;
@@ -480,19 +484,12 @@ public class Unit implements Comparable<Unit>{
     
     @Override
     public String toString(){
-        String result = this.status.getSide().toString() + "";
+        String result = "";
         if(this.name.equals("")){
             result += this.role;
         }
         else{
             result += this.name;
-        }
-        result += " in position " + this.status.getPosition() + " ";
-        if(this.role.isRanged()){
-            result += "on backline ";
-        }
-        else{
-            result += "on frontline ";
         }
         return result;
     }

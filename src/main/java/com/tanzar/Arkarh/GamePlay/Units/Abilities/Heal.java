@@ -69,7 +69,7 @@ public class Heal extends UnitAbility{
         for(Unit target: targets.toArray()){
             target.heal(healValue);
             String stringFormat = source.toString() + " heals " + target.toString() + " for " + healValue + ".";
-            this.report.abilityUse(source, target, stringFormat);
+            this.report.abilityUse(this, source, target, stringFormat);
         }
     }
 

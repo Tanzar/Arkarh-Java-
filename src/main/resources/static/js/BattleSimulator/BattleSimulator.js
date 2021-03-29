@@ -4,84 +4,10 @@
  * and open the template in the editor.
  */
 
-var simulator = new Simulator();
-
-function startSimulation(attackersCanvas, defendersCanvas, battleCanvas, combatlog, data){
-    if(!simulator.auto){
-        simulator.stop();
-        console.log(data);
-        simulator.init(attackersCanvas, defendersCanvas, battleCanvas, combatlog, data);
-        simulator.start();
-    }
-}
-
-function nextStage(){
-    if(simulator.isRunning() && !simulator.auto){
-        simulator.nextStage();
-    }
-}
-
-function previousStage(){
-    if(simulator.isRunning() && !simulator.auto){
-        simulator.previousStage();
-    }
-}
-
-function autoBattle(){
-    if(simulator.isRunning()){
-        simulator.auto = true;
-        window.setTimeout(autoStage, 2000);
-    }
-}
-
-function autoStage(){
-    console.log(simulator.currentStage);
-    simulator.nextStage();
-    if(!simulator.isLastStage() && simulator.auto == true){
-        window.setTimeout(autoStage, 2000);
-    }
-    else{
-        if(simulator.isLastStage()){
-            stopAutoBattle();
-        }
-    }
-}
-
-function stopAutoBattle(){
-    simulator.auto = false;
-}
-
-function Simulator(){
-    this.attackersCanvas;
-    this.defendersCanvas;
-    this.battleCanvas;
-    this.combatlog;
-    this.assets;
-    this.attackersFront = [];
-    this.attackersBack = [];
-    this.attackersReserves = [];
-    this.attackersReservesState = [];
-    this.defendersFront = [];
-    this.defendersBack = [];
-    this.defendersReserves = [];
-    this.defendersReservesState = [];
-    this.width;
-    this.entries;
-    this.currentStage = 0;
-    this.firstPhase = true;
-    this.run = true;
-    this.auto = false;
-    this.init = function(attackersCanvas, defendersCanvas, battleCanvas, combatTextArea, data){
-        this.attackersCanvas = attackersCanvas;
-        this.defendersCanvas = defendersCanvas;
-        this.battleCanvas = battleCanvas;
-        this.combatlog = new CombatLog(combatTextArea);
-        this.setAssets();
-        this.getSimulation(data);
-        this.updateBattleState();
-        console.log(this.stagesIndexes);
-    }
-    this.setAssets = function(){
+function Simulation(attackersCanvas, defendersCanvas, battlefieldCanvas, combatlogTextArea, armiesData, simulationControls){
+    this.combatlog = new CombatLog(combatlogTextArea);
+    
+    this.getAssets = function(){
         var response = $.ajax({
             async: false,
             type: "GET",
@@ -97,8 +23,12 @@ function Simulator(){
                 return undefined;
             }
         });
-        this.assets = new Assets(response.responseJSON);
+        return new Assets(response.responseJSON);
     }
+    this.assets = this.getAssets();
+    
+    this.width;
+    this.entries;
     this.getSimulation = function(data){
         var response = $.ajax({
             async: false,
@@ -120,179 +50,318 @@ function Simulator(){
         this.entries = new CombatEntries(response.entries);
         console.log(response);
     }
-    this.updateBattleState = function(){
-        this.combatlog.clear();
+    this.getSimulation(armiesData);
+    
+    this.battlefield = new Battlefield(battlefieldCanvas, this.assets, this.width);
+    
+    
+    this.attackersReserves = new Reserves(attackersCanvas, this.assets, 'attacker');
+    this.defendersReserves = new Reserves(defendersCanvas, this.assets, 'defender');
+    
+    this.isTickMode = true;
+    this.entries.setupStages(this.isTickMode);
+    this.currentStage = 0;
+    this.isAuto = false;
+    this.isRunning = false;
+    
+    this.changeStage = function(stage){
+        this.currentStage = stage;
         var entries = this.entries.getStageEntries(this.currentStage);
-        if(this.firstPhase == true){
-            this.battlePhase(entries);
-        }
-        else{
-            this.reinforcementsPhase(entries);
+        this.battlefield.setupBattleField(entries, this.isTickMode);
+        this.attackersReserves.setupReserves(entries);
+        this.defendersReserves.setupReserves(entries);
+        this.combatlog.clear();
+        for(var i = 0; i < entries.length; i++){
+            if(entries[i].entryGroup != 'attackersState' && entries[i].entryGroup != 'defendersState')
+            this.combatlog.newLogLine(entries[i].entryText);
         }
     }
-    this.battlePhase = function(entries){
-        for(var i = 0; i < entries.length; i++){
-            var entry = entries[i];
-            if(entry.entryCategory == "reinforcePhase"){
-                break;
+    this.changeStage(this.currentStage);
+    
+    this.nextStage = function(){
+        var lastStage = this.entries.stagesCount() - 1;
+        if(this.currentStage < lastStage){
+            this.currentStage++;
+            this.changeStage(this.currentStage);
+        }
+    }
+    
+    this.previousStage = function(){
+        if(this.currentStage > 0){
+            this.currentStage--;
+            this.changeStage(this.currentStage);
+        }
+    }
+    
+    this.isLastStage = function(){
+        var lastStage = this.entries.stagesCount() - 1;
+        if(this.currentStage >= lastStage){
+            return true;
+        }
+        return false;
+    }
+    
+    this.changeTickMode = function(){
+        this.isTickMode = !this.isTickMode;
+        this.entries.setupStages(this.isTickMode);
+        this.changeStage(0);
+    }
+    
+    this.waitTime = 2000;
+    var simulation = this;
+    this.autoNextStage = function(){
+        simulation.nextStage();
+        if(simulation.isRunning && !simulation.isLastStage()){
+            window.setTimeout(simulation.autoNextStage, simulation.waitTime);
+        }
+    }
+    
+    this.newButton = function(text, onClick){
+        var button = document.createElement('button');
+        button.innerHTML = text;
+        button.onclick = onClick;
+        return button;
+    }
+    
+    this.tickModeButton
+    this.autoModeButton;
+    this.startButton;
+    this.stopButton;
+    this.setupTickModeButton = function(div, simulation){
+        this.tickModeButton = this.newButton('Current mode: tick', function(){
+            simulation.changeTickMode();
+            if(simulation.isTickMode){
+                this.innerHTML = 'Current mode: tick';
             }
             else{
-                this.interpretEntry(entry);
+                this.innerHTML = 'Current mode: per unit';
             }
-        }
+        });
+        var br = document.createElement('br');
+        div.appendChild(this.tickModeButton);
+        div.appendChild(br);
     }
-    this.interpretEntry = function(entry){
-        if(entry.entryCategory == "attackersState" || entry.entryCategory == "defendersState"){
-            if(entry.entryCategory == "attackersState"){
+    this.initControls = function(div){
+        var simulation = this;
+        this.tickModeButton = this.setupTickModeButton(div, simulation)
+        this.autoModeButton = this.newButton('Current mode: Manual', function(){
+            if(simulation.isAuto){
+                simulation.isRunning = false;
+                simulation.isAuto = false;
+                this.innerHTML = 'Current mode: Manual';
+            }
+            else{
+                simulation.isAuto = true;
+                this.innerHTML = 'Current mode: Auto';
+            }
+        });
+        var br = document.createElement('br');
+        div.appendChild(this.autoModeButton);
+        div.appendChild(br);
+        this.startButton = this.newButton('Start / next', function(){
+            if(simulation.isAuto){
+                if(!simulation.isRunning){
+                    simulation.isRunning = true;
+                    simulation.autoNextStage();
+                }
+            }
+            else{
+                simulation.nextStage();
+            }
+        });
+        br = document.createElement('br');
+        div.appendChild(this.startButton);
+        div.appendChild(br);
+        this.stopButton = this.newButton('Stop / previous', function(){
+            if(simulation.isAuto){
+                simulation.isRunning = false;
+            }
+            else{
+                simulation.previousStage();
+            }
+        });
+        br = document.createElement('br');
+        div.appendChild(this.stopButton);
+        div.appendChild(br);
+    }
+    this.initControls(simulationControls);
+    
+    this.draw = function(){
+        this.attackersReserves.draw();
+        this.battlefield.draw();
+        this.defendersReserves.draw();
+    }
+    
+    this.newFrame = function(){
+        simulation.draw();
+        requestAnimationFrame(simulation.newFrame);
+    }
+    
+    requestAnimationFrame(simulation.newFrame);
+}
+
+function Battlefield(canvas, assets, combatWidth){
+    this.canvas = canvas;
+    this.assets = assets;
+    this.width = combatWidth;
+    
+    this.initializeEmptyLines = function(width){
+        var line = [];
+        for(var i = 0; i < width; i++){
+            line.push('none');
+        }
+        return line;
+    }
+    this.attackersFront = this.initializeEmptyLines(this.width);
+    this.attackersBack = this.initializeEmptyLines(this.width);
+    this.defendersFront = this.initializeEmptyLines(this.width);
+    this.defendersBack = this.initializeEmptyLines(this.width);
+    this.markedUnits = [];
+    
+    this.setupBattleField = function(entries, isTickMode){
+        this.markedUnits = [];
+        for(var i = 0; i < entries.length; i++){
+            var entry = entries[i];
+            if(entry.entryGroup == 'attackersState'){
                 this.attackersFront = entry.frontLine;
                 this.attackersBack = entry.backLine;
-                this.attackersReserves = entry.reserves;
-                this.attackersReservesState = entry.reservesState;
             }
-            else{
+            if(entry.entryGroup == 'defendersState'){
                 this.defendersFront = entry.frontLine;
                 this.defendersBack = entry.backLine;
-                this.defendersReserves = entry.reserves;
-                this.defendersReservesState = entry.reservesState;
             }
-        }
-        else{
-            var text = entry.stringFormat;
-            this.combatlog.newLogLine(text);
-        }
-    }
-    this.reinforcementsPhase = function(entries){
-        var found = false;
-        for(var i = 0; i < entries.length; i++){
-            var entry = entries[i];
-            if(!found){
-                if(entry.entryCategory == "reinforcePhase"){
-                    found = true;
-                    var text = entry.stringFormat;
-                    this.combatlog.newLogLine(text);
-                }
-            }
-            else{
-                if(entry.entryCategory != "tick"){
-                    this.interpretEntry(entry);
-                }
+            if(!isTickMode){
+                this.markUnits(entry);
             }
         }
     }
-    this.stop = function(){
-        this.run = false;
+    
+    this.markUnits = function(entry){
+        var source = entry.source;
+        var target = entry.target;
+        if(source !== undefined){
+            var sourcePosition = new Position(source.side, source.positionInLine, source.front);
+            if(!this.isMarked(sourcePosition)){
+                this.markedUnits.push(sourcePosition);
+            }
+        }
+        if(target !== undefined){
+            var targetPosition = new Position(target.side, target.positionInLine, target.front);
+            if(!this.isMarked(targetPosition)){
+                this.markedUnits.push(targetPosition);
+            }
+        }
     }
-    this.start = function(){
-        this.run = true;
-        console.log(this);
-        requestAnimationFrame(newFrame);
-    }
-    this.newFrame = function(ctxBattle, ctxAttackReserves, ctxDefReserves){
-        this.drawBattle(ctxBattle);
-        this.drawReserves(this.attackersCanvas.width, ctxAttackReserves, this.attackersReserves, this.attackersReservesState);
-        this.drawReserves(this.defendersCanvas.width, ctxDefReserves, this.defendersReserves, this.defendersReservesState);
-    }
-    this.drawBattle = function(ctx){
+    
+    this.draw = function(){
+        var ctx = this.canvas.getContext("2d");
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        ctx.save();
         for(var index = 0; index < this.attackersFront.length; index++){
-            ctx.save();
             this.drawUnits(ctx, index);
-            ctx.restore();
         }
+        ctx.restore();
     }
+    
     this.drawUnits = function(ctx, index){
         var scale = 50;
         var x = index * scale;
         var y = 0;
-        var asset = this.assets.findUnit(this.attackersBack[index]);
-        ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
+        var position = new Position('attacker', index, false);
+        this.drawUnit(ctx, this.attackersBack[index], x, y, scale, position);
         y = y + 50;
-        asset = this.assets.findUnit(this.attackersFront[index]);
-        ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
+        position = new Position('attacker', index, true);
+        this.drawUnit(ctx, this.attackersFront[index], x, y, scale, position);
         y = y + 100;
-        asset = this.assets.findUnit(this.defendersFront[index]);
-        ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
+        position = new Position('defender', index, true);
+        this.drawUnit(ctx, this.defendersFront[index], x, y, scale, position);
         y = y + 50;
-        asset = this.assets.findUnit(this.defendersBack[index]);
-        ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
+        position = new Position('defender', index, false);
+        this.drawUnit(ctx, this.defendersBack[index], x, y, scale, position);
     }
-    this.drawReserves = function(width, ctx, reserves, state){
-        var scale = 25;
-        for(var index = 0; index < reserves.length; index++){
-            ctx.save();
-            var x = (index % (width/scale)) * scale;
-            var y = Math.floor(index / (width/scale) ) * scale;
-            var asset = this.assets.findUnit(reserves[index]);
+    
+    this.drawUnit = function(ctx, assetName, x, y, scale, position){
+        var asset = this.assets.findUnit(assetName);
+        if(assetName !== 'none'){
             ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
-            if(state[index] == 1){
-                ctx.drawImage(this.assets.marker, x, y, scale, scale);                       // draw image at current position
-            }
-            if(state[index] == 2){
-                ctx.drawImage(this.assets.markerGreen, x, y, scale, scale);                       // draw image at current position
-            }
-            ctx.restore();
         }
-    }
-    this.nextStage = function(){
-        if(this.currentStage + 1 < this.entries.stagesCount() || this.firstPhase == true){
-            if(this.firstPhase == false){
-                this.currentStage++;
-            }
-            this.firstPhase = !this.firstPhase;
-            this.updateBattleState();
-        }
-    }
-    this.previousStage = function(){
-        if(this.currentStage > 0 || this.firstPhase == false){
-            if(this.firstPhase == true){
-                this.currentStage--;
-            }
-            this.firstPhase = !this.firstPhase;
-            this.updateBattleState();
-        }
-    }
-    this.isLastStage = function(){
-        if(this.currentStage == this.entries.stagesCount() - 1 && this.firstPhase == false){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    this.isRunning = function(){
-        return this.run;
-    }
-}
-
-function CombatEntries(entries){
-    this.entries = entries;
-    this.stagesIndexes = [];
-    for(var i = 0; i < this.entries.length; i++){
-        if(this.entries[i].entryCategory == "tick"){
-            this.stagesIndexes.push(i);
+        if(this.isMarked(position)){
+            ctx.drawImage(this.assets.markerMove, x, y, scale, scale);                       // draw image at current position
         }
     }
     
-    this.getStageEntries = function(stage){
-        var resultEntries = [];
-        var index = this.getStageEntryIndex(stage);
-        var nextIndex = this.getStageEntryIndex(stage + 1);
-        for(var i = index; i <= nextIndex; i++){
-            resultEntries.push(this.entries[i]);
+    this.isMarked = function(position){
+        for(var i = 0; i < this.markedUnits.length; i++){
+            if(position.isTheSameAs(this.markedUnits[i])){
+                return true;
+            }
         }
-        return resultEntries;
+        return false;
     }
-    this.getStageEntryIndex = function(stage){
-        if(stage < 0){
-            return 0;
+    
+}
+
+function Position(side, index, isFront){
+    this.side = side;
+    this.index = index;
+    this.isFront = isFront;
+    
+    this.isTheSameAs = function(position){
+        if(this.side == position.side){
+            if(this.index == position.index){
+                if(this.isFront == position.isFront){
+                    return true;
+                }
+            }
         }
-        if(stage >= this.stagesIndexes.length){
-            return this.entries.length - 1;
-        }
-        var index = this.stagesIndexes[stage];
-        return index;
+        return false;
     }
-    this.stagesCount = function(){
-        return this.stagesIndexes.length;
+}
+
+function Reserves(canvas, assets, side){
+    this.canvas = canvas;
+    this.assets = assets;
+    this.side = side;
+    this.reserves = [];
+    this.reservesState = [];
+    
+    this.setupReserves = function(entries){
+        for(var i = 0; i < entries.length; i++){
+            var entry = entries[i];
+            if(this.side == 'attacker'){
+                if(entry.entryGroup == 'attackersState'){
+                    this.reserves = entry.reserves;
+                    this.reservesState = entry.reservesState;
+                }
+            }
+            else{
+                if(entry.entryGroup == 'defendersState'){
+                    this.reserves = entry.reserves;
+                    this.reservesState = entry.reservesState;
+                }
+            }
+        }
+    }
+    
+    this.draw = function(){
+        var ctx = this.canvas.getContext("2d");
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        var scale = 25;
+        var width = this.canvas.width;
+        for(var index = 0; index < this.reserves.length; index++){
+            ctx.save();
+            var x = (index % (width/scale)) * scale;
+            var y = Math.floor(index / (width/scale) ) * scale;
+            var asset = this.assets.findUnit(this.reserves[index]);
+            ctx.drawImage(asset.img, x, y, scale, scale);                       // draw image at current position
+            if(this.reservesState[index] == 'dead'){
+                ctx.drawImage(this.assets.markerDead, x, y, scale, scale);                       // draw image at current position
+            }
+            if(this.reservesState[index] == 'risen'){
+                ctx.drawImage(this.assets.markerRisen, x, y, scale, scale);                       // draw image at current position
+            }
+            ctx.restore();
+        }
     }
 }
 
@@ -312,17 +381,87 @@ function CombatLog(combatTextArea){
     }
 }
 
-function Position(assetName){
-    this.name = assetName;
-    this.active = false;
+function CombatEntries(entries){
+    this.entries = entries;
+    this.stagesIndexes = [];
+    
+    this.setupStages = function(isTickMode){
+        if(isTickMode){
+            this.setupTickModeStages();
+        }
+        else{
+            this.setupPerUnitModeStages();
+        }
+    }
+    
+    this.setupTickModeStages = function(){
+        this.stagesIndexes = [];
+        for(var i = 0; i < this.entries.length; i++){
+            if(this.entries[i].entryGroup == "tickStart" || this.entries[i].entryGroup == "reinforceStart"){
+                this.stagesIndexes.push(i);
+            }
+        }
+    }
+    
+    this.setupPerUnitModeStages = function(){
+        this.stagesIndexes = [];
+        var currentUnit = {
+            front: true,
+            positionInLine: -1,
+            side: 'defender'
+        };
+        for(var i = 0; i < this.entries.length; i++){
+            var entry = this.entries[i];
+            if(entry.entryGroup == "tickStart" || entry.entryGroup == "reinforceStart"){
+                this.stagesIndexes.push(i);
+            }
+            else{
+                if(entry.entryGroup == "onAction" || entry.entryGroup == "onDeath" || entry.entryGroup == "onEntry"){
+                    var source = entry.source;
+                    if(currentUnit.front !== source.front || currentUnit.positionInLine !== source.positionInLine || currentUnit.side !== source.side){
+                        this.stagesIndexes.push(i);
+                        currentUnit = source
+                    }
+                }
+            }
+            
+        }
+    }
+    
+    this.getStageEntries = function(stage){
+        var resultEntries = [];
+        var index = this.getStageEntryIndex(stage);
+        var nextIndex = this.getStageEntryIndex(stage + 1);
+        for(var i = index; i < nextIndex; i++){
+            resultEntries.push(this.entries[i]);
+        }
+        return resultEntries;
+    }
+    
+    this.getStageEntryIndex = function(stage){
+        if(stage < 0){
+            return 0;
+        }
+        if(stage >= this.stagesIndexes.length){
+            return this.entries.length - 1;
+        }
+        var index = this.stagesIndexes[stage];
+        return index;
+    }
+    
+    this.stagesCount = function(){
+        return this.stagesIndexes.length;
+    }
 }
 
 function Assets(pattern){
     this.units = [];
-    this.marker = new Image();
-    this.marker.src = "/img/units/marker.png";
-    this.markerGreen = new Image();
-    this.markerGreen.src = "/img/units/markerGreen.png";
+    this.markerDead = new Image();
+    this.markerDead.src = "/img/units/markerDead.png";
+    this.markerRisen = new Image();
+    this.markerRisen.src = "/img/units/markerRisen.png";
+    this.markerMove = new Image();
+    this.markerMove.src = "/img/units/markerMove.png";
     
     for(i = 0; i < pattern.length; i++){
         asset = new Asset();
@@ -362,13 +501,7 @@ function test(){
 }
 
 function newFrame(){
-    var ctxBattle = simulator.battleCanvas.getContext("2d");
-    ctxBattle.clearRect(0, 0, simulator.battleCanvas.width, simulator.battleCanvas.height);
-    var ctxAttack = simulator.attackersCanvas.getContext("2d");
-    ctxAttack.clearRect(0, 0, simulator.attackersCanvas.width, simulator.attackersCanvas.height);
-    var ctxDef = simulator.defendersCanvas.getContext("2d");
-    ctxDef.clearRect(0, 0, simulator.defendersCanvas.width, simulator.defendersCanvas.height);
-    simulator.newFrame(ctxBattle, ctxAttack, ctxDef);
+    simulator.newFrame();
     if(simulator.run == true){
         requestAnimationFrame(newFrame);
     }

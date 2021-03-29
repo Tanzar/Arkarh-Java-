@@ -47,11 +47,17 @@ public class Battlefield {
     public CombatReport fight(){
         BattleState battleState = BattleState.ongoing;
         CombatReport report = new CombatReport(this.fieldWidth);
+        report.nextTick();
+        boolean isNotFirstTick = false;
         Units fieldedUnits = this.groupUnits(attackingSide, defendingSide);
         for(Unit unit: fieldedUnits.toArray()){
             unit.useAbilities(Trigger.onEntry, this, report);
         }
         while(battleState == BattleState.ongoing){
+            if(isNotFirstTick){
+                report.nextTick();
+            }
+            isNotFirstTick = true;
             this.tick(report);
             battleState = this.getState();
         }
@@ -81,7 +87,6 @@ public class Battlefield {
     }
     
     public void tick(CombatReport report){
-        report.nextTick();
         report.battlefieldState(attackingSide, defendingSide);
         Units fieldedUnits = this.groupUnits(attackingSide, defendingSide);
         for(Unit unit: fieldedUnits.toArray()){
@@ -89,6 +94,7 @@ public class Battlefield {
             unit.takeMoraleDamage();
         }
         this.reinforcementPhase(report);
+        report.endTick();
     }
     
     private Units groupUnits(Side attackers, Side defenders){
@@ -103,7 +109,7 @@ public class Battlefield {
         report.nextReinforcementPhase();
         this.onDeathTrigger(report);
         this.reinforceSides(report);
-        report.battlefieldState(attackingSide, defendingSide);
+        report.endReinforcementPhase();
     }
     
     /**
@@ -124,6 +130,7 @@ public class Battlefield {
     private void reinforceSides(CombatReport report){
         Units reinforcements = this.attackingSide.reorganizeLines();
         Units defendersReinforcements = this.defendingSide.reorganizeLines();
+        report.battlefieldState(attackingSide, defendingSide);
         reinforcements.addUnits(defendersReinforcements);
         for(Unit unit: reinforcements.toArray()){
             unit.useAbilities(Trigger.onEntry, this, report);

@@ -125,6 +125,10 @@ public class Side {
         }
     }
     
+    public BattleSide getBattleSide(){
+        return this.battleSide;
+    }
+    
     public int getWidth(){
         return this.width;
     }

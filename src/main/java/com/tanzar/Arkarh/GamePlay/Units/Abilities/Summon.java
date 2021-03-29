@@ -87,10 +87,10 @@ public class Summon extends UnitAbility{
     @Override
     protected void onUse(Unit source, Units targets) {
         for(Unit summonedUnit: targets.toArray()){
-            report.abilityUse(source, summonedUnit, source.toString() +  " summons " + summonedUnit.toString() + " on battlefield.");
+            report.abilityUse(this, source, summonedUnit, source.toString() + " uses " + this.name + " to summon " + summonedUnit.toString() + " on battlefield.");
         }
         if(targets.isEmpty()){
-            report.abilityUse(source, source, "None answered call of " + source.toString());
+            report.abilityUse(this, source, source, "None answered call of " + source.toString());
         }
     }
 

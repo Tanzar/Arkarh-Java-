@@ -103,31 +103,24 @@ function BattleSimEditor(attackersDiv, defendersDiv, starterDiv){
         this.artifacts.hands.push({id:0, name:'Empty'});
         leaderDiv.addSelectValueFromSelectedItem("Hands", this.artifacts.hands, 'id', 'name', side.leader.equipment, 3);
         leaderDiv.newLine();
-        this.artifacts.legs.push({id:0, name:'Empty'});
-        leaderDiv.addSelectValueFromSelectedItem("Legs", this.artifacts.legs, 'id', 'name', side.leader.equipment, 4);
-        leaderDiv.newLine();
         this.artifacts.feet.push({id:0, name:'Empty'});
-        leaderDiv.addSelectValueFromSelectedItem("Feet", this.artifacts.feet, 'id', 'name', side.leader.equipment, 5);
+        leaderDiv.addSelectValueFromSelectedItem("Feet", this.artifacts.feet, 'id', 'name', side.leader.equipment, 4);
         leaderDiv.newLine();
         this.artifacts.mainhand.push({id:0, name:'Empty'});
-        leaderDiv.addSelectValueFromSelectedItem("Main Hand", this.artifacts.mainhand, 'id', 'name', side.leader.equipment, 6);
+        leaderDiv.addSelectValueFromSelectedItem("Main Hand", this.artifacts.mainhand, 'id', 'name', side.leader.equipment, 5);
         leaderDiv.newLine();
         this.artifacts.offhand.push({id:0, name:'Empty'});
-        leaderDiv.addSelectValueFromSelectedItem("Off Hand", this.artifacts.offhand, 'id', 'name', side.leader.equipment, 7);
+        leaderDiv.addSelectValueFromSelectedItem("Off Hand", this.artifacts.offhand, 'id', 'name', side.leader.equipment, 6);
         leaderDiv.newLine();
         this.artifacts.ring.push({id:0, name:'Empty'});
-        leaderDiv.addSelectValueFromSelectedItem("Ring 1", this.artifacts.ring, 'id', 'name', side.leader.equipment, 8);
+        leaderDiv.addSelectValueFromSelectedItem("Ring 1", this.artifacts.ring, 'id', 'name', side.leader.equipment, 7);
         leaderDiv.newLine();
-        leaderDiv.addSelectValueFromSelectedItem("Ring 2", this.artifacts.ring, 'id', 'name', side.leader.equipment, 9);
+        leaderDiv.addSelectValueFromSelectedItem("Ring 2", this.artifacts.ring, 'id', 'name', side.leader.equipment, 8);
         leaderDiv.newLine();
         this.artifacts.bonus.push({id:0, name:'Empty'});
-        leaderDiv.addSelectValueFromSelectedItem("Bonus 1", this.artifacts.bonus, 'id', 'name', side.leader.equipment, 10);
+        leaderDiv.addSelectValueFromSelectedItem("Bonus 1", this.artifacts.bonus, 'id', 'name', side.leader.equipment, 9);
         leaderDiv.newLine();
-        leaderDiv.addSelectValueFromSelectedItem("Bonus 2", this.artifacts.bonus, 'id', 'name', side.leader.equipment, 11);
-        leaderDiv.newLine();
-        leaderDiv.addSelectValueFromSelectedItem("Bonus 3", this.artifacts.bonus, 'id', 'name', side.leader.equipment, 12);
-        leaderDiv.newLine();
-        leaderDiv.addSelectValueFromSelectedItem("Bonus 4", this.artifacts.bonus, 'id', 'name', side.leader.equipment, 13);
+        leaderDiv.addSelectValueFromSelectedItem("Bonus 2", this.artifacts.bonus, 'id', 'name', side.leader.equipment, 10);
     }
     
     this.initUnitsSelection = function(unitsSelectionDiv, side){
@@ -217,7 +210,7 @@ function Leader(){
     this.attack = 1;
     this.defense = 1;
     this.spellPower = 1;
-    this.equipment = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.equipment = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     this.upkeep = 150;
 }
 

@@ -10,11 +10,13 @@ package com.tanzar.Arkarh.GamePlay.Combat;
  * @author spako
  */
 public class Position {
+    private BattleSide side;
     private int positionInLine;
     private boolean front;
     private int dmg;
     
-    public Position(int positionInLine, boolean isFront){
+    public Position(int positionInLine, boolean isFront, BattleSide side){
+        this.side = side;
         this.positionInLine = positionInLine;
         this.front = isFront;
         this.dmg = 0;

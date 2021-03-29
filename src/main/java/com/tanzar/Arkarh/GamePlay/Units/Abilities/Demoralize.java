@@ -64,8 +64,8 @@ public class Demoralize extends UnitAbility{
             for(int i = 0; i < this.multiplier; i++){
                 target.takeMoraleDamage();
             }
-            String stringFormat = source.toString() + " demoralizes " + target.toString() + ".";
-            this.report.abilityUse(source, target, stringFormat);
+            String stringFormat = source.toString() + " " + this.name + " demoralizes " + target.toString() + ".";
+            this.report.abilityUse(this, source, target, stringFormat);
         }
     }
 

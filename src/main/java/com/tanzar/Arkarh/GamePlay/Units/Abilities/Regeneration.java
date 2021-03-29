@@ -56,7 +56,7 @@ public class Regeneration extends UnitAbility{
         double percentage = ((double) this.baseHealing) / 100;
         int value = (int) Math.round(percentage * health);
         source.heal(value);
-        this.report.abilityUse(source, source, source.toString() + " regenerates " + value + " health.");
+        this.report.abilityUse(this, source, source, source.toString() + " regenerates " + value + " health.");
     }
 
     @Override
