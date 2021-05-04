@@ -24,6 +24,7 @@ function Table(){
         element.appendChild(br);
         element.appendChild(preview);
         this.addRow(textNode, element);
+        return select;
     }
     
     this.assetsSelect = function(item, properity, assets){
@@ -57,6 +58,7 @@ function Table(){
         select.value = item[properity];
         this.addOnChange(properity, item, select);
         this.addRow(textNode, select);
+        return select;
     }
     
     this.addSelectDifferentValues = function(text, textArray, valuesArray, properity, item){
@@ -73,6 +75,7 @@ function Table(){
         select.value = item[properity];
         this.addOnChange(properity, item, select);
         this.addRow(textNode, select);
+        return select;
     }
     
     this.addCustom = function(text, div){
@@ -99,6 +102,7 @@ function Table(){
         textInput.value = item[properity];
         this.addOnChange(properity, item, textInput);
         this.addRow(textNode, textInput);
+        return textInput;
     }
     
     this.addNumber = function(text, properity, item, min, max){
@@ -114,6 +118,7 @@ function Table(){
         number.value = item[properity];
         this.addOnChange(properity, item, number);
         this.addRow(textNode, number);
+        return number;
     }
     
     this.addNumberNoMax = function(text, properity, item, min){
@@ -126,6 +131,7 @@ function Table(){
         number.value = item[properity];
         this.addOnChange(properity, item, number);
         this.addRow(textNode, number);
+        return number;
     }
     
     this.addOnChange = function(properityName, item, inputField){

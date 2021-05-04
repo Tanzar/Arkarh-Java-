@@ -18,7 +18,7 @@ public class ReinforceEntry extends Entry{
             this.setText(text);
         }
         else{
-            this.setGroup(EntryGroup.reinforceEnd);
+            this.setEntryGroup(EntryGroup.reinforceEnd);
             String text = "Reinforcing ends.";
             this.setText(text);
         }

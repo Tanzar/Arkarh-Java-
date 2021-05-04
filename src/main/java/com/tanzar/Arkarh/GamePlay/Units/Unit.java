@@ -219,17 +219,17 @@ public class Unit implements Comparable<Unit>{
     }
     
     private void updateHealth(){
-        int maxHealth = this.defensive.getBaseHealth();
+        int health = this.status.getHealth();
         int healthBonus = this.passives.summarizeValues(PassiveEffect.bonusHealth);
-        maxHealth = maxHealth + healthBonus;
-        this.status.setHealth(maxHealth);
+        health = health + healthBonus;
+        this.status.setHealth(health);
     }
     
     private void updateMorale(){
-        int maxMorale = this.special.getBaseMorale();
+        int morale = this.status.getMorale();
         int moraleBonus = this.passives.summarizeValues(PassiveEffect.baseMorale);
-        maxMorale = maxMorale + moraleBonus;
-        this.status.setMorale(maxMorale);
+        morale = morale + moraleBonus;
+        this.status.setMorale(morale);
     }
 
     public Passives getPassives() {

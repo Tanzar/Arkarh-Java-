@@ -27,6 +27,11 @@ public enum ArtifactEffect {
     damage("unit"),
     health("unit"),
     upkeep("leader"),
+    ignoreArmor("unit"),
+    ignoreWard("unit"),
+    ignoreDefense("unit"),
+    lifeSteal("unit"),
+    range("unit"),
     ;
     
     private String group;

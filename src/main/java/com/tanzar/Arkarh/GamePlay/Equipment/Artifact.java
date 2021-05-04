@@ -192,6 +192,21 @@ public class Artifact {
             case health:
                 this.applyPassive(unit, PassiveEffect.bonusHealth);
                 break;
+            case ignoreArmor:
+                this.applyPassive(unit, PassiveEffect.ignoreArmorPercentage);
+                break;
+            case ignoreWard:
+                this.applyPassive(unit, PassiveEffect.ignoreWardPercentage);
+                break;
+            case ignoreDefense:
+                this.applyPassive(unit, PassiveEffect.ignoreDefensePercentage);
+                break;
+            case lifeSteal:
+                this.applyPassive(unit, PassiveEffect.lifeSteal);
+                break;
+            case range:
+                this.applyPassive(unit, PassiveEffect.range);
+                break;
         }
     }
     

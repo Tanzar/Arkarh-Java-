@@ -64,6 +64,14 @@ function Simulation(attackersCanvas, defendersCanvas, battlefieldCanvas, combatl
     this.isAuto = false;
     this.isRunning = false;
     
+    this.showSummary = function(){
+        var lines = this.entries.summary.formText();
+        this.combatlog.clear();
+        for(var i = 0; i < lines.length; i++){
+            this.combatlog.newLogLine(lines[i]);
+        }
+    }
+    
     this.changeStage = function(stage){
         this.currentStage = stage;
         var entries = this.entries.getStageEntries(this.currentStage);
@@ -127,6 +135,7 @@ function Simulation(attackersCanvas, defendersCanvas, battlefieldCanvas, combatl
     this.autoModeButton;
     this.startButton;
     this.stopButton;
+    this.summaryButton;
     this.setupTickModeButton = function(div, simulation){
         this.tickModeButton = this.newButton('Current mode: tick', function(){
             simulation.changeTickMode();
@@ -182,6 +191,14 @@ function Simulation(attackersCanvas, defendersCanvas, battlefieldCanvas, combatl
         });
         br = document.createElement('br');
         div.appendChild(this.stopButton);
+        div.appendChild(br);
+        this.summaryButton = this.newButton('Combat Summary', function(){
+            if(!simulation.isAuto){
+                simulation.showSummary();
+            }
+        });
+        br = document.createElement('br');
+        div.appendChild(this.summaryButton);
         div.appendChild(br);
     }
     this.initControls(simulationControls);
@@ -384,6 +401,7 @@ function CombatLog(combatTextArea){
 function CombatEntries(entries){
     this.entries = entries;
     this.stagesIndexes = [];
+    this.summary = new Summary(entries);
     
     this.setupStages = function(isTickMode){
         if(isTickMode){
@@ -451,6 +469,218 @@ function CombatEntries(entries){
     
     this.stagesCount = function(){
         return this.stagesIndexes.length;
+    }
+}
+
+function Summary(entries){
+    this.totalAttackers = {
+        physical : 0,
+        magical : 0,
+        healing : 0
+    }
+    this.totalDefenders = {
+        physical : 0,
+        magical : 0,
+        healing : 0
+    }
+    this.mostDamageDone = new SummaryForm("", 0, 0);
+    this.mostDamageDoneArray = [];
+    this.leastDamageTaken = new SummaryForm("", 0, 0);//todo
+    this.leastDamageTakenArray = [];
+    this.tickCount = 0;
+    
+    this.roundDamagePerTick = function(value){
+        var decimalPlaces = 2;
+        var tens = Math.pow(10, decimalPlaces);
+        var number = Math.round( (value/this.tickCount) * tens) / tens;
+        return number;
+    }
+    
+    this.canBeAnalized = function(entry){
+        if(entry.abilityGroup != undefined){
+            return true;
+        }
+        return false;
+    }
+    
+    this.findValue = function(text){
+        var found = false;
+        var number = "";
+        for(var i = 0; i < text.length; i++){
+            var charAt = text.charAt(i);
+            var toCheck = parseInt(charAt, 10);
+            if(!isNaN(toCheck)){
+                found = true;
+            }
+            else{
+                if(found){
+                    return Number(number);
+                }
+            }
+            if(found){
+                number += charAt;
+            }
+        }
+        if(number == ""){
+            return 0;
+        }
+        return Number(number);
+    }
+    
+    this.addTotalDamage = function(entry, value){
+        if(entry.entryText.includes("physical")){
+            if(entry.source.side == "attacker"){
+                this.totalAttackers.physical += value;
+            }
+            else{
+                this.totalDefenders.physical += value;
+            }
+        }
+        else{
+            if(entry.source.side == "attacker"){
+                this.totalAttackers.magical += value;
+            }
+            else{
+                this.totalDefenders.magical += value;
+            }
+        }
+    }
+    
+    this.addToMostDamageDone = function(entry, value){
+        var unit = 0;
+        for(var i = 0; i < this.mostDamageDoneArray.length; i++){
+            if(entry.source.unitName == this.mostDamageDoneArray[i].unit){
+                unit = this.mostDamageDoneArray[i];
+            }
+        }
+        if(unit == 0){
+            unit = new SummaryForm(entry.source.unitName, 0, 0);
+            this.mostDamageDoneArray.push(unit);
+        }
+        unit.addDamage(entry, value);
+    }
+    
+    this.addToLeastDamageTaken = function(entry, value){
+        var target = 0;
+        var source = 0;
+        for(var i = 0; i < this.leastDamageTakenArray.length; i++){
+            if(entry.target.unitName == this.leastDamageTakenArray[i].unit){
+                target = this.leastDamageTakenArray[i];
+            }
+            if(entry.source.unitName == this.leastDamageTakenArray[i].unit){
+                source = this.leastDamageTakenArray[i];
+            }
+        }
+        if(target == 0){
+            target = new SummaryForm(entry.target.unitName, 0, 0);
+            this.leastDamageTakenArray.push(target);
+        }
+        if(source == 0){
+            source = new SummaryForm(entry.source.unitName, 0, 0);
+            this.leastDamageTakenArray.push(source);
+        }
+        target.addDamage(entry, value);
+    }
+    
+    this.selectMostDamageDone = function(){
+        for(var i = 0; i < this.mostDamageDoneArray.length; i++){
+            var totalCurrentTop = this.mostDamageDone.magical + this.mostDamageDone.physical;
+            var totalCurrent = this.mostDamageDoneArray[i].magical + this.mostDamageDoneArray[i].physical;
+            if(totalCurrentTop < totalCurrent){
+                this.mostDamageDone = this.mostDamageDoneArray[i];
+            }
+        }
+    }
+    
+    this.selectLeastDamageTaken = function(){
+        for(var i = 0; i < this.leastDamageTakenArray.length; i++){
+            if(this.leastDamageTaken.unit == ""){
+                this.leastDamageTaken = this.leastDamageTakenArray[i];
+            }
+            else{
+                var totalCurrentTop = this.leastDamageTaken.magical + this.leastDamageTaken.physical;
+                var totalCurrent = this.leastDamageTakenArray[i].magical + this.leastDamageTakenArray[i].physical;
+                if(totalCurrentTop > totalCurrent){
+                    this.leastDamageTaken = this.leastDamageTakenArray[i];
+                }
+            }
+        }
+    }
+    
+    this.addTotalHealing = function(entry, value){
+        if(entry.source.side == "attacker"){
+            this.totalAttackers.healing += value;
+        }
+        else{
+            this.totalDefenders.healing += value;
+        }
+    }
+    
+    this.analizeAttack = function(entry, value){
+        this.addTotalDamage(entry, value);
+        this.addToMostDamageDone(entry, value);
+        this.addToLeastDamageTaken(entry, value);
+    }
+    
+    this.analizeEntry = function(entry, value){
+        if(entry.abilityGroup == "heal" || entry.abilityGroup == "regeneration"){
+            this.addTotalHealing(entry, value);
+        }
+        if(entry.abilityGroup == "attack"){
+            this.analizeAttack(entry, value);
+        }
+    }
+    
+    this.analizeEntries = function(entries){
+        for(var i = 0; i < entries.length; i++){
+            var entry = entries[i];
+            if(this.canBeAnalized(entry)){
+                var value = this.findValue(entry.entryText);
+                this.analizeEntry(entry, value);
+            }
+            if(entry.entryGroup == "tickStart"){
+                this.tickCount++;
+            }
+        }
+        this.selectMostDamageDone();
+        this.selectLeastDamageTaken();
+    }
+    this.analizeEntries(entries);
+    
+    this.formText = function(){
+        var textArray = [];
+        textArray.push("Total damage done");
+        textArray.push("Attackers physical damage done: " + this.totalAttackers.physical + " (" + this.roundDamagePerTick(this.totalAttackers.physical) + " dmg/tick).");
+        textArray.push("Attackers magical damage done: " + this.totalAttackers.magical + " (" + this.roundDamagePerTick(this.totalAttackers.magical) + " dmg/tick).");
+        textArray.push("Defenders physical damage done: " + this.totalDefenders.physical + " (" + this.roundDamagePerTick(this.totalDefenders.physical) + " dmg/tick).");
+        textArray.push("Defenders magical damage done: " + this.totalDefenders.magical + " (" + this.roundDamagePerTick(this.totalDefenders.magical) + " dmg/tick).");
+        textArray.push("Total healing done");
+        textArray.push("Attackers healing damage done: " + this.totalAttackers.healing);
+        textArray.push("Defenders healing damage done: " + this.totalDefenders.healing);
+        textArray.push(" ");
+        textArray.push("Most damage done: " + this.mostDamageDone.unit);
+        textArray.push("Physical damage done: " + this.mostDamageDone.physical);
+        textArray.push("Magical damage done: " + this.mostDamageDone.magical);
+        textArray.push(" ");
+        textArray.push("Least damage taken: " + this.leastDamageTaken.unit);
+        textArray.push("Physical damage taken: " + this.leastDamageTaken.physical);
+        textArray.push("Magical damage taken: " + this.leastDamageTaken.magical);
+        return textArray;
+    }
+}
+
+function SummaryForm(unit, physical, magical){
+    this.unit = unit;
+    this.physical = physical;
+    this.magical = magical;
+    
+    this.addDamage = function(entry, value){
+        if(entry.entryText.includes("physical")){
+            this.physical += value;
+        }
+        else{
+            this.magical += value;
+        }
     }
 }
 

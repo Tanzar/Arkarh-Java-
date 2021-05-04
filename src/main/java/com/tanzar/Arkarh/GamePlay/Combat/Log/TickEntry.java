@@ -18,7 +18,7 @@ public class TickEntry extends Entry{
             this.setText(text);
         }
         else{
-            this.setGroup(EntryGroup.tickEnd);
+            this.setEntryGroup(EntryGroup.tickEnd);
             String text = "Tick nr. " + tickNumber + " ends.";
             this.setText(text);
         }

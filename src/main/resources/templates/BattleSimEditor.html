@@ -12,23 +12,32 @@ and open the template in the editor.
         <script type="text/javascript" src="js/tools/URLConnector.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/tools/DivElement.js"></script>
+        <script type="text/javascript" src="js/tools/Table.js"></script>
         <script type="text/javascript" src="js/BattleSimulator/BattleSimEditor.js"></script>
         <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     </head>
     <body>
-        <table>
-            <tr>
-                <td valign="top">
-                    <div id="attackers"></div>
-                </td>
-                <td valign="top">
-                    <div id="defenders"></div>
-                </td>
-            </tr>
-        </table>
-        <br>
-        <div id="starterDiv">Start</div>
+        <center>
+            <table>
+                <tr>
+                    <td valign="top">
+                        <center>
+                            <text>Attackers</text>
+                        </center>
+                        <div id="attackers"></div>
+                    </td>
+                    <td valign="top">
+                        <center>
+                            <text>Defenders</text>
+                        </center>
+                        <div id="defenders"></div>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <div id="starterDiv">Start</div>
+        </center>
     </body>
     <script>
         var attackersDiv = document.getElementById("attackers");

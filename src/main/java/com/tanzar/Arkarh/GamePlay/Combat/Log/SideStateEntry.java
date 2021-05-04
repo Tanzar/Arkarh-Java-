@@ -31,7 +31,7 @@ public class SideStateEntry extends Entry{
     private void setupGroup(Side side){
         BattleSide battleSide = side.getBattleSide();
         if(battleSide.equals(BattleSide.defender)){
-            this.setGroup(EntryGroup.defendersState);
+            this.setEntryGroup(EntryGroup.defendersState);
         }
     }
     
@@ -46,7 +46,7 @@ public class SideStateEntry extends Entry{
     }
     
     private String getAssetName(int i, boolean isFront, Side side){
-        Unit unit = side.getUnit(new Position(i, isFront, side.getBattleSide()));
+        Unit unit = side.getUnit(new Position("", i, isFront, side.getBattleSide()));
         if(unit != null){
             return unit.getAssetName();
         }

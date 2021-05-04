@@ -25,11 +25,11 @@ public abstract class Entry {
         this.entryText = entryText;
     }
     
-    protected void setGroup(EntryGroup group){
+    protected void setEntryGroup(EntryGroup group){
         this.entryGroup = group;
     }
     
-    public EntryGroup getGroup(){
+    public EntryGroup getEntryGroup(){
         return this.entryGroup;
     }
     

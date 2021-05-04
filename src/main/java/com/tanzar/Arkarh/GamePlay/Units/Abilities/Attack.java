@@ -69,14 +69,17 @@ public class Attack extends UnitAbility{
     protected void onUse(Unit source, Units targets) {
         Unit[] units = targets.toArray();
         for(Unit target: units){
-            int totalDamage = this.calculateDamage(source, target);
-            this.report(source, target, totalDamage, school);
-            this.lifeSteal(source, target, totalDamage);
-            this.bonusDamage(source, target);
+            this.attackTarget(source, target);
         }
     }
     
-    private int calculateDamage(Unit source, Unit target){
+    private void attackTarget(Unit source, Unit target){
+        int totalDamage = this.baseAttack(source, target);
+        this.lifeSteal(source, target, totalDamage);
+        this.bonusDamage(source, target);
+    }
+    
+    private int baseAttack(Unit source, Unit target){
         int damage = source.getTotalBaseDamage();
         int attack = source.getTotalAttack();
         int spellPower = source.getTotalSpellPower();
@@ -87,6 +90,11 @@ public class Attack extends UnitAbility{
         else{
             totalDamage = this.magicAttack(source, target, damage, spellPower);
         }
+        if(totalDamage <= 0){
+            totalDamage = 1;
+        }
+        target.takeDamage(totalDamage);
+        this.report(source, target, totalDamage, school);
         return totalDamage;
     }
     
@@ -94,10 +102,6 @@ public class Attack extends UnitAbility{
         double attackDefenseMultiplier = this.calculateAttackDefenseMultiplier(source, target, attack);
         double armorMultiplier = this.armorMultiplier(source, target);
         damage = (int) Math.round(damage * attackDefenseMultiplier * armorMultiplier);
-        if(damage <= 0){
-            damage = 1;
-        }
-        target.takeDamage(damage);
         return damage;
     }
     
@@ -114,7 +118,8 @@ public class Attack extends UnitAbility{
     
     private int calculateTargetDefense(Unit source, Unit target){
         double multiplier = this.calculateIgnore(source, PassiveEffect.ignoreDefensePercentage);
-        return (int) Math.round(target.getTotalDefense() * multiplier);
+        int defense = (int) Math.round(target.getTotalDefense() * multiplier);
+        return defense;
     }
     
     private int magicAttack(Unit source, Unit target, int damage, int spellPower){
@@ -122,10 +127,6 @@ public class Attack extends UnitAbility{
         double wardMultiplier = this.wardMultiplier(source, target);
         damage = (int) Math.round(damage * spellPowerMultiplier);
         damage = (int) Math.round(damage * wardMultiplier);
-        if(damage <= 0){
-            damage = 1;
-        }
-        target.takeDamage(damage);
         return damage;
     }
     
@@ -133,18 +134,22 @@ public class Attack extends UnitAbility{
         Passives sourcePassives = source.getPassives();
         Passives bonusDamageEffects = sourcePassives.getByEffect(PassiveEffect.bonusDamage);
         for(Passive passive : bonusDamageEffects.toArray()){
-            EffectSchool school = passive.getSchool();
-            int damage = passive.getTotalValue();
-            if(school.equals(EffectSchool.physical)){
-                damage = (int) Math.round(damage * this.armorMultiplier(source, target));
-            }
-            else{
-                damage = (int) Math.round(damage * this.wardMultiplier(source, target));
-            }
-            target.takeDamage(damage);
-            this.report(source, target, damage, school);
-            this.lifeSteal(source, target, damage);
+            this.dealBonusDamage(source, target, passive);
         }
+    }
+    
+    private void dealBonusDamage(Unit source, Unit target, Passive passive){
+        EffectSchool school = passive.getSchool();
+        int damage = passive.getTotalValue();
+        if(school.equals(EffectSchool.physical)){
+            damage = (int) Math.round(damage * this.armorMultiplier(source, target));
+        }
+        else{
+            damage = (int) Math.round(damage * this.wardMultiplier(source, target));
+        }
+        target.takeDamage(damage);
+        this.report(source, target, damage, school);
+        this.lifeSteal(source, target, damage);
     }
     
     private double armorMultiplier(Unit source, Unit target){
