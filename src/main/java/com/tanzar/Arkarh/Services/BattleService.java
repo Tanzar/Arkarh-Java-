@@ -92,7 +92,7 @@ public class BattleService {
             catch(Exception ex){
                 
             }
-        }
+        }//test
         return leader;
     }
 }
