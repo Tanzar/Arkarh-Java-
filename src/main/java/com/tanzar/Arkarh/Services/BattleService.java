@@ -92,14 +92,7 @@ public class BattleService {
             catch(Exception ex){
                 
             }
-        }/*
-        String[] inventory = leaderJson.getStringArray("inventory");
-        for(String index: equipped){
-            int id = Integer.valueOf(index);
-            ArtifactEntity entity = this.artifactsDAO.getById(id);
-            Artifact artifact = new Artifact(entity);
-            leader.addArtifactToInventory(artifact);
-        }*/
+        }
         return leader;
     }
 }
