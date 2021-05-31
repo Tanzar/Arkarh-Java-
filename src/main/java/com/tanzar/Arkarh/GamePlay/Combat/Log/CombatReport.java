@@ -36,6 +36,10 @@ public class CombatReport {
         }
     }
     
+    public int getTickCount(){
+        return this.tickCounter;
+    }
+    
     public void nextTick(){
         this.tickCounter++;
         Entry entry = new TickEntry(this.tickCounter, true);

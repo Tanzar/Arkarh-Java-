@@ -166,6 +166,9 @@ public class Passive {
         if (this.source != other.source) {
             return false;
         }
+        if (this.school != other.school) {
+            return false;
+        }
         return true;
     }
 

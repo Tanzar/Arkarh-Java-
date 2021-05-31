@@ -91,9 +91,9 @@ public abstract class UnitAbility {
     }
 
     public void use(Unit source, Trigger mainTrigger, Battlefield battlefield, CombatReport report){
+        this.report = report;
         if(this.trigger.equals(mainTrigger) && this.additionalConditions(source)){
             if(this.isReady()){
-                this.report = report;
                 Units targets = this.setupTargets(source, battlefield);
                 this.onUse(source, targets);
                 this.reduceCharges();

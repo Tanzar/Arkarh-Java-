@@ -50,7 +50,11 @@ public class Heal extends UnitAbility{
 
     @Override
     protected boolean additionalConditions(Unit source) {
-        return source.isAlive();
+        int tickNumber = this.report.getTickCount();
+        if(tickNumber > 150){
+            return false;
+        }
+        return true;
     }
 
     @Override

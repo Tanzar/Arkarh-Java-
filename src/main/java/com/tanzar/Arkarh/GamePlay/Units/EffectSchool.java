@@ -11,6 +11,7 @@ package com.tanzar.Arkarh.GamePlay.Units;
  * @author spako
  */
 public enum EffectSchool {
+    none,
     physical,
     light,
     shadow,
@@ -56,7 +57,7 @@ public enum EffectSchool {
             case life:
                 return EffectSchool.death;
             default:
-                return EffectSchool.physical;
+                return EffectSchool.none;
                 
         }
     }
@@ -87,7 +88,7 @@ public enum EffectSchool {
             case life:
                 return "life";
             default:
-                return "physical";
+                return "none";
                 
         }
     }

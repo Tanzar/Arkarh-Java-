@@ -6,6 +6,7 @@
 package com.tanzar.Arkarh.GamePlay.Units.Modifiers;
 
 import com.tanzar.Arkarh.Converter.Json;
+import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,21 +84,35 @@ public class Passives {
         return this.passives.size();
     }
     
-    public Passives getByEffect(PassiveEffect effect){
+    public Passives getByEffect(PassiveEffect effect, EffectSchool school){
         Passives results = new Passives();
         for(Passive passive: this.passives){
-            if(passive.getEffect().equals(effect)){
-                results.add(passive);
+            if(effect == PassiveEffect.weakness){
+                if(passive.getSchool().equals(school)){
+                    results.add(passive);
+                }
+            }
+            else{
+                if(passive.getEffect().equals(effect)){
+                    results.add(passive);
+                }
             }
         }
         return results;
     }
     
-    public int summarizeValues(PassiveEffect effect){
+    public int summarizeValues(PassiveEffect effect, EffectSchool school){
         int value = 0;
         for(Passive passive: this.passives){
-            if(passive.getEffect().equals(effect)){
-                value += passive.getTotalValue();
+            if(effect == PassiveEffect.weakness && school != EffectSchool.none){
+                if(passive.getSchool().equals(school)){
+                    value += Math.abs(passive.getTotalValue());
+                }
+            }
+            else{
+                if(passive.getEffect().equals(effect)){
+                    value += passive.getTotalValue();
+                }
             }
         }
         return value;

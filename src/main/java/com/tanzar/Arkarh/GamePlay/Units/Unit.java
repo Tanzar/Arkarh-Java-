@@ -220,14 +220,14 @@ public class Unit implements Comparable<Unit>{
     
     private void updateHealth(){
         int health = this.status.getHealth();
-        int healthBonus = this.passives.summarizeValues(PassiveEffect.bonusHealth);
+        int healthBonus = this.passives.summarizeValues(PassiveEffect.bonusHealth, EffectSchool.none);
         health = health + healthBonus;
         this.status.setHealth(health);
     }
     
     private void updateMorale(){
         int morale = this.status.getMorale();
-        int moraleBonus = this.passives.summarizeValues(PassiveEffect.baseMorale);
+        int moraleBonus = this.passives.summarizeValues(PassiveEffect.baseMorale, EffectSchool.none);
         morale = morale + moraleBonus;
         this.status.setMorale(morale);
     }
@@ -274,7 +274,7 @@ public class Unit implements Comparable<Unit>{
     
     public int getTotalAttack(){
         int value = this.offensive.getAttack();
-        value += this.passives.summarizeValues(PassiveEffect.attack);
+        value += this.passives.summarizeValues(PassiveEffect.attack, EffectSchool.none);
         if(value < 1){
             return 1;
         }
@@ -283,7 +283,7 @@ public class Unit implements Comparable<Unit>{
     
     public int getTotalSpellPower(){
         int value = this.offensive.getSpellPower();
-        value += this.passives.summarizeValues(PassiveEffect.spellPower);
+        value += this.passives.summarizeValues(PassiveEffect.spellPower, EffectSchool.none);
         if(value < 1){
             return 1;
         }
@@ -292,7 +292,7 @@ public class Unit implements Comparable<Unit>{
     
     public int getTotalBaseDamage(){
         int value = this.offensive.getDamage();
-        value += this.passives.summarizeValues(PassiveEffect.damage);
+        value += this.passives.summarizeValues(PassiveEffect.damage, EffectSchool.none);
         if(value < 1){
             return 1;
         }
@@ -301,7 +301,7 @@ public class Unit implements Comparable<Unit>{
     
     public int getTotalDefense(){
         int value = this.defensive.getDefense();
-        value += this.passives.summarizeValues(PassiveEffect.defense);
+        value += this.passives.summarizeValues(PassiveEffect.defense, EffectSchool.none);
         if(value < 1){
             return 1;
         }
@@ -310,7 +310,7 @@ public class Unit implements Comparable<Unit>{
     
     public int getTotalArmor(){
         int value = this.defensive.getArmor();
-        value += this.passives.summarizeValues(PassiveEffect.armor);
+        value += this.passives.summarizeValues(PassiveEffect.armor, EffectSchool.none);
         int maxArmor = this.defensive.getMaxArmor();
         if(value > maxArmor){
             return maxArmor;
@@ -325,7 +325,7 @@ public class Unit implements Comparable<Unit>{
     
     public int getTotalWard(){
         int value = this.defensive.getWard();
-        value += this.passives.summarizeValues(PassiveEffect.ward);
+        value += this.passives.summarizeValues(PassiveEffect.ward, EffectSchool.none);
         int maxWard = this.defensive.getMaxWard();
         if(value > maxWard){
             return maxWard;
@@ -340,7 +340,7 @@ public class Unit implements Comparable<Unit>{
     
     public int getTotalHealth() {
         int value = this.defensive.getBaseHealth();
-        value += this.passives.summarizeValues(PassiveEffect.bonusHealth);
+        value += this.passives.summarizeValues(PassiveEffect.bonusHealth, EffectSchool.none);
         return value;
     }
     
@@ -432,7 +432,7 @@ public class Unit implements Comparable<Unit>{
     
     public void updateStatus(){
         int maxHealth = this.defensive.getBaseHealth();
-        int healthBonus = this.passives.summarizeValues(PassiveEffect.bonusHealth);
+        int healthBonus = this.passives.summarizeValues(PassiveEffect.bonusHealth, EffectSchool.none);
         maxHealth = maxHealth + healthBonus;
         this.status.updateState(maxHealth);
     }
@@ -446,7 +446,7 @@ public class Unit implements Comparable<Unit>{
     public void takeMoraleDamage(){
         if(this.category.takesMoraleDamage()){
             int moraleLoss = this.special.getMoraleLoss();
-            int moraleLossModifier = this.passives.summarizeValues(PassiveEffect.moraleLoss);
+            int moraleLossModifier = this.passives.summarizeValues(PassiveEffect.moraleLoss, EffectSchool.none);
             moraleLoss = moraleLoss - moraleLossModifier;
             if(moraleLoss > 0){
                 this.status.damageMorale(moraleLoss);
@@ -463,7 +463,7 @@ public class Unit implements Comparable<Unit>{
             if(percentage > 100){
                 percentage = 100;
             }
-            int maxHealth = this.defensive.getBaseHealth() + this.passives.summarizeValues(PassiveEffect.bonusHealth);
+            int maxHealth = this.defensive.getBaseHealth() + this.passives.summarizeValues(PassiveEffect.bonusHealth, EffectSchool.none);
             int newHealth = (int) Math.round(((double) maxHealth) * ( ((double)percentage)/100));
             this.status.setHealth(newHealth);
             this.status.setState(State.alive);
@@ -494,8 +494,8 @@ public class Unit implements Comparable<Unit>{
         return result;
     }
     
-    public int getPassiveValue(PassiveEffect effect){
-        int value = this.passives.summarizeValues(effect);
+    public int getPassiveValue(PassiveEffect effect, EffectSchool school){
+        int value = this.passives.summarizeValues(effect, school);
         return value;
     }
 

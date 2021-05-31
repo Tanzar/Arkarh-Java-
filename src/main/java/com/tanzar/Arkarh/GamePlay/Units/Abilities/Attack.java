@@ -88,7 +88,12 @@ public class Attack extends UnitAbility{
             totalDamage = this.physicalAttack(source, target, damage, attack);
         }
         else{
-            totalDamage = this.magicAttack(source, target, damage, spellPower);
+            if(this.school.equals(EffectSchool.none)){
+                totalDamage = 0;
+            }
+            else{
+                totalDamage = this.magicAttack(source, target, damage, spellPower);
+            }
         }
         if(totalDamage <= 0){
             totalDamage = 1;
@@ -100,8 +105,9 @@ public class Attack extends UnitAbility{
     
     private int physicalAttack(Unit source, Unit target, int damage, int attack){
         double attackDefenseMultiplier = this.calculateAttackDefenseMultiplier(source, target, attack);
+        double weaknessMultiplier = this.weaknessMultiplier(target, EffectSchool.physical);
         double armorMultiplier = this.armorMultiplier(source, target);
-        damage = (int) Math.round(damage * attackDefenseMultiplier * armorMultiplier);
+        damage = (int) Math.round(damage * attackDefenseMultiplier * weaknessMultiplier * armorMultiplier);
         return damage;
     }
     
@@ -124,15 +130,17 @@ public class Attack extends UnitAbility{
     
     private int magicAttack(Unit source, Unit target, int damage, int spellPower){
         double spellPowerMultiplier = 1 + (spellPower * this.spellPowerBonus);
+        double weaknessMultiplier = this.weaknessMultiplier(target, this.school);
         double wardMultiplier = this.wardMultiplier(source, target);
         damage = (int) Math.round(damage * spellPowerMultiplier);
+        damage = (int) Math.round(damage * weaknessMultiplier);
         damage = (int) Math.round(damage * wardMultiplier);
         return damage;
     }
     
     private void bonusDamage(Unit source, Unit target){
         Passives sourcePassives = source.getPassives();
-        Passives bonusDamageEffects = sourcePassives.getByEffect(PassiveEffect.bonusDamage);
+        Passives bonusDamageEffects = sourcePassives.getByEffect(PassiveEffect.bonusDamage, EffectSchool.none);
         for(Passive passive : bonusDamageEffects.toArray()){
             this.dealBonusDamage(source, target, passive);
         }
@@ -142,14 +150,25 @@ public class Attack extends UnitAbility{
         EffectSchool school = passive.getSchool();
         int damage = passive.getTotalValue();
         if(school.equals(EffectSchool.physical)){
-            damage = (int) Math.round(damage * this.armorMultiplier(source, target));
+            damage = (int) Math.round(damage * this.armorMultiplier(source, target) * this.weaknessMultiplier(target, school));
         }
         else{
-            damage = (int) Math.round(damage * this.wardMultiplier(source, target));
+            damage = (int) Math.round(damage * this.wardMultiplier(source, target) * this.weaknessMultiplier(target, school));
         }
         target.takeDamage(damage);
         this.report(source, target, damage, school);
         this.lifeSteal(source, target, damage);
+    }
+    
+    private double weaknessMultiplier(Unit target, EffectSchool attackSchool){
+        int totalWeaknessToAttack = target.getPassiveValue(PassiveEffect.weakness, attackSchool);
+        double weakness = Math.round(totalWeaknessToAttack / 100);
+        if(weakness < 0){
+            return 1.0;
+        }
+        else{
+            return 1.0 + weakness;
+        }
     }
     
     private double armorMultiplier(Unit source, Unit target){
@@ -170,7 +189,7 @@ public class Attack extends UnitAbility{
     
     private double calculateIgnore(Unit source, PassiveEffect ignore){
         Passives passives = source.getPassives();
-        int value = passives.summarizeValues(ignore);
+        int value = passives.summarizeValues(ignore, EffectSchool.none);
         if(value > 100){
             value = 100;
         }
@@ -182,7 +201,7 @@ public class Attack extends UnitAbility{
     }
     
     private void lifeSteal(Unit source, Unit target, int damage){
-        double percentage = source.getPassiveValue(PassiveEffect.lifeSteal);
+        double percentage = source.getPassiveValue(PassiveEffect.lifeSteal, EffectSchool.none);
         if(percentage > 0){
             double lifestealMultiplier = percentage / 100;
             double stolenHealth = ((double) damage) * lifestealMultiplier;

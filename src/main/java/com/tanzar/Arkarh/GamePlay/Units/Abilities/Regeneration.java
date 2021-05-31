@@ -40,6 +40,10 @@ public class Regeneration extends UnitAbility{
 
     @Override
     protected boolean additionalConditions(Unit source) {
+        int tickNumber = this.report.getTickCount();
+        if(tickNumber > 150){
+            return false;
+        }
         return true;
     }
 

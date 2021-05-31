@@ -28,7 +28,8 @@ public enum PassiveEffect {
     ignoreWardPercentage(true),
     ignoreDefensePercentage(true),
     moraleLoss(false),
-    lifeSteal(true)
+    lifeSteal(true),
+    weakness(true)
     ;
     
     private boolean isPercentage;
