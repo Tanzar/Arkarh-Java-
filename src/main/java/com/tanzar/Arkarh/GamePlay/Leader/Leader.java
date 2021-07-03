@@ -5,6 +5,7 @@
  */
 package com.tanzar.Arkarh.GamePlay.Leader;
 
+import com.tanzar.Arkarh.GamePlay.Leader.Magic.Spell;
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.Equipment.Equipment;
 import com.tanzar.Arkarh.GamePlay.Equipment.Artifact;

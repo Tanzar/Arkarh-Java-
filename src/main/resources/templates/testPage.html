@@ -9,33 +9,13 @@ and open the template in the editor.
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script type="text/javascript" src="js/index.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/modal.css"/>
-        <script type="text/javascript" src="js/tools/Modal.js"></script>
-        <script type="text/javascript" src="js/tools/URLConnector.js"></script>
-        <script type="text/javascript" src="js/tools/Table.js"></script>
-        <script type="text/javascript" src="js/tools/DivElement.js"></script>
-        <script type="text/javascript" src="js/unitEditor/EditorSetup.js"></script>
-        <script type="text/javascript" src="js/unitEditor/UnitModalBody.js"></script>
-        <script type="text/javascript" src="js/unitEditor/AbilityModalBody.js"></script>
-        <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
-        <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-        <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-        <script type="text/javascript" language="javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.jqueryui.min.js"></script>
+        <script type="text/javascript" src="js/test/test.js"></script>
     </head>
     <body>
         <button id="testButton">Test</button>
-        <div id="testDiv"></div>
-        <br>
-        <br>
-        <div id="testDivTf"></div>
     </body>
     <script>
-        
-        var dif = document.getElementById("testDiv");
-        var difTf = document.getElementById("testDivTf");
-        var editor = new EditorSetup(dif, difTf);
+        var btn = document.getElementById("testButton");
+        btn.onclick = test();
     </script>
 </html>

@@ -6,7 +6,7 @@
 package com.tanzar.Arkarh.GamePlay.Units.Abilities;
 
 import com.tanzar.Arkarh.Converter.Json;
-import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
+import com.tanzar.Arkarh.Database.Entities.Units.UnitAbilityEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.TargetsGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;

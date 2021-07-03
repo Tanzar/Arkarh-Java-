@@ -39,6 +39,13 @@ public enum Fraction {
         return this.alliance;
     }
     
+    public boolean isPartOfAlliance(Alliance alliance){
+        if(this.alliance == alliance){
+            return true;
+        }
+        return false;
+    }
+    
     public static Json[] getRelations(){
         Fraction[] allFractions = Fraction.values();
         int count = allFractions.length;

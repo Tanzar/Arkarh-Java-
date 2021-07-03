@@ -5,10 +5,11 @@
  */
 package com.tanzar.Arkarh.GamePlay.Units.Abilities;
 
-import com.tanzar.Arkarh.Containers.Gameplay.UnitAbilityEntities;
+import com.tanzar.Arkarh.Database.Containers.UnitAbilityEntities;
 import com.tanzar.Arkarh.Converter.Json;
-import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
-import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
+import com.tanzar.Arkarh.Database.Entities.Units.UnitAbilityEntity;
+import com.tanzar.Arkarh.Database.Entities.Units.UnitEntity;
+import com.tanzar.Arkarh.GameConfig;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Side;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
@@ -55,6 +56,11 @@ public class Summon extends UnitAbility{
 
     @Override
     protected boolean additionalConditions(Unit source) {
+        int tickNumber = this.report.getTickCount();
+        GameConfig config = BeanUtil.getBean(GameConfig.class);
+        if(tickNumber > config.getAbilityLockTick()){
+            return false;
+        }
         return true;
     }
 

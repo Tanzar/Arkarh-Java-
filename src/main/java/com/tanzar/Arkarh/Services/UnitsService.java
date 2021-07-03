@@ -5,14 +5,14 @@
  */
 package com.tanzar.Arkarh.Services;
 
-import com.tanzar.Arkarh.Containers.Gameplay.UnitAbilityEntities;
-import com.tanzar.Arkarh.Containers.Gameplay.UnitEntities;
+import com.tanzar.Arkarh.Database.Containers.UnitAbilityEntities;
+import com.tanzar.Arkarh.Database.Containers.UnitEntities;
 import com.tanzar.Arkarh.Converter.Json;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.AbilityFactory;
-import com.tanzar.Arkarh.DAO.UnitAbilitiesDAO;
-import com.tanzar.Arkarh.DAO.UnitsDAO;
-import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
-import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
+import com.tanzar.Arkarh.Database.DAO.UnitAbilitiesDAO;
+import com.tanzar.Arkarh.Database.DAO.UnitsDAO;
+import com.tanzar.Arkarh.Database.Entities.Units.UnitAbilityEntity;
+import com.tanzar.Arkarh.Database.Entities.Units.UnitEntity;
 import com.tanzar.Arkarh.GamePlay.TMP.Alliance;
 import com.tanzar.Arkarh.GamePlay.TMP.Category;
 import com.tanzar.Arkarh.GamePlay.TMP.Fraction;

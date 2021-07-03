@@ -5,14 +5,14 @@
  */
 package com.tanzar.Arkarh.Services;
 
-import com.tanzar.Arkarh.Containers.Gameplay.UnitAbilityEntities;
+import com.tanzar.Arkarh.Database.Containers.UnitAbilityEntities;
 import com.tanzar.Arkarh.Converter.Json;
-import com.tanzar.Arkarh.DAO.ArtifactsDAO;
-import com.tanzar.Arkarh.DAO.UnitAbilitiesDAO;
-import com.tanzar.Arkarh.DAO.UnitsDAO;
-import com.tanzar.Arkarh.Entities.Leader.ArtifactEntity;
-import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
-import com.tanzar.Arkarh.Entities.Unit.UnitEntity;
+import com.tanzar.Arkarh.Database.DAO.ArtifactsDAO;
+import com.tanzar.Arkarh.Database.DAO.UnitAbilitiesDAO;
+import com.tanzar.Arkarh.Database.DAO.UnitsDAO;
+import com.tanzar.Arkarh.Database.Entities.Leader.ArtifactEntity;
+import com.tanzar.Arkarh.Database.Entities.Units.UnitAbilityEntity;
+import com.tanzar.Arkarh.Database.Entities.Units.UnitEntity;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Combat.Log.CombatReport;
 import com.tanzar.Arkarh.GamePlay.Equipment.Artifact;

@@ -7,8 +7,8 @@ package com.tanzar.Arkarh.Services;
 
 import com.google.gson.Gson;
 import com.tanzar.Arkarh.Containers.MapContainer;
-import com.tanzar.Arkarh.DAO.FieldDAO;
-import com.tanzar.Arkarh.DAO.MapDAO;
+import com.tanzar.Arkarh.Database.DAO.FieldDAO;
+import com.tanzar.Arkarh.Database.DAO.MapDAO;
 import com.tanzar.Arkarh.Elements.Assets;
 import com.tanzar.Arkarh.Elements.GameBoard;
 import com.tanzar.Arkarh.Map.Exceptions.GenerationException;

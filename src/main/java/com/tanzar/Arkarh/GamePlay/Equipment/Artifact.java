@@ -6,7 +6,7 @@
 package com.tanzar.Arkarh.GamePlay.Equipment;
 
 import com.tanzar.Arkarh.Converter.Json;
-import com.tanzar.Arkarh.Entities.Leader.ArtifactEntity;
+import com.tanzar.Arkarh.Database.Entities.Leader.ArtifactEntity;
 import com.tanzar.Arkarh.GamePlay.Leader.Leader;
 import com.tanzar.Arkarh.GamePlay.Units.EffectSchool;
 import com.tanzar.Arkarh.GamePlay.Units.Modifiers.Passive;

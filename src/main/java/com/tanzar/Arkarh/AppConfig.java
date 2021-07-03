@@ -21,4 +21,9 @@ public class AppConfig {
     public Assets assets() throws IOException{
         return new Assets();
     }
+    
+    @Bean(name = "gameCinfig")
+    public GameConfig gameConfig(){
+        return new GameConfig();
+    }
 }

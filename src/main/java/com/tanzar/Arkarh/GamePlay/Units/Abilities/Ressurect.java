@@ -6,13 +6,15 @@
 package com.tanzar.Arkarh.GamePlay.Units.Abilities;
 
 import com.tanzar.Arkarh.Converter.Json;
-import com.tanzar.Arkarh.Entities.Unit.UnitAbilityEntity;
+import com.tanzar.Arkarh.Database.Entities.Units.UnitAbilityEntity;
+import com.tanzar.Arkarh.GameConfig;
 import com.tanzar.Arkarh.GamePlay.Combat.Battlefield;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.Trigger;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbility;
 import com.tanzar.Arkarh.GamePlay.Units.Unit;
 import com.tanzar.Arkarh.GamePlay.Units.Abilities.Base.UnitAbilityGroup;
 import com.tanzar.Arkarh.GamePlay.Units.Units;
+import com.tanzar.Arkarh.Services.BeanUtil;
 
 /**
  *
@@ -44,6 +46,11 @@ public class Ressurect extends UnitAbility{
 
     @Override
     protected boolean additionalConditions(Unit source) {
+        int tickNumber = this.report.getTickCount();
+        GameConfig config = BeanUtil.getBean(GameConfig.class);
+        if(tickNumber > config.getAbilityLockTick()){
+            return false;
+        }
         return true;
     }
 

@@ -5,10 +5,10 @@
  */
 package com.tanzar.Arkarh.Services;
 
-import com.tanzar.Arkarh.Containers.Gameplay.ArtifactEntities;
+import com.tanzar.Arkarh.Database.Containers.ArtifactEntities;
 import com.tanzar.Arkarh.Converter.Json;
-import com.tanzar.Arkarh.DAO.ArtifactsDAO;
-import com.tanzar.Arkarh.Entities.Leader.ArtifactEntity;
+import com.tanzar.Arkarh.Database.DAO.ArtifactsDAO;
+import com.tanzar.Arkarh.Database.Entities.Leader.ArtifactEntity;
 import com.tanzar.Arkarh.GamePlay.Equipment.Artifact;
 import com.tanzar.Arkarh.GamePlay.Equipment.ArtifactEffect;
 import com.tanzar.Arkarh.GamePlay.Equipment.Artifacts;
